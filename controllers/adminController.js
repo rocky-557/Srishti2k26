@@ -160,27 +160,29 @@ async function removeAdmin(req, res) {
   }
 }
 
-/**
- * POST /api/admin/members/search
- * 
- * Mirrors adminlogin/search_members.php
- * Returns HTML table rows (same format as PHP for frontend compatibility).
- */
 async function searchMembers(req, res) {
   try {
-    const query = req.body.query;
-    if (!query) {
-      return res.send('<tr><td colspan="7" class="text-center">No search query provided.</td></tr>');
+    const query = req.body.query || req.body.search || req.query.query || '';
+    const wantsJson = req.headers.accept?.includes('application/json') || req.body.format === 'json' || req.query.format === 'json';
+
+    let members;
+    if (!query || query.trim() === '') {
+      members = await User.find({}).sort({ memberId: -1 }).limit(100);
+    } else {
+      const regex = new RegExp(query.trim(), 'i');
+      members = await User.find({
+        $or: [
+          { name: regex },
+          { email: regex },
+          { mobile: regex },
+          { collegeName: regex }
+        ]
+      }).sort({ memberId: -1 });
     }
 
-    const regex = new RegExp(query, 'i');
-    const members = await User.find({
-      $or: [
-        { name: regex },
-        { email: regex },
-        { mobile: regex }
-      ]
-    }).sort({ memberId: -1 });
+    if (wantsJson) {
+      return res.json(members);
+    }
 
     if (members.length === 0) {
       return res.send('<tr><td colspan="7" class="text-center">No members found matching your search.</td></tr>');
@@ -207,7 +209,7 @@ async function searchMembers(req, res) {
     return res.send(html);
   } catch (err) {
     console.error('Search members error:', err);
-    return res.send('<tr><td colspan="7" class="text-center">Server error.</td></tr>');
+    return res.status(500).json({ error: 'Server error.' });
   }
 }
 

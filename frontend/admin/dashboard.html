@@ -536,14 +536,19 @@
 
         // Load Live Members
         async function loadLiveMembers(searchQuery = '') {
+            const tbody = $('#members-table-body');
             try {
                 const res = await fetch('/api/admin/members/search', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ search: searchQuery })
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({ query: searchQuery, format: 'json' })
                 });
+                if (res.status === 401) {
+                    window.location.href = '/admin/ad-login.html';
+                    return;
+                }
                 const members = await res.json();
-                const tbody = $('#members-table-body');
                 tbody.empty();
 
                 if (!Array.isArray(members) || members.length === 0) {
@@ -575,6 +580,7 @@
                 });
             } catch (err) {
                 console.error('Error loading members:', err);
+                tbody.html('<tr><td colspan="7" class="text-center py-4 text-danger">Error loading member records.</td></tr>');
             }
         }
 
