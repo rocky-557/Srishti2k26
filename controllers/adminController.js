@@ -283,11 +283,31 @@ async function updateMember(req, res) {
  */
 async function downloadEventwise(req, res) {
   try {
-    const eventType = req.body.event_type;
+    const eventType = (req.body && req.body.event_type) || req.query.event_type;
+    const eventName = (req.body && req.body.event_name) || req.query.event_name;
+    const format = (req.body && req.body.format) || req.query.format;
+
+    const isCsv = format === 'csv' || format === 'xls';
 
     // Handle 'Paid' users list
     if (eventType === 'Paid') {
       const payments = await Payment.find({ paymentStatus: 'success' }).sort({ addedOn: -1 });
+
+      if (isCsv) {
+        let csv = 'SRiSHTi ID,Name,Email,Mobile,College,Transaction ID,Amount,Date\n';
+        for (const p of payments) {
+          const user = await User.findOne({ memberId: p.memberId });
+          const name = user ? user.name : p.name;
+          const email = user ? user.email : '';
+          const mobile = user ? user.mobile : '';
+          const college = user ? user.collegeName : '';
+          const dateStr = p.addedOn ? p.addedOn.toISOString().replace('T', ' ').substring(0, 19) : '';
+          csv += `"${p.memberId}","${csvEsc(name)}","${csvEsc(email)}","${csvEsc(mobile)}","${csvEsc(college)}","${csvEsc(p.transactionId)}","${p.amount}","${dateStr}"\n`;
+        }
+        res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+        res.setHeader('Content-Disposition', 'attachment; filename="SRiSHTi2k26_Paid_Users.csv"');
+        return res.send(csv);
+      }
 
       if (payments.length === 0) {
         return res.send('<tr><td colspan="8" class="text-center">No successful payment records found.</td></tr>');
@@ -311,9 +331,8 @@ async function downloadEventwise(req, res) {
     }
 
     // Handle event-wise downloads
-    const eventName = req.body.event_name;
     if (!eventName) {
-      return res.send('<tr><td colspan="7" class="text-center">No event specified.</td></tr>');
+      return isCsv ? res.status(400).send('No event specified.') : res.send('<tr><td colspan="7" class="text-center">No event specified.</td></tr>');
     }
 
     // Map event_type to registration type
@@ -328,23 +347,32 @@ async function downloadEventwise(req, res) {
       case 'Paper':
         regType = 'paper'; break;
       case 'Flagship':
+      case 'Bots':
         regType = 'flagship'; break;
       default:
-        return res.send('<tr><td colspan="7" class="text-center">Invalid Event Type</td></tr>');
+        return isCsv ? res.status(400).send('Invalid Event Type') : res.send('<tr><td colspan="7" class="text-center">Invalid Event Type</td></tr>');
     }
 
-    // Find all registrations for this event
-    const registrations = await Registration.find({ type: regType, name: eventName });
+    // Find all registrations for this event (case-insensitive)
+    const regexName = new RegExp(`^${eventName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i');
+    const registrations = await Registration.find({ type: regType, name: regexName });
     const emails = registrations.map(r => r.email);
-
-    if (emails.length === 0) {
-      return res.send('<tr><td colspan="7" class="text-center">No participants found for this event.</td></tr>');
-    }
 
     const members = await User.find({ email: { $in: emails } });
 
+    if (isCsv) {
+      let csv = 'SRiSHTi ID,Name,Email,Mobile,College,General Fee,Accommodation\n';
+      for (const m of members) {
+        csv += `"${m.memberId || ''}","${csvEsc(m.name)}","${csvEsc(m.email)}","${csvEsc(m.mobile)}","${csvEsc(m.collegeName)}","${csvEsc(m.genfee || '')}","${csvEsc(m.accommodation || '')}"\n`;
+      }
+      const safeName = eventName.replace(/[^a-zA-Z0-9]/g, '_');
+      res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+      res.setHeader('Content-Disposition', `attachment; filename="SRiSHTi2k26_${safeName}.csv"`);
+      return res.send(csv);
+    }
+
     if (members.length === 0) {
-      return res.send('<tr><td colspan="7" class="text-center">No participant details found.</td></tr>');
+      return res.send('<tr><td colspan="7" class="text-center">No participants found for this event.</td></tr>');
     }
 
     let html = '';
@@ -364,6 +392,11 @@ async function downloadEventwise(req, res) {
     console.error('Download eventwise error:', err);
     return res.send('<tr><td colspan="7" class="text-center">Server error.</td></tr>');
   }
+}
+
+function csvEsc(str) {
+  if (!str) return '';
+  return String(str).replace(/"/g, '""');
 }
 
 /**

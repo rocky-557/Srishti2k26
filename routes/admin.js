@@ -39,8 +39,8 @@ router.get('/members/:id', requireAdmin, getMember);
 // POST /api/admin/members/update — update member (requires admin)
 router.post('/members/update', requireAdmin, updateMember);
 
-// POST /api/admin/events/download — event-wise participant list (requires admin)
-router.post('/events/download', requireAdmin, downloadEventwise);
+// ALL /api/admin/events/download — event-wise participant list (requires admin)
+router.all('/events/download', requireAdmin, downloadEventwise);
 
 // GET /api/admin/stats — live event statistics (requires admin)
 router.get('/stats', requireAdmin, getStats);

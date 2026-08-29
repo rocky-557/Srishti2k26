@@ -205,7 +205,7 @@
                     </div>
                     <div class="card-body px-4 pb-4">
                         <div class="row g-3 align-items-end">
-                            <div class="col-md-5">
+                            <div class="col-md-4">
                                 <label for="reportTypeSelect" class="form-label">Report Type / Category</label>
                                 <select class="form-select" id="reportTypeSelect">
                                     <option selected disabled>Choose an option...</option>
@@ -215,19 +215,22 @@
                                     <option value="Flagship">Flagship</option>
                                     <option value="Bots">Bots</option>
                                     <option value="Gaming">Gaming</option>
-                                    <option value="Paper">Paper</option>
+                                    <option value="Paper">Paper Presentation</option>
                                     <option value="Workshop">Workshop</option>
                                 </select>
                             </div>
-                            <div class="col-md-5" id="reportEventNameContainer">
+                            <div class="col-md-4" id="reportEventNameContainer">
                                 <label for="reportEventNameSelect" class="form-label">Event Name</label>
                                 <select class="form-select" id="reportEventNameSelect" disabled>
                                     <option>Please select a category first</option>
                                 </select>
                             </div>
-                            <div class="col-md-2">
-                                <button class="btn btn-primary w-100" id="view-report-btn" disabled>
+                            <div class="col-md-4 d-flex gap-2">
+                                <button class="btn btn-primary flex-fill" id="view-report-btn" disabled>
                                     <i class="bi bi-eye me-1"></i>View List
+                                </button>
+                                <button class="btn btn-success flex-fill" id="download-report-xls-btn" disabled>
+                                    <i class="bi bi-file-earmark-excel-fill me-1"></i>Download XLS
                                 </button>
                             </div>
                         </div>
@@ -340,8 +343,10 @@
                             <option disabled>–––– TRACKS ––––</option>
                             <option value="Technical">Technical</option>
                             <option value="Non-Technical">Non-Technical</option>
-                            <option value="Paper">Paper</option>
+                            <option value="Paper">Paper Presentation</option>
                             <option value="Flagship">Flagship</option>
+                            <option value="Bots">Bots</option>
+                            <option value="Gaming">Gaming</option>
                             <option value="Workshop">Workshop</option>
                         </select>
                     </div>
@@ -712,9 +717,26 @@
         });
         $('#reportTypeSelect').on('change', function () {
             handleCategoryChange($(this), $('#reportEventNameSelect'), $('#reportEventNameContainer'), $('#view-report-btn'));
+            if ($(this).val() === 'Paid') {
+                $('#download-report-xls-btn').prop('disabled', false);
+            } else {
+                $('#download-report-xls-btn').prop('disabled', !$('#reportEventNameSelect').val());
+            }
         });
         $('#reportEventNameSelect').on('change', function () {
-            $('#view-report-btn').prop('disabled', !$(this).val());
+            const hasVal = !$(this).val();
+            $('#view-report-btn').prop('disabled', hasVal);
+            $('#download-report-xls-btn').prop('disabled', hasVal);
+        });
+
+        // Download XLS Report from Participant Lists Card
+        $('#download-report-xls-btn').on('click', function () {
+            const eventType = $('#reportTypeSelect').val();
+            const eventName = (eventType === 'Paid') ? 'Paid' : $('#reportEventNameSelect').val();
+            if (!eventType || (!eventName && eventType !== 'Paid')) return;
+
+            const url = `/api/admin/events/download?format=csv&event_type=${encodeURIComponent(eventType)}&event_name=${encodeURIComponent(eventName)}`;
+            window.location.href = url;
         });
 
         // View Live Report
