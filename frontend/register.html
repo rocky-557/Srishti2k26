@@ -10,6 +10,8 @@
   <title>Srishti 2k26 | Sign Up</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="cinematic.css">
+  <!-- Google reCAPTCHA v2 -->
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 
 <body>
@@ -47,8 +49,12 @@
 
     <div class="form-container">
       <div class="form-logo-wrap">
-        <a href="home.html" title="Back to Home">
-          <img src="assets/srishti26_logo_tight.png" alt="Srishti 2K26 Logo" class="form-top-logo">
+        <a href="home.html" title="Back to Home"
+          style="display: inline-flex; align-items: center; justify-content: center; gap: 24px; text-decoration: none;">
+          <img src="assets/psg_logo.png" alt="PSG College Logo" class="form-top-logo psg-college-logo"
+            style="height: 105px; width: auto; max-width: 240px; filter: drop-shadow(0 0 18px rgba(255, 255, 255, 0.5));">
+          <img src="assets/srishti26_logo_tight.png" alt="Srishti 2K26 Logo" class="form-top-logo"
+            style="width: 330px; max-width: 80%;">
         </a>
       </div>
 
@@ -57,152 +63,160 @@
         <p>Register for Srishti 2k26 — assemble your future.</p>
       </header>
 
-        <form id="signupForm" novalidate>
-          <div class="form-grid">
+      <form id="signupForm" novalidate>
+        <div class="form-grid">
 
-            <div class="form-group" id="group-firstName">
-              <label for="firstName">First Name <span>*</span></label>
-              <input type="text" id="firstName" name="firstName" placeholder="John" required>
-              <span class="error-message">First name is required</span>
-            </div>
-
-            <div class="form-group" id="group-lastName">
-              <label for="lastName">Last Name <span>*</span></label>
-              <input type="text" id="lastName" name="lastName" placeholder="Doe" required>
-              <span class="error-message">Last name is required</span>
-            </div>
-
-            <div class="form-group full-width" id="group-email">
-              <label for="email">Email Address <span>*</span></label>
-              <input type="email" id="email" name="email" placeholder="john.doe@example.com" required>
-              <span class="error-message">Please enter a valid email address</span>
-            </div>
-
-            <div class="form-group" id="group-phone">
-              <label for="phone">Phone Number <span>*</span></label>
-              <input type="tel" id="phone" name="phone" placeholder="9876543210" required>
-              <span class="error-message">Enter a valid 10-digit number</span>
-            </div>
-
-            <div class="form-group" id="group-rollNo">
-              <label for="rollNo">Roll Number <span>*</span></label>
-              <input type="text" id="rollNo" name="rollNo" placeholder="23MX102" required>
-              <span class="error-message">Roll number is required</span>
-            </div>
-
-            <div class="form-group full-width" id="group-college">
-              <label for="college">College <span>*</span></label>
-              <select id="college" name="college" required>
-                <option value="" disabled selected>Select your College</option>
-                <option value="PSG College of Technology">PSG College of Technology</option>
-                <option value="PSG College of Arts and Science">PSG College of Arts and Science</option>
-                <option value="PSG Polytechnic College">PSG Polytechnic College</option>
-                <option value="PSG Institute of Technology and Applied Research">PSG Institute of Technology and Applied
-                  Research</option>
-                <option value="others">Others</option>
-              </select>
-              <span class="error-message">Please select your college</span>
-            </div>
-
-            <div class="form-group conditional-field full-width" id="group-otherCollege">
-              <label for="otherCollege">Specify College Name <span>*</span></label>
-              <input type="text" id="otherCollege" name="otherCollege" placeholder="Enter your college name">
-              <span class="error-message">Please specify your college name</span>
-            </div>
-
-            <div class="form-group full-width" id="group-department">
-              <label for="department">Department <span>*</span></label>
-              <select id="department" name="department" required>
-                <option value="" disabled selected>Select your Department</option>
-                <option value="Computer Science and Engineering">Computer Science and Engineering</option>
-                <option value="Information Technology">Information Technology</option>
-                <option value="Electronics and Communication Engineering">Electronics and Communication Engineering
-                </option>
-                <option value="Electrical and Electronics Engineering">Electrical and Electronics Engineering</option>
-                <option value="Mechanical Engineering">Mechanical Engineering</option>
-                <option value="Civil Engineering">Civil Engineering</option>
-                <option value="Biotechnology">Biotechnology</option>
-                <option value="Production Engineering">Production Engineering</option>
-                <option value="Biomedical Engineering">Biomedical Engineering</option>
-                <option value="Fashion Technology">Fashion Technology</option>
-                <option value="Computer Applications (BCA/MCA)">Computer Applications (BCA/MCA)</option>
-                <option value="Commerce and Management">Commerce and Management</option>
-                <option value="Sciences (Physics/Chemistry/Maths)">Sciences (Physics/Chemistry/Maths)</option>
-                <option value="others">Others</option>
-              </select>
-              <span class="error-message">Please select your department</span>
-            </div>
-
-            <div class="form-group conditional-field full-width" id="group-otherDepartment">
-              <label for="otherDepartment">Specify Department <span>*</span></label>
-              <input type="text" id="otherDepartment" name="otherDepartment" placeholder="Enter your department name">
-              <span class="error-message">Please specify your department name</span>
-            </div>
-
-            <div class="form-group full-width" id="group-yearOfStudy">
-              <label for="yearOfStudy">Year of Study <span>*</span></label>
-              <select id="yearOfStudy" name="yearOfStudy" required>
-                <option value="" disabled selected>Select Year</option>
-                <option value="1">1st Year</option>
-                <option value="2">2nd Year</option>
-                <option value="3">3rd Year</option>
-                <option value="4">4th Year</option>
-                <option value="5">5th Year (Integrated / M.Sc.)</option>
-              </select>
-              <span class="error-message">Please select your year of study</span>
-            </div>
-
-            <div class="form-group full-width" id="group-referenceId">
-              <label for="referenceId">
-                Reference ID
-                <span class="optional-badge">Optional</span>
-              </label>
-              <input type="text" id="referenceId" name="referenceId" placeholder="e.g. REF-2026-ABCD"
-                autocomplete="off">
-              <span class="field-hint">
-                💡 If you were referred by someone or have a special invite code, enter it here.
-              </span>
-            </div>
-
-            <div class="form-group full-width">
-              <div class="toggle-container">
-                <label for="accommodation" style="cursor:pointer;margin-bottom:0;">Accommodation Required</label>
-                <label class="switch">
-                  <input type="checkbox" id="accommodation" name="accommodation" value="yes">
-                  <span class="slider"></span>
-                </label>
-              </div>
-            </div>
-
-            <div class="form-group full-width" id="group-terms">
-              <label class="checkbox-container">
-                <input type="checkbox" id="terms" name="terms" required>
-                <span class="custom-checkbox"></span>
-                I agree to all the terms &amp; conditions of Srishti 2k26 and confirm that the details provided are
-                accurate.
-              </label>
-              <span class="error-message" style="margin-left:1.8rem;">You must agree to the terms and conditions to
-                register</span>
-            </div>
-
-            <div class="form-group full-width" style="margin-top:0.25rem;">
-              <button type="submit" class="submit-btn" id="registerBtn">
-                <span>Register Now</span>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                  stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="5" y1="12" x2="19" y2="12" />
-                  <polyline points="12 5 19 12 12 19" />
-                </svg>
-              </button>
-            </div>
-
+          <div class="form-group" id="group-firstName">
+            <label for="firstName">First Name <span>*</span></label>
+            <input type="text" id="firstName" name="firstName" placeholder="John" required>
+            <span class="error-message">First name is required</span>
           </div>
-        </form>
 
-        <div class="form-footer">
-          Already have an account? <a href="login.html" id="signinLink">Sign In</a>
+          <div class="form-group" id="group-lastName">
+            <label for="lastName">Last Name <span>*</span></label>
+            <input type="text" id="lastName" name="lastName" placeholder="Doe" required>
+            <span class="error-message">Last name is required</span>
+          </div>
+
+          <div class="form-group full-width" id="group-email">
+            <label for="email">Email Address <span>*</span></label>
+            <input type="email" id="email" name="email" placeholder="john.doe@example.com" required>
+            <span class="error-message">Please enter a valid email address</span>
+          </div>
+
+          <div class="form-group" id="group-phone">
+            <label for="phone">Phone Number <span>*</span></label>
+            <input type="tel" id="phone" name="phone" placeholder="9876543210" required>
+            <span class="error-message">Enter a valid 10-digit number</span>
+          </div>
+
+          <div class="form-group" id="group-rollNo">
+            <label for="rollNo">
+              Roll Number
+              <span class="optional-badge">Optional</span>
+            </label>
+            <input type="text" id="rollNo" name="rollNo" placeholder="e.g. 23MX102">
+          </div>
+
+          <div class="form-group full-width" id="group-college">
+            <label for="college">College <span>*</span></label>
+            <select id="college" name="college" required>
+              <option value="" disabled selected>Select your College</option>
+              <option value="PSG College of Technology">PSG College of Technology</option>
+              <option value="PSG College of Arts and Science">PSG College of Arts and Science</option>
+              <option value="PSG Polytechnic College">PSG Polytechnic College</option>
+              <option value="PSG Institute of Technology and Applied Research">PSG Institute of Technology and Applied
+                Research</option>
+              <option value="others">Others</option>
+            </select>
+            <span class="error-message">Please select your college</span>
+          </div>
+
+          <div class="form-group conditional-field full-width" id="group-otherCollege">
+            <label for="otherCollege">Specify College Name <span>*</span></label>
+            <input type="text" id="otherCollege" name="otherCollege" placeholder="Enter your college name">
+            <span class="error-message">Please specify your college name</span>
+          </div>
+
+          <div class="form-group full-width" id="group-department">
+            <label for="department">Department <span>*</span></label>
+            <select id="department" name="department" required>
+              <option value="" disabled selected>Select your Department</option>
+              <option value="Computer Science and Engineering">Computer Science and Engineering</option>
+              <option value="Information Technology">Information Technology</option>
+              <option value="Electronics and Communication Engineering">Electronics and Communication Engineering
+              </option>
+              <option value="Electrical and Electronics Engineering">Electrical and Electronics Engineering</option>
+              <option value="Mechanical Engineering">Mechanical Engineering</option>
+              <option value="Civil Engineering">Civil Engineering</option>
+              <option value="Biotechnology">Biotechnology</option>
+              <option value="Production Engineering">Production Engineering</option>
+              <option value="Biomedical Engineering">Biomedical Engineering</option>
+              <option value="Fashion Technology">Fashion Technology</option>
+              <option value="Computer Applications (BCA/MCA)">Computer Applications (BCA/MCA)</option>
+              <option value="Commerce and Management">Commerce and Management</option>
+              <option value="Sciences (Physics/Chemistry/Maths)">Sciences (Physics/Chemistry/Maths)</option>
+              <option value="others">Others</option>
+            </select>
+            <span class="error-message">Please select your department</span>
+          </div>
+
+          <div class="form-group conditional-field full-width" id="group-otherDepartment">
+            <label for="otherDepartment">Specify Department <span>*</span></label>
+            <input type="text" id="otherDepartment" name="otherDepartment" placeholder="Enter your department name">
+            <span class="error-message">Please specify your department name</span>
+          </div>
+
+          <div class="form-group full-width" id="group-yearOfStudy">
+            <label for="yearOfStudy">Year of Study <span>*</span></label>
+            <select id="yearOfStudy" name="yearOfStudy" required>
+              <option value="" disabled selected>Select Year</option>
+              <option value="1">1st Year</option>
+              <option value="2">2nd Year</option>
+              <option value="3">3rd Year</option>
+              <option value="4">4th Year</option>
+              <option value="5">5th Year (Integrated / M.Sc.)</option>
+            </select>
+            <span class="error-message">Please select your year of study</span>
+          </div>
+
+          <div class="form-group full-width" id="group-referenceId">
+            <label for="referenceId">
+              Reference ID
+              <span class="optional-badge">Optional</span>
+            </label>
+            <input type="text" id="referenceId" name="referenceId" placeholder="e.g. REF-2026-ABCD" autocomplete="off">
+            <span class="field-hint">
+              💡 If you were referred by someone or have a special invite code, enter it here.
+            </span>
+          </div>
+
+          <div class="form-group full-width">
+            <div class="toggle-container">
+              <label for="accommodation" style="cursor:pointer;margin-bottom:0;">Accommodation Required</label>
+              <label class="switch">
+                <input type="checkbox" id="accommodation" name="accommodation" value="yes">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group full-width" id="group-recaptcha"
+            style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0.5rem 0;">
+            <div class="g-recaptcha" data-sitekey="6LcUOp4tAAAAACD6aZLnw1AEy_oeMhw796EmeDCX" data-theme="dark"></div>
+            <span class="error-message" id="recaptcha-error" style="display: none; margin-top: 6px;">Please verify that
+              you are not a robot</span>
+          </div>
+
+          <div class="form-group full-width" id="group-terms">
+            <label class="checkbox-container">
+              <input type="checkbox" id="terms" name="terms" required>
+              <span class="custom-checkbox"></span>
+              I agree to all the terms &amp; conditions of Srishti 2k26 and confirm that the details provided are
+              accurate.
+            </label>
+            <span class="error-message" style="margin-left:1.8rem;">You must agree to the terms and conditions to
+              register</span>
+          </div>
+
+          <div class="form-group full-width" style="margin-top:0.25rem;">
+            <button type="submit" class="submit-btn" id="registerBtn">
+              <span>Register Now</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </button>
+          </div>
+
         </div>
+      </form>
+
+      <div class="form-footer">
+        Already have an account? <a href="login.html" id="signinLink">Sign In</a>
       </div>
+    </div>
   </div>
 
   <!-- Success Modal -->
@@ -216,7 +230,7 @@
     </div>
   </div>
 
-  <script src="app.js"></script>
+  <script src="js/app.js"></script>
   <script src="cinematic.js"></script>
 </body>
 

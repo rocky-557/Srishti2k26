@@ -38,36 +38,36 @@
 .avng-desktop-nav {
   display: none; /* Hidden by default (mobile-first) */
   position: fixed;
-  top: 20px;
+  top: 18px;
   left: 50%;
   transform: translateX(-50%);
   width: 95%;
-  max-width: 1400px;
-  height: 80px;
-  min-height: 80px;
+  max-width: 1550px;
+  height: 105px;
+  min-height: 105px;
   box-sizing: border-box;
   z-index: 10000;
   align-items: center;
   justify-content: space-between;
-  padding: 0 30px;
-  border-radius: 22px;
+  padding: 0 34px;
+  border-radius: 26px;
 
   /* Dark metallic glass panel */
-  background: rgba(8, 12, 10, 0.82);
-  backdrop-filter: blur(20px) saturate(1.3);
-  -webkit-backdrop-filter: blur(20px) saturate(1.3);
+  background: rgba(8, 12, 10, 0.86);
+  backdrop-filter: blur(20px) saturate(1.35);
+  -webkit-backdrop-filter: blur(20px) saturate(1.35);
 
   /* Subtle green metallic border */
-  border: 1px solid rgba(120, 255, 120, 0.18);
+  border: 1px solid rgba(120, 255, 120, 0.22);
 
   /* Soft green shadow */
   box-shadow:
-    0 4px 30px rgba(94, 255, 122, 0.06),
-    0 1px 0 rgba(56, 217, 108, 0.08) inset,
-    0 0 60px rgba(94, 255, 122, 0.03);
+    0 6px 36px rgba(94, 255, 122, 0.08),
+    0 1px 0 rgba(56, 217, 108, 0.1) inset,
+    0 0 70px rgba(94, 255, 122, 0.04);
 
   /* Gamma energy accent line at bottom */
-  border-bottom: 2px solid transparent;
+  border-bottom: 2.5px solid transparent;
   border-image: linear-gradient(
     90deg,
     rgba(94, 255, 122, 0.0) 0%,
@@ -107,7 +107,7 @@
   );
   background-size: 200% 100%;
   animation: hulkEnergyLine 6s linear infinite;
-  border-radius: 22px 22px 0 0;
+  border-radius: 26px 26px 0 0;
   pointer-events: none;
 }
 
@@ -116,7 +116,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: 22px;
+  border-radius: 26px;
   background: radial-gradient(
     ellipse at 50% 100%,
     rgba(94, 255, 122, 0.04) 0%,
@@ -136,13 +136,13 @@
 
 /* --- Scroll Effect ------------------------------------------- */
 .avng-desktop-nav.avng-nav-scrolled {
-  background: rgba(7, 10, 8, 0.92);
-  height: 66px;
-  min-height: 66px;
-  padding: 0 30px;
+  background: rgba(7, 10, 8, 0.94);
+  height: 84px;
+  min-height: 84px;
+  padding: 0 34px;
   box-shadow:
-    0 8px 40px rgba(94, 255, 122, 0.08),
-    0 1px 0 rgba(56, 217, 108, 0.12) inset;
+    0 10px 45px rgba(94, 255, 122, 0.1),
+    0 1px 0 rgba(56, 217, 108, 0.14) inset;
 }
 
 .avng-desktop-nav.avng-nav-scrolled::after {
@@ -154,7 +154,7 @@
 .avng-desktop-nav__logos {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 18px;
   flex-shrink: 0;
   height: 100%;
 }
@@ -167,8 +167,8 @@
 }
 
 .avng-desktop-nav__logos img {
-  height: 40px;
-  max-height: 40px;
+  height: 56px;
+  max-height: 56px;
   width: auto;
   object-fit: contain;
   transition: transform 0.3s ease, filter 0.3s ease;
@@ -177,20 +177,20 @@
 
 /* Slightly larger sizing for 100 YRS logo */
 .avng-desktop-nav__logos img[src*="100 YRS"] {
-  height: 48px;
-  max-height: 48px;
+  height: 66px;
+  max-height: 66px;
 }
 
 .avng-desktop-nav__logos img:hover {
   transform: scale(1.08);
-  filter: brightness(1.1) drop-shadow(0 0 10px rgba(94, 255, 122, 0.4));
+  filter: brightness(1.1) drop-shadow(0 0 12px rgba(94, 255, 122, 0.45));
 }
 
 /* --- CENTER: Nav Links --------------------------------------- */
 .avng-desktop-nav__links {
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: 30px;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -371,43 +371,34 @@
 /* Large desktop: comfortable spacing */
 @media (min-width: 1400px) {
   .avng-desktop-nav__links {
-    gap: 38px;
+    gap: 45px;
   }
   .avng-desktop-nav__logos img {
-    height: 46px;
+    height: 76px;
+  }
+  .avng-desktop-nav__logos img[src*="100 YRS"] {
+    height: 88px;
   }
 }
 
-/* Laptop range: tighten spacing */
-@media (min-width: 993px) and (max-width: 1200px) {
+/* Laptop range: maintain comfortable sizing */
+@media (min-width: 993px) and (max-width: 1399px) {
   .avng-desktop-nav {
-    padding: 14px 20px;
+    padding: 0 28px;
+    height: 95px;
+    min-height: 95px;
   }
   .avng-desktop-nav__links {
-    gap: 20px;
-  }
-  .avng-desktop-nav__links a {
-    font-size: 0.8rem;
+    gap: 22px;
   }
   .avng-desktop-nav__logos img {
-    height: 36px;
+    height: 48px;
+  }
+  .avng-desktop-nav__logos img[src*="100 YRS"] {
+    height: 56px;
   }
   .avng-desktop-nav__logos {
-    gap: 10px;
-  }
-  .avng-desktop-nav__register a {
-    padding: 8px 18px;
-    font-size: 0.82rem;
-  }
-}
-
-/* Tablet/small laptop: slightly tighter */
-@media (min-width: 993px) and (max-width: 1100px) {
-  .avng-desktop-nav__links {
-    gap: 16px;
-  }
-  .avng-desktop-nav__links a {
-    font-size: 0.76rem;
+    gap: 14px;
   }
 }
 

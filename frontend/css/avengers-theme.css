@@ -1296,3 +1296,37 @@ body.ave-menu-open [data-avengers-theme] .ave-hamburger span:nth-child(3) {
     display: none !important;
   }
 }
+
+/* ============================================================
+   22. HIGHLIGHTED EMAIL SUBMISSION BOX (Bigger font, bold, white)
+   ============================================================ */
+.email-highlight-box,
+li.email-highlight-rule {
+  font-size: 1.15rem !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  background: rgba(8, 14, 24, 0.88) !important;
+  border: 1px solid rgba(94, 255, 122, 0.45) !important;
+  border-left: 5px solid #5EFF7A !important;
+  padding: 12px 18px !important;
+  border-radius: 10px !important;
+  margin: 14px 0 !important;
+  line-height: 1.6 !important;
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.7) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(94, 255, 122, 0.05) !important;
+  list-style-type: none !important;
+  display: block !important;
+}
+
+.email-highlight-box strong,
+.email-highlight-box a,
+li.email-highlight-rule strong,
+li.email-highlight-rule a {
+  color: #5EFF7A !important;
+  font-size: 1.18rem !important;
+  font-weight: 800 !important;
+  text-decoration: underline !important;
+  letter-spacing: 0.03em !important;
+  text-shadow: 0 0 10px rgba(94, 255, 122, 0.6) !important;
+  word-break: break-all !important;
+}

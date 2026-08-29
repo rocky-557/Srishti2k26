@@ -7,6 +7,7 @@
  *   logout.php           → logout()
  */
 const bcrypt = require('bcryptjs');
+const nodemailer = require('nodemailer');
 const User = require('../models/User');
 const { getNextSequence } = require('../models/Counter');
 
@@ -43,6 +44,21 @@ async function signup(req, res) {
     // --- Validation (same order as PHP) ---
     if (!name || !email || !phone || !cgname) {
       return res.send('Please fill all the mandatory fields.');
+    }
+
+    // Google reCAPTCHA v2 verification
+    const recaptchaToken = req.body['g-recaptcha-response'] || req.body.recaptcha;
+    const recaptchaSecret = process.env.RECAPTCHA_SECRET_KEY || '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe';
+    if (recaptchaToken) {
+      try {
+        const verifyRes = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${recaptchaSecret}&response=${recaptchaToken}`, { method: 'POST' });
+        const verifyData = await verifyRes.json();
+        if (!verifyData.success) {
+          return res.send('CAPTCHA verification failed. Please check "I am not a robot".');
+        }
+      } catch (e) {
+        console.warn('reCAPTCHA verification error:', e);
+      }
     }
 
     // Email format
@@ -108,6 +124,9 @@ async function signup(req, res) {
       genfee: '',
       memberId
     });
+
+    // Asynchronously dispatch "Thank You for Registering" email (non-blocking)
+    sendWelcomeEmail({ name, email: email.toLowerCase(), memberId, cgname, depart });
 
     // Set session (same keys as PHP)
     req.session.login = memberId;
@@ -193,4 +212,84 @@ function logout(req, res) {
   });
 }
 
-module.exports = { signup, login, logout };
+/**
+ * Sends a styled HTML registration confirmation email asynchronously via SMTP.
+ */
+async function sendWelcomeEmail({ name, email, memberId, cgname, depart }) {
+  try {
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST || 'smtp.gmail.com',
+      port: parseInt(process.env.SMTP_PORT || '587'),
+      secure: false,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS
+      }
+    });
+
+    const srishtiId = `SRiSHTi25${memberId}`;
+
+    await transporter.sendMail({
+      from: `"SRiSHTi 2k26 Team" <${process.env.SMTP_USER}>`,
+      to: email,
+      subject: `⚡ Welcome to SRiSHTi 2k26 — Registration Confirmed! (${srishtiId})`,
+      html: `
+        <div style="background-color: #060911; font-family: 'Poppins', Helvetica, Arial, sans-serif; padding: 30px 15px; color: #e0e6ed;">
+          <div style="max-width: 600px; margin: 0 auto; background: #0c121e; border: 1px solid rgba(94, 255, 122, 0.25); border-radius: 16px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.6);">
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+              <h1 style="color: #5EFF7A; margin: 0; font-size: 26px; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 15px rgba(94, 255, 122, 0.4);">
+                SRiSHTi 2k26
+              </h1>
+              <p style="color: #8899a6; font-size: 13px; margin-top: 4px;">National Level Technical Symposium | PSG Tech</p>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid rgba(94, 255, 122, 0.15); margin: 20px 0;" />
+
+            <h2 style="color: #ffffff; font-size: 20px; margin-bottom: 12px;">Greetings ${name},</h2>
+            <p style="color: #b0bec5; font-size: 14px; line-height: 1.6;">
+              Thank you for registering for <strong>SRiSHTi 2k26</strong>! Your account has been created successfully. Assemble your skills and prepare to conquer the ultimate technical stage.
+            </p>
+
+            <div style="background: rgba(94, 255, 122, 0.06); border: 1px dashed rgba(94, 255, 122, 0.4); border-radius: 12px; padding: 20px; margin: 25px 0; text-align: center;">
+              <span style="color: #8899a6; font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; display: block; margin-bottom: 6px;">Your Official SRiSHTi ID</span>
+              <span style="color: #5EFF7A; font-size: 30px; font-weight: 700; letter-spacing: 3px; font-family: monospace;">${srishtiId}</span>
+            </div>
+
+            <table style="width: 100%; font-size: 14px; color: #b0bec5; border-collapse: collapse; margin-bottom: 25px;">
+              <tr>
+                <td style="padding: 8px 0; color: #78909c;">College:</td>
+                <td style="padding: 8px 0; color: #ffffff; text-align: right; font-weight: 500;">${cgname || 'PSG Tech'}</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; color: #78909c;">Department:</td>
+                <td style="padding: 8px 0; color: #ffffff; text-align: right; font-weight: 500;">${depart || 'General'}</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; color: #78909c;">Registered Email:</td>
+                <td style="padding: 8px 0; color: #ffffff; text-align: right; font-weight: 500;">${email}</td>
+              </tr>
+            </table>
+
+            <div style="text-align: center; margin-top: 30px;">
+              <a href="http://localhost:8526/login.html" style="background: linear-gradient(135deg, #1B5E20, #2E7D32, #43A047); color: #ffffff; padding: 12px 30px; border-radius: 30px; text-decoration: none; font-weight: 600; font-size: 14px; display: inline-block; box-shadow: 0 0 20px rgba(94, 255, 122, 0.3);">
+                Login to Dashboard
+              </a>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid rgba(94, 255, 122, 0.15); margin: 30px 0 15px 0;" />
+
+            <p style="color: #607d8b; font-size: 12px; text-align: center; margin: 0;">
+              If you have any questions, reach out to us at <a href="mailto:queries.srishti2k24@gmail.com" style="color: #5EFF7A;">queries.srishti2k24@gmail.com</a>.
+            </p>
+          </div>
+        </div>
+      `
+    });
+    console.log(`✅ Welcome registration email sent to ${email} (ID: ${srishtiId})`);
+  } catch (err) {
+    console.error('❌ Failed to send welcome registration email:', err.message || err);
+  }
+}
+
+module.exports = { signup, login, logout, sendWelcomeEmail };
