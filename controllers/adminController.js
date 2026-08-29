@@ -561,13 +561,13 @@ function escHtml(str) {
  */
 async function gitPull(req, res) {
   const { exec } = require('child_process');
-  // Optional: you can run 'git pull && pm2 restart server' depending on your setup.
-  exec('git pull', { cwd: process.cwd() }, (error, stdout, stderr) => {
+  // Pull latest code and automatically reload PM2 if PM2 is running
+  exec('git pull origin main && (pm2 reload all || true)', { cwd: process.cwd() }, (error, stdout, stderr) => {
     if (error) {
       console.error(`Git pull error: ${error.message}`);
       return res.status(500).json({ error: error.message, stderr });
     }
-    return res.json({ success: true, message: stdout || 'Pulled successfully.' });
+    return res.json({ success: true, message: stdout || 'Code updated and server reloaded successfully.' });
   });
 }
 
