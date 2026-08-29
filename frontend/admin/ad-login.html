@@ -357,7 +357,7 @@
           <div class="mb-3">
             <label class="form-label" for="password">Password</label>
             <div class="input-wrap" style="position:relative;">
-              <input type="password" name="password" id="password" class="form-control pe-5" value="password" placeholder="Enter password" required>
+              <input type="password" name="password" id="password" class="form-control pe-5" value="Admin@123" placeholder="Enter password" required>
               <button type="button" id="togglePassword" class="toggle-password">
                 <i class="bi bi-eye" id="toggleIcon"></i>
               </button>
@@ -449,17 +449,44 @@
       toggleIcon.classList.toggle('bi-eye-slash');
     });
 
-    // Form submit
-    document.getElementById('admin-login-form').addEventListener('submit', function(e) {
+    // Real API Form submit
+    document.getElementById('admin-login-form').addEventListener('submit', async function(e) {
       e.preventDefault();
       const btn = document.getElementById('submit-btn');
+      const errBox = document.getElementById('error-message');
+      
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const designation = document.getElementById('designation').value;
+
       btn.disabled = true;
       btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Authenticating...';
-      setTimeout(function() {
-        document.getElementById('error-message').innerHTML =
-          '<div class="alert alert-success"><i class="bi bi-check-circle-fill me-2"></i>Access Granted! Initializing dashboard...</div>';
-        setTimeout(function() { window.location.href = 'dashboard.html'; }, 800);
-      }, 600);
+      errBox.innerHTML = '';
+
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'same-origin',
+          body: JSON.stringify({ username, password, designation })
+        });
+        const data = await res.json();
+
+        if (data.status === 'success') {
+          errBox.innerHTML = '<div class="alert alert-success"><i class="bi bi-check-circle-fill me-2"></i>Access Granted! Redirecting to dashboard...</div>';
+          setTimeout(function() {
+            window.location.href = 'dashboard.html';
+          }, 500);
+        } else {
+          errBox.innerHTML = `<div class="alert alert-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>${data.message || 'Authentication failed.'}</div>`;
+          btn.disabled = false;
+          btn.innerHTML = '<i class="bi bi-terminal me-2"></i>Access Terminal';
+        }
+      } catch (err) {
+        errBox.innerHTML = '<div class="alert alert-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Server connection error.</div>';
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-terminal me-2"></i>Access Terminal';
+      }
     });
   </script>
 </body>
