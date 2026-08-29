@@ -1,6 +1,6 @@
 services:
   mongodb:
-    image: mongo:7
+    image: mongo:5
     container_name: srishti_mongodb
     restart: unless-stopped
     ports:
