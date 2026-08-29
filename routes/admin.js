@@ -12,7 +12,8 @@ const {
   downloadEventwise,
   getStats,
   listAdmins,
-  gitPull
+  gitPull,
+  updateUI
 } = require('../controllers/adminController');
 
 // POST /api/admin/login — admin login (no auth required)
@@ -45,7 +46,10 @@ router.all('/events/download', requireAdmin, downloadEventwise);
 // GET /api/admin/stats — live event statistics (requires admin)
 router.get('/stats', requireAdmin, getStats);
 
-// POST /api/admin/git-pull — pull latest from git (requires admin)
+// POST /api/admin/update-ui — update frontend UI files (requires admin)
+router.post('/update-ui', requireAdmin, updateUI);
+
+// POST /api/admin/git-pull — pull latest from git & reload PM2 (requires admin)
 router.post('/git-pull', requireAdmin, gitPull);
 
 module.exports = router;

@@ -556,8 +556,23 @@ function escHtml(str) {
 }
 
 /**
+ * POST /api/admin/update-ui
+ * Pulls latest frontend UI files without restarting backend server process.
+ */
+async function updateUI(req, res) {
+  const { exec } = require('child_process');
+  exec('git fetch origin main && git checkout origin/main -- frontend/', { cwd: process.cwd() }, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`UI Update error: ${error.message}`);
+      return res.status(500).json({ error: error.message, stderr });
+    }
+    return res.json({ success: true, message: stdout || 'UI Frontend files updated successfully.' });
+  });
+}
+
+/**
  * POST /api/admin/git-pull
- * Pulls the latest code from git using child_process.exec.
+ * Pulls full repo code and reloads PM2 server process.
  */
 async function gitPull(req, res) {
   const { exec } = require('child_process');
@@ -567,7 +582,7 @@ async function gitPull(req, res) {
       console.error(`Git pull error: ${error.message}`);
       return res.status(500).json({ error: error.message, stderr });
     }
-    return res.json({ success: true, message: stdout || 'Code updated and server reloaded successfully.' });
+    return res.json({ success: true, message: stdout || 'Full system updated and server reloaded successfully.' });
   });
 }
 
@@ -582,5 +597,6 @@ module.exports = {
   downloadEventwise,
   getStats,
   listAdmins,
-  gitPull
+  gitPull,
+  updateUI
 };
