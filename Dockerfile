@@ -1,14 +1,32 @@
+# Use Node.js 22 Alpine base image
 FROM node:22-alpine
 
+# Set working directory
 WORKDIR /app
 
-# Install app dependencies
-COPY package*.json ./
-RUN npm install --omit=dev
+# Set production environment defaults
+ENV NODE_ENV=production
+ENV PORT=4173
 
-# Copy application source
+# Install dependencies first for optimal Docker layer caching
+COPY package*.json ./
+RUN npm ci --omit=dev --ignore-scripts
+
+# Copy application source code
 COPY . .
 
-EXPOSE 8526
+# Set proper file permissions for the non-root node user
+RUN chown -R node:node /app
 
+# Use non-root user for security best practices
+USER node
+
+# Expose application port
+EXPOSE 4173
+
+# Add container healthcheck
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:4173/api/status || exit 1
+
+# Launch application server
 CMD ["node", "server.js"]
