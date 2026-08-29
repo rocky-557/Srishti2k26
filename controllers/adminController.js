@@ -130,8 +130,9 @@ async function removeAdmin(req, res) {
   try {
     const userToDelete = req.body.user_to_delete;
 
-    // Master admin cannot delete themselves
-    if (userToDelete === 'Gannadheesh Raj') {
+    // Master admins cannot delete themselves
+    const protectedAdmins = ['Sri Raghav', 'Niranjan'];
+    if (protectedAdmins.includes(userToDelete)) {
       response.message = 'Master admin account cannot be removed.';
       return res.json(response);
     }

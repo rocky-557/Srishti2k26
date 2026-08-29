@@ -22,21 +22,30 @@ async function seed() {
     const bcrypt = require('bcryptjs');
     const defaultPasswordHash = await bcrypt.hash('Admin@123', 10);
 
-    // Update or insert master admin
+    // Master admins: Sri Raghav & Niranjan
     await Admin.findOneAndUpdate(
-      { user: 'Gannadheesh Raj' },
-      { user: 'Gannadheesh Raj', password: defaultPasswordHash, designation: 'admin' },
+      { user: 'Sri Raghav' },
+      { user: 'Sri Raghav', password: defaultPasswordHash, designation: 'admin' },
       { upsert: true, returnDocument: 'after' }
     );
 
-    // Update or insert standard admin
+    await Admin.findOneAndUpdate(
+      { user: 'Niranjan' },
+      { user: 'Niranjan', password: defaultPasswordHash, designation: 'admin' },
+      { upsert: true, returnDocument: 'after' }
+    );
+
+    // Standard admin
     await Admin.findOneAndUpdate(
       { user: 'admin' },
       { user: 'admin', password: defaultPasswordHash, designation: 'admin' },
       { upsert: true, returnDocument: 'after' }
     );
 
-    console.log('✅ Admins seeded successfully: "admin" & "Gannadheesh Raj" (password: Admin@123)');
+    // Delete legacy admin if exists
+    await Admin.deleteOne({ user: 'Gannadheesh Raj' });
+
+    console.log('✅ Admins seeded successfully: "Sri Raghav", "Niranjan", & "admin" (password: Admin@123)');
 
     await mongoose.connection.close();
     console.log('Done.');

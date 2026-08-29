@@ -45,7 +45,7 @@ router.post('/events/download', requireAdmin, downloadEventwise);
 // GET /api/admin/stats — live event statistics (requires admin)
 router.get('/stats', requireAdmin, getStats);
 
-// POST /api/admin/git-pull — pull latest from git (requires master admin)
-router.post('/git-pull', requireMasterAdmin, gitPull);
+// POST /api/admin/git-pull — pull latest from git (requires admin)
+router.post('/git-pull', requireAdmin, gitPull);
 
 module.exports = router;

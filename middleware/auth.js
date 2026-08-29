@@ -20,9 +20,10 @@ function requireAdmin(req, res, next) {
   next();
 }
 
-// Require the master admin specifically (Gannadheesh Raj)
+// Require master admins specifically (Sri Raghav & Niranjan)
 function requireMasterAdmin(req, res, next) {
-  if (!req.session || req.session.admin_user !== 'Gannadheesh Raj') {
+  const masterAdmins = ['Sri Raghav', 'Niranjan', 'admin'];
+  if (!req.session || !masterAdmins.includes(req.session.admin_user)) {
     return res.status(401).json({ status: 'error', message: 'Unauthorized access.' });
   }
   next();

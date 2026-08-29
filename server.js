@@ -170,7 +170,7 @@ app.post('/adminlogin/add_admin_process.php', (req, res) => {
   addAdmin(req, res);
 });
 app.post('/adminlogin/remove_admin_process.php', (req, res) => {
-  if (!req.session || req.session.admin_user !== 'Gannadheesh Raj') return res.status(401).json({ status: 'error', message: 'Unauthorized' });
+  if (!req.session || !['Sri Raghav', 'Niranjan', 'admin'].includes(req.session.admin_user)) return res.status(401).json({ status: 'error', message: 'Unauthorized' });
   const { removeAdmin } = require('./controllers/adminController');
   removeAdmin(req, res);
 });
