@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  forgotPasswordForm.addEventListener('submit', (e) => {
+  forgotPasswordForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const value = emailOrPhoneInput.value;
 
@@ -107,23 +107,40 @@ document.addEventListener('DOMContentLoaded', () => {
     sendOtpBtn.disabled = true;
     sendOtpBtn.innerHTML = '<span>Sending OTP...</span>';
 
-    setTimeout(() => {
-      // Transition to Step 2
-      step1.classList.remove('step-active');
-      step1.classList.add('step-hidden');
-
-      step2.classList.remove('step-hidden');
-      step2.classList.add('step-active');
+    try {
+      const res = await fetch('/api/auth/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ emailOrPhone: value })
+      });
+      const data = await res.json();
 
       sendOtpBtn.disabled = false;
       sendOtpBtn.innerHTML = '<span>Send OTP</span>';
 
-      // Start Countdown Timer & focus first OTP box
-      startTimer(60);
-      if (otpBoxes[0]) {
-        otpBoxes[0].focus();
+      if (data.status === 'success') {
+        // Transition to Step 2
+        step1.classList.remove('step-active');
+        step1.classList.add('step-hidden');
+
+        step2.classList.remove('step-hidden');
+        step2.classList.add('step-active');
+
+        startTimer(300); // 5 minutes
+        if (otpBoxes[0]) {
+          otpBoxes[0].focus();
+        }
+      } else {
+        groupEmailOrPhone.classList.add('error');
+        const errSpan = groupEmailOrPhone.querySelector('.error-message');
+        if (errSpan) errSpan.textContent = data.message || 'Failed to send OTP.';
       }
-    }, 600);
+    } catch (err) {
+      sendOtpBtn.disabled = false;
+      sendOtpBtn.innerHTML = '<span>Send OTP</span>';
+      groupEmailOrPhone.classList.add('error');
+    }
   });
 
   /* =============================================
@@ -246,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* =============================================
      STEP 2 SUBMIT: VERIFY OTP -> TRANSITION TO STEP 3
   ============================================= */
-  otpForm.addEventListener('submit', (e) => {
+  otpForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const otpValue = otpBoxes.map(b => b.value).join('');
 
@@ -263,19 +280,37 @@ document.addEventListener('DOMContentLoaded', () => {
     verifyOtpBtn.disabled = true;
     verifyOtpBtn.innerHTML = '<span>Verifying...</span>';
 
-    setTimeout(() => {
+    try {
+      const res = await fetch('/api/auth/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ otp: otpValue })
+      });
+      const data = await res.json();
+
       verifyOtpBtn.disabled = false;
       verifyOtpBtn.innerHTML = '<span>Verify OTP</span>';
-      
-      // Transition from Step 2 to Step 3 (Reset Password)
-      step2.classList.remove('step-active');
-      step2.classList.add('step-hidden');
 
-      step3.classList.remove('step-hidden');
-      step3.classList.add('step-active');
+      if (data.status === 'success') {
+        // Transition from Step 2 to Step 3 (Reset Password)
+        step2.classList.remove('step-active');
+        step2.classList.add('step-hidden');
 
-      newPasswordInput.focus();
-    }, 600);
+        step3.classList.remove('step-hidden');
+        step3.classList.add('step-active');
+
+        newPasswordInput.focus();
+      } else {
+        groupOtp.classList.add('error');
+        const errSpan = document.getElementById('otpError');
+        if (errSpan) errSpan.textContent = data.message || 'Invalid OTP code.';
+      }
+    } catch (err) {
+      verifyOtpBtn.disabled = false;
+      verifyOtpBtn.innerHTML = '<span>Verify OTP</span>';
+      groupOtp.classList.add('error');
+    }
   });
 
   /* =============================================
@@ -369,7 +404,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* =============================================
      STEP 3 SUBMIT: RESET PASSWORD & SUCCESS MODAL
   ============================================= */
-  resetPasswordForm.addEventListener('submit', (e) => {
+  resetPasswordForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const newPass = newPasswordInput.value;
@@ -377,7 +412,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let valid = true;
 
-    if (!newPass || newPass.length < 6) {
+    if (!newPass || newPass.length < 8) {
       groupNewPassword.classList.add('error');
       newPasswordInput.focus();
       valid = false;
@@ -398,15 +433,30 @@ document.addEventListener('DOMContentLoaded', () => {
     resetPasswordBtn.disabled = true;
     resetPasswordBtn.innerHTML = '<span>Resetting Password...</span>';
 
-    setTimeout(() => {
+    try {
+      const res = await fetch('/api/auth/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ password: newPass, confirmPassword: confirmPass })
+      });
+      const data = await res.json();
+
       resetPasswordBtn.disabled = false;
       resetPasswordBtn.innerHTML = '<span>Reset Password</span>';
 
-      // Open Success Modal
-      if (successModal) {
-        successModal.classList.remove('hidden');
+      if (data.status === 'success') {
+        if (successModal) {
+          successModal.classList.remove('hidden');
+        }
+      } else {
+        alert(data.message || 'Failed to reset password.');
       }
-    }, 800);
+    } catch (err) {
+      resetPasswordBtn.disabled = false;
+      resetPasswordBtn.innerHTML = '<span>Reset Password</span>';
+      alert('Server connection error.');
+    }
   });
 
 });

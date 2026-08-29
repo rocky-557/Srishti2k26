@@ -221,6 +221,7 @@ async function sendWelcomeEmail({ name, email, memberId, cgname, depart }) {
       host: process.env.SMTP_HOST || 'smtp.gmail.com',
       port: parseInt(process.env.SMTP_PORT || '587'),
       secure: false,
+      family: 4,
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS
@@ -292,4 +293,160 @@ async function sendWelcomeEmail({ name, email, memberId, cgname, depart }) {
   }
 }
 
-module.exports = { signup, login, logout, sendWelcomeEmail };
+/**
+ * POST /api/auth/send-otp
+ * Generates and sends a 6-digit OTP to the user's email address.
+ */
+async function sendOtp(req, res) {
+  try {
+    const { emailOrPhone } = req.body;
+    if (!emailOrPhone) {
+      return res.json({ status: 'error', message: 'Please enter your registered email or phone number.' });
+    }
+
+    const val = emailOrPhone.trim().toLowerCase();
+    const user = await User.findOne({
+      $or: [{ email: val }, { mobile: val }]
+    });
+
+    if (!user) {
+      return res.json({ status: 'error', message: 'No registered account found with this email/mobile.' });
+    }
+
+    // Generate 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expires = Date.now() + 5 * 60 * 1000; // 5 minutes
+
+    req.session.otpData = {
+      email: user.email,
+      otp,
+      expires,
+      verified: false
+    };
+
+const dns = require('dns');
+if (dns.setDefaultResultOrder) {
+  dns.setDefaultResultOrder('ipv4first');
+}
+
+    // Log OTP to server console for testing/development
+    console.log(`\n==============================================`);
+    console.log(`🔑 SRiSHTi 2k26 OTP for ${user.email}: [ ${otp} ]`);
+    console.log(`==============================================\n`);
+
+    // Asynchronously attempt email dispatch (non-blocking)
+    try {
+      const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false,
+        auth: {
+          user: process.env.EMAIL_USER || 'atommailer1@gmail.com',
+          pass: process.env.EMAIL_PASS || 'dksg gljy slwt lgtj'
+        }
+      });
+
+      transporter.sendMail({
+        from: `"SRiSHTi 2k26" <${process.env.EMAIL_USER || 'atommailer1@gmail.com'}>`,
+        to: user.email,
+        subject: '🔑 Your SRiSHTi 2k26 Password Reset Verification Code',
+        html: `
+          <div style="font-family: Arial, sans-serif; background: #050810; color: #ffffff; padding: 30px; border-radius: 12px; max-width: 500px; margin: 0 auto; border: 1px solid rgba(201, 162, 39, 0.3);">
+            <h2 style="color: #f0c040; text-align: center;">SRiSHTi 2k26</h2>
+            <h4 style="text-align: center; color: #e0e0e0;">Password Reset Verification Code</h4>
+            <p style="color: #b0bec5; font-size: 14px;">Hello <strong>${user.name}</strong>,</p>
+            <p style="color: #b0bec5; font-size: 14px;">You requested a password reset for your SRiSHTi 2k26 account. Use the 6-digit code below to complete your password reset:</p>
+            <div style="background: rgba(201, 162, 39, 0.1); border: 2px dashed #f0c040; border-radius: 10px; padding: 18px; text-align: center; margin: 25px 0;">
+              <span style="font-size: 34px; font-weight: 800; letter-spacing: 8px; color: #5EFF7A; font-family: monospace;">${otp}</span>
+            </div>
+            <p style="color: #ff6b6b; font-size: 12px; text-align: center;">⚠️ This code is valid for 5 minutes. Do not share it with anyone.</p>
+          </div>
+        `
+      }).then(() => {
+        console.log(`✅ OTP email delivered to ${user.email}`);
+      }).catch(mailErr => {
+        console.warn(`⚠️ SMTP unreachable. OTP code logged to terminal: ${otp}`);
+      });
+    } catch (e) {
+      console.warn(`⚠️ SMTP init error:`, e.message);
+    }
+
+    req.session.save((err) => {
+      if (err) console.error('OTP session save error:', err);
+      return res.json({ status: 'success', message: `Verification code sent to ${user.email}.` });
+    });
+  } catch (err) {
+    console.error('Send OTP error:', err);
+    return res.json({ status: 'error', message: 'Failed to send OTP code. Please try again.' });
+  }
+}
+
+/**
+ * POST /api/auth/verify-otp
+ * Verifies the 6-digit OTP code entered by the user.
+ */
+async function verifyOtp(req, res) {
+  try {
+    const { otp } = req.body;
+    const otpData = req.session.otpData;
+
+    if (!otpData) {
+      return res.json({ status: 'error', message: 'No active OTP session found. Please request a new code.' });
+    }
+
+    if (Date.now() > otpData.expires) {
+      req.session.otpData = null;
+      return res.json({ status: 'error', message: 'OTP code has expired. Please request a new code.' });
+    }
+
+    if (otpData.otp !== String(otp).trim()) {
+      return res.json({ status: 'error', message: 'Incorrect 6-digit OTP code.' });
+    }
+
+    otpData.verified = true;
+    req.session.save((err) => {
+      if (err) console.error('Verify OTP session save error:', err);
+      return res.json({ status: 'success', message: 'OTP verified successfully.' });
+    });
+  } catch (err) {
+    console.error('Verify OTP error:', err);
+    return res.json({ status: 'error', message: 'Failed to verify OTP code.' });
+  }
+}
+
+/**
+ * POST /api/auth/reset-password
+ * Resets user password after successful OTP verification.
+ */
+async function resetPassword(req, res) {
+  try {
+    const { password, confirmPassword } = req.body;
+    const otpData = req.session.otpData;
+
+    if (!otpData || !otpData.verified) {
+      return res.json({ status: 'error', message: 'Unauthorized. Please verify your OTP code first.' });
+    }
+
+    if (!password || password.length < 8) {
+      return res.json({ status: 'error', message: 'Password must be at least 8 characters long.' });
+    }
+
+    if (confirmPassword && password !== confirmPassword) {
+      return res.json({ status: 'error', message: 'Passwords do not match.' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+    await User.updateOne({ email: otpData.email }, { password: hashedPassword });
+
+    req.session.otpData = null;
+    req.session.save((err) => {
+      if (err) console.error('Reset password session save error:', err);
+      return res.json({ status: 'success', message: 'Password reset successfully! You can now log in.' });
+    });
+  } catch (err) {
+    console.error('Reset password error:', err);
+    return res.json({ status: 'error', message: 'Failed to reset password.' });
+  }
+}
+
+module.exports = { signup, login, logout, sendWelcomeEmail, sendOtp, verifyOtp, resetPassword };

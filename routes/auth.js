@@ -2,13 +2,22 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const Registration = require('../models/Registration');
-const { signup, login, logout } = require('../controllers/authController');
+const { signup, login, logout, sendOtp, verifyOtp, resetPassword } = require('../controllers/authController');
 
 // POST /api/auth/signup — user registration
 router.post('/signup', signup);
 
 // POST /api/auth/login — user login
 router.post('/login', login);
+
+// POST /api/auth/send-otp — generate & email 6-digit OTP
+router.post('/send-otp', sendOtp);
+
+// POST /api/auth/verify-otp — verify 6-digit OTP
+router.post('/verify-otp', verifyOtp);
+
+// POST /api/auth/reset-password — reset user password
+router.post('/reset-password', resetPassword);
 
 // GET /api/auth/logout & POST /api/auth/logout — user logout
 router.get('/logout', logout);
