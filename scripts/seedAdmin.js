@@ -9,6 +9,11 @@
  * 
  * Usage: node scripts/seedAdmin.js
  */
+const crypto = require('crypto');
+if (!globalThis.crypto) {
+  globalThis.crypto = crypto;
+}
+
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
 
 const mongoose = require('mongoose');

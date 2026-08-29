@@ -5,6 +5,11 @@
  */
 require('dotenv').config();
 
+const crypto = require('crypto');
+if (!globalThis.crypto) {
+  globalThis.crypto = crypto;
+}
+
 const dns = require('dns');
 if (dns.setDefaultResultOrder) {
   dns.setDefaultResultOrder('ipv4first');
