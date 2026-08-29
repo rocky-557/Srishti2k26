@@ -1,0 +1,193 @@
+/* @import url("https://fonts.googleapis.com/css2?family=Arimo:wght@600&family=Comic+Neue&family=Imprima&family=Poppins&family=Roboto&family=Sora:wght@800&family=Yatra+One&display=swap"); */
+@import url("https://fonts.googleapis.com/css2?family=Arimo:wght@600&family=Comic+Neue&family=Imprima&family=Poppins&family=Roboto&family=Rubik:wght@300&family=Sora:wght@800&family=Yatra+One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nova+Round&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+@font-face {
+  font-family: production;
+  src: url("../assets/fonts/production.ttf");
+}
+
+@font-face {
+  font-family: Aquatico;
+  src: url("../assets/fonts/Aquatico-Regular.otf");
+}
+
+@font-face {
+  font-family: Flare;
+  src: url("../assets/fonts/Flare-Regular.otf");
+}
+
+@font-face {
+  font-family: AquireBold;
+  src: url("../assets/fonts/AquireBold.otf");
+}
+
+@font-face {
+  font-family: MonumentExtended;
+  src: url("../assets/fonts/MonumentExtended-Regular.otf");
+}
+
+@font-face {
+  font-family: Agency FB;
+  src: url("../assets/fonts/AgencyFB-Bold.ttf");
+}
+
+@font-face {
+  font-family: lemonmilk;
+  src: url("../assets/fonts/LemonMilkRegular.ttf");
+}
+
+@font-face {
+  font-family: recoleta;
+  src: url("../assets/fonts/Recoleta-Regular.otf");
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #141227;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #2e295b;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #2e295b;
+}
+
+.logoheader {
+  background: rgb(234, 105, 45);
+  background: rgba(0, 0, 0, 0.5);
+  /* 50% opaque black */
+  ;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid black;
+}
+
+.logoheader img {
+  width: 15rem;
+}
+
+.header-assoc {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  flex-wrap: wrap;
+}
+
+.header-title {
+  padding-top: 1.5rem;
+  background: white;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 600;
+  letter-spacing: 0.25rem;
+  font-family: "Rye", serif;
+  font-size: 3rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  text-align: center;
+}
+
+.wheader-title {
+  padding-top: 1.5rem;
+  background: white;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 600;
+  letter-spacing: 0.15rem;
+  font-family: AquireBold;
+  font-size: 1.5rem;
+  font-style: normal;
+  line-height: normal;
+  text-align: center;
+  display: none;
+}
+
+.head {
+  color: #141227 !important;
+}
+
+.header-title span {
+  font-family: "Agency FB";
+  font-weight: 700;
+  font-size: 3rem;
+}
+
+
+@media (min-width: 320px) and (max-width: 425px) {
+  .logoheader img {
+    width: 8rem;
+  }
+
+  .header-title {
+    padding-top: 0.5rem;
+    font-size: 2rem;
+  }
+
+  .wheader-title {
+    padding-top: 0.8rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (min-width: 425px) and (max-width: 600px) {
+  .logoheader img {
+    width: 10rem;
+  }
+
+  .header-title {
+    padding-top: 0.5rem;
+    font-size: 2rem;
+  }
+
+  .wheader-title {
+    padding-top: 0.8rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 768px) {
+  .logoheader img {
+    width: 12rem;
+  }
+
+  .header-title {
+    padding-top: .5rem;
+    font-size: 3rem;
+  }
+
+  .wheader-title {
+    padding-top: 1rem;
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 992px) {
+  .logoheader img {
+    width: 15rem;
+  }
+
+  .header-title {
+    padding-top: .5rem;
+    font-size: 4rem;
+  }
+
+  .wheader-title {
+    padding-top: 1.5rem;
+    font-size: 1.5rem;
+  }
+}

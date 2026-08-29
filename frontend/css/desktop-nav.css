@@ -1,0 +1,488 @@
+/* ============================================================
+   DESKTOP NAVBAR — Hulk Gamma-Tech Theme / Srishti Structure
+   Premium futuristic interface inspired by Bruce Banner's lab
+   and Hulk's gamma energy. Visible only above 992px.
+   ============================================================ */
+
+/* --- Gamma Energy Keyframes ---------------------------------- */
+@keyframes hulkGammaPulse {
+  0%   { opacity: 0.35; }
+  50%  { opacity: 0.65; }
+  100% { opacity: 0.35; }
+}
+
+@keyframes hulkEnergyLine {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes hulkRegGradient {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes hulkActivePulse {
+  0%   { box-shadow: 0 0 6px rgba(94, 255, 122, 0.4); }
+  50%  { box-shadow: 0 0 14px rgba(94, 255, 122, 0.6); }
+  100% { box-shadow: 0 0 6px rgba(94, 255, 122, 0.4); }
+}
+
+@keyframes hulkUnderlineGlow {
+  0%   { filter: brightness(1) drop-shadow(0 0 4px rgba(94, 255, 122, 0.5)); }
+  50%  { filter: brightness(1.3) drop-shadow(0 0 8px rgba(94, 255, 122, 0.7)); }
+  100% { filter: brightness(1) drop-shadow(0 0 4px rgba(94, 255, 122, 0.5)); }
+}
+
+/* --- Desktop Navbar Container -------------------------------- */
+.avng-desktop-nav {
+  display: none; /* Hidden by default (mobile-first) */
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 95%;
+  max-width: 1400px;
+  height: 80px;
+  min-height: 80px;
+  box-sizing: border-box;
+  z-index: 10000;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+  border-radius: 22px;
+
+  /* Dark metallic glass panel */
+  background: rgba(8, 12, 10, 0.82);
+  backdrop-filter: blur(20px) saturate(1.3);
+  -webkit-backdrop-filter: blur(20px) saturate(1.3);
+
+  /* Subtle green metallic border */
+  border: 1px solid rgba(120, 255, 120, 0.18);
+
+  /* Soft green shadow */
+  box-shadow:
+    0 4px 30px rgba(94, 255, 122, 0.06),
+    0 1px 0 rgba(56, 217, 108, 0.08) inset,
+    0 0 60px rgba(94, 255, 122, 0.03);
+
+  /* Gamma energy accent line at bottom */
+  border-bottom: 2px solid transparent;
+  border-image: linear-gradient(
+    90deg,
+    rgba(94, 255, 122, 0.0) 0%,
+    rgba(56, 217, 108, 0.5) 15%,
+    rgba(94, 255, 122, 0.7) 35%,
+    rgba(156, 255, 77, 0.6) 50%,
+    rgba(94, 255, 122, 0.7) 65%,
+    rgba(56, 217, 108, 0.5) 85%,
+    rgba(94, 255, 122, 0.0) 100%
+  ) 1;
+
+  /* Smooth transitions for scroll effect */
+  transition: background 0.35s ease,
+              padding 0.35s ease,
+              height 0.35s ease,
+              min-height 0.35s ease,
+              box-shadow 0.35s ease;
+}
+
+/* Gamma energy moving highlight — top inner edge */
+.avng-desktop-nav::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(94, 255, 122, 0.0) 20%,
+    rgba(94, 255, 122, 0.3) 40%,
+    rgba(156, 255, 77, 0.5) 50%,
+    rgba(94, 255, 122, 0.3) 60%,
+    rgba(94, 255, 122, 0.0) 80%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: hulkEnergyLine 6s linear infinite;
+  border-radius: 22px 22px 0 0;
+  pointer-events: none;
+}
+
+/* Subtle ambient gamma glow — background layer */
+.avng-desktop-nav::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  background: radial-gradient(
+    ellipse at 50% 100%,
+    rgba(94, 255, 122, 0.04) 0%,
+    transparent 70%
+  );
+  animation: hulkGammaPulse 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Show on desktop */
+@media (min-width: 993px) {
+  .avng-desktop-nav {
+    display: flex;
+  }
+}
+
+/* --- Scroll Effect ------------------------------------------- */
+.avng-desktop-nav.avng-nav-scrolled {
+  background: rgba(7, 10, 8, 0.92);
+  height: 66px;
+  min-height: 66px;
+  padding: 0 30px;
+  box-shadow:
+    0 8px 40px rgba(94, 255, 122, 0.08),
+    0 1px 0 rgba(56, 217, 108, 0.12) inset;
+}
+
+.avng-desktop-nav.avng-nav-scrolled::after {
+  animation: hulkGammaPulse 6s ease-in-out infinite;
+  opacity: 0.6;
+}
+
+/* --- LEFT: Logos --------------------------------------------- */
+.avng-desktop-nav__logos {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+  height: 100%;
+}
+
+.avng-desktop-nav__logos a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  height: 100%;
+}
+
+.avng-desktop-nav__logos img {
+  height: 40px;
+  max-height: 40px;
+  width: auto;
+  object-fit: contain;
+  transition: transform 0.3s ease, filter 0.3s ease;
+  filter: brightness(1) drop-shadow(0 0 0px transparent);
+}
+
+/* Slightly larger sizing for 100 YRS logo */
+.avng-desktop-nav__logos img[src*="100 YRS"] {
+  height: 48px;
+  max-height: 48px;
+}
+
+.avng-desktop-nav__logos img:hover {
+  transform: scale(1.08);
+  filter: brightness(1.1) drop-shadow(0 0 10px rgba(94, 255, 122, 0.4));
+}
+
+/* --- CENTER: Nav Links --------------------------------------- */
+.avng-desktop-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-wrap: nowrap;
+}
+
+.avng-desktop-nav__links li {
+  position: relative;
+}
+
+.avng-desktop-nav__links a {
+  color: rgba(200, 210, 200, 0.72);
+  text-decoration: none;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  padding: 4px 0;
+  position: relative;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+  white-space: nowrap;
+}
+
+/* Underline animation pseudo-element — gamma energy bar */
+.avng-desktop-nav__links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #38D96C, #5EFF7A, #9CFF4D, #5EFF7A, #38D96C);
+  background-size: 200% 100%;
+  border-radius: 2px;
+  transition: width 0.35s cubic-bezier(0.25, 0.8, 0.25, 1),
+              left 0.35s cubic-bezier(0.25, 0.8, 0.25, 1),
+              box-shadow 0.35s ease;
+  box-shadow: 0 0 0px transparent;
+}
+
+/* Hover state */
+.avng-desktop-nav__links a:hover {
+  color: #5EFF7A;
+  text-shadow: 0 0 12px rgba(94, 255, 122, 0.35);
+}
+
+.avng-desktop-nav__links a:hover::after {
+  width: 100%;
+  left: 0;
+  box-shadow: 0 0 8px rgba(94, 255, 122, 0.35),
+              0 0 16px rgba(56, 217, 108, 0.15);
+}
+
+/* --- Active page state --------------------------------------- */
+.avng-desktop-nav__links a.avng-nav-active {
+  color: #5EFF7A;
+  text-shadow:
+    0 0 10px rgba(94, 255, 122, 0.45),
+    0 0 25px rgba(56, 217, 108, 0.15);
+}
+
+.avng-desktop-nav__links a.avng-nav-active::after {
+  width: 100%;
+  left: 0;
+  background: linear-gradient(90deg, #38D96C, #5EFF7A, #9CFF4D, #5EFF7A, #38D96C);
+  background-size: 200% 100%;
+  animation:
+    hulkEnergyLine 3s linear infinite,
+    hulkUnderlineGlow 2.5s ease-in-out infinite;
+  box-shadow:
+    0 0 8px rgba(94, 255, 122, 0.5),
+    0 0 20px rgba(56, 217, 108, 0.2),
+    0 0 35px rgba(94, 255, 122, 0.08);
+}
+
+/* --- RIGHT: Register Button — Hulk Gamma Edition ------------ */
+.avng-desktop-nav__register {
+  flex-shrink: 0;
+}
+
+.avng-desktop-nav__register a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 24px;
+  border-radius: 30px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #fff;
+  text-decoration: none;
+
+  /* Dark metallic green gradient */
+  background: linear-gradient(135deg, #1B5E20, #2E7D32, #43A047, #2E7D32, #1B5E20);
+  background-size: 300% 300%;
+  animation: hulkRegGradient 5s ease infinite;
+
+  border: 1px solid rgba(94, 255, 122, 0.2);
+  box-shadow:
+    0 0 16px rgba(94, 255, 122, 0.15),
+    0 0 32px rgba(56, 217, 108, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: transform 0.3s ease,
+              box-shadow 0.3s ease,
+              filter 0.3s ease,
+              border-color 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Gamma reactor glow inner ring */
+.avng-desktop-nav__register a::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120%;
+  height: 120%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    circle,
+    rgba(94, 255, 122, 0.12) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+/* Metallic sheen sweep */
+.avng-desktop-nav__register a::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.12),
+    transparent
+  );
+  transition: left 0.6s ease;
+  pointer-events: none;
+}
+
+.avng-desktop-nav__register a:hover {
+  transform: translateY(-3px);
+  border-color: rgba(94, 255, 122, 0.35);
+  box-shadow:
+    0 0 24px rgba(94, 255, 122, 0.3),
+    0 0 48px rgba(56, 217, 108, 0.15),
+    0 8px 24px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  filter: brightness(1.12);
+}
+
+.avng-desktop-nav__register a:hover::before {
+  opacity: 1;
+}
+
+.avng-desktop-nav__register a:hover::after {
+  left: 120%;
+}
+
+.avng-desktop-nav__register a:active {
+  transform: translateY(-1px);
+  box-shadow:
+    0 0 12px rgba(94, 255, 122, 0.25),
+    0 0 24px rgba(56, 217, 108, 0.12),
+    0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* --- Responsive Fine-Tuning ---------------------------------- */
+
+/* Large desktop: comfortable spacing */
+@media (min-width: 1400px) {
+  .avng-desktop-nav__links {
+    gap: 38px;
+  }
+  .avng-desktop-nav__logos img {
+    height: 46px;
+  }
+}
+
+/* Laptop range: tighten spacing */
+@media (min-width: 993px) and (max-width: 1200px) {
+  .avng-desktop-nav {
+    padding: 14px 20px;
+  }
+  .avng-desktop-nav__links {
+    gap: 20px;
+  }
+  .avng-desktop-nav__links a {
+    font-size: 0.8rem;
+  }
+  .avng-desktop-nav__logos img {
+    height: 36px;
+  }
+  .avng-desktop-nav__logos {
+    gap: 10px;
+  }
+  .avng-desktop-nav__register a {
+    padding: 8px 18px;
+    font-size: 0.82rem;
+  }
+}
+
+/* Tablet/small laptop: slightly tighter */
+@media (min-width: 993px) and (max-width: 1100px) {
+  .avng-desktop-nav__links {
+    gap: 16px;
+  }
+  .avng-desktop-nav__links a {
+    font-size: 0.76rem;
+  }
+}
+
+/* Hide desktop nav on mobile/tablet */
+@media (max-width: 992px) {
+  .avng-desktop-nav {
+    display: none !important;
+  }
+}
+
+/* --- Mobile Top Logo Bar (visible ≤ 992px) ------------------- */
+.avng-mobile-top-bar {
+  display: none;
+}
+
+@media (max-width: 992px) {
+  .avng-mobile-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(94%, 540px);
+    padding: 8px 16px;
+    background: rgba(8, 14, 22, 0.85);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(0, 240, 255, 0.25);
+    border-radius: 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7), 0 0 15px rgba(0, 240, 255, 0.1);
+    z-index: 100;
+    box-sizing: border-box;
+  }
+
+  .avng-mobile-top-bar a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+  }
+
+  .avng-mobile-top-bar a:active {
+    transform: scale(1.1);
+  }
+
+  .avng-mobile-top-bar img {
+    height: 28px;
+    max-height: 28px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+  }
+
+  .avng-mobile-top-bar img[src*="100 YRS"] {
+    height: 34px;
+    max-height: 34px;
+  }
+}
+
+@media (max-width: 480px) {
+  .avng-mobile-top-bar {
+    top: 10px;
+    padding: 6px 10px;
+    width: 95%;
+  }
+
+  .avng-mobile-top-bar img {
+    height: 24px;
+    max-height: 24px;
+  }
+
+  .avng-mobile-top-bar img[src*="100 YRS"] {
+    height: 30px;
+    max-height: 30px;
+  }
+}

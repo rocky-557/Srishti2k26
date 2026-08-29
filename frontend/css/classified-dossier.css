@@ -1,0 +1,1469 @@
+/* ==========================================================================
+   CLASSIFIED AVENGERS EVENT CARDS & DOSSIER EXPERIENTIAL SYSTEM
+   Inspired by S.H.I.E.L.D. Command, Stark Industries HUD, & Classified Files
+   ========================================================================== */
+
+:root {
+    --avng-gold: #f5c518;
+    --avng-red: #e62429;
+    --avng-blue: #00f0ff;
+    --avng-dark-bg: #0b0e14;
+    --avng-panel-bg: #121824;
+    --avng-panel-border: rgba(0, 240, 255, 0.25);
+    --avng-card-border-glow: rgba(0, 240, 255, 0.4);
+    --avng-text-bright: #e6f7ff;
+    --avng-text-muted: #8a99ad;
+}
+
+/* --------------------------------------------------------------------------
+   2-COLUMN GRID ADJUSTMENTS
+   -------------------------------------------------------------------------- */
+.avng-card-col {
+    margin-bottom: 2.5rem;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+/* --------------------------------------------------------------------------
+   CLASSIFIED EVENT CARD (ANGULAR, METALLIC AVENGERS PALETTE)
+   -------------------------------------------------------------------------- */
+.avng-card {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    background: linear-gradient(180deg, #10141C 0%, #161F2C 100%);
+    border: 1px solid rgba(130, 90, 255, 0.25);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.85), 
+                0 0 15px rgba(130, 90, 255, 0.18);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    perspective: 1000px;
+    display: flex;
+    flex-direction: column;
+}
+
+.avng-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, rgba(130, 90, 255, 0.8), rgba(94, 255, 122, 0.8), rgba(130, 90, 255, 0.8));
+    background-size: 200% 100%;
+    animation: avngStripFlow 6s linear infinite;
+    z-index: 10;
+}
+
+@keyframes avngStripFlow {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 200% 0%; }
+}
+
+.avng-card:hover {
+    transform: translateY(-8px) scale(1.01);
+    border-color: rgba(130, 90, 255, 0.6);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.9), 
+                0 0 30px rgba(130, 90, 255, 0.35),
+                inset 0 0 20px rgba(130, 90, 255, 0.12);
+}
+
+/* Futuristic Corner Accents (Subtle Hulk-Green Accents) */
+.avng-card-corner {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-color: rgba(130, 90, 255, 0.6);
+    border-style: solid;
+    pointer-events: none;
+    z-index: 5;
+    transition: all 0.3s ease;
+}
+.avng-corner-tl { top: 6px; left: 6px; border-width: 2px 0 0 2px; }
+.avng-corner-tr { top: 6px; right: 6px; border-width: 2px 2px 0 0; }
+.avng-corner-bl { bottom: 6px; left: 6px; border-width: 0 0 2px 2px; }
+.avng-corner-br { bottom: 6px; right: 6px; border-width: 0 2px 2px 0; }
+
+.avng-card:hover .avng-card-corner {
+    width: 16px;
+    height: 16px;
+    border-color: #5eff7a;
+    box-shadow: 0 0 10px rgba(94, 255, 122, 0.8);
+}
+
+/* --------------------------------------------------------------------------
+   NEW CARD HIERARCHY: TITLE & SMALL CATEGORY LABEL ATTACHED TO IMAGE TOP-LEFT
+   -------------------------------------------------------------------------- */
+.avng-card-title {
+    font-family: 'Luckiest Guy', cursive, sans-serif;
+    font-size: 1.55rem;
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 22px 18px 18px 18px;
+    margin: 0;
+    text-shadow: 0 0 14px rgba(130, 90, 255, 0.4), 0 2px 4px rgba(0, 0, 0, 0.8);
+    line-height: 1.25;
+}
+
+/* --------------------------------------------------------------------------
+   PREMIUM CATEGORY BADGE (ATTACHED DIRECTLY TO IMAGE TOP-LEFT CORNER)
+   -------------------------------------------------------------------------- */
+.avng-card-badge,
+.avng-card-category {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 6;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 14px;
+    min-height: 26px;
+    background: rgba(16, 22, 30, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(94, 255, 122, 0.45);
+    border-radius: 4px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #ffffff;
+    text-transform: uppercase;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6), 0 0 10px rgba(94, 255, 122, 0.2);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    pointer-events: none;
+    line-height: 1;
+}
+
+.avng-card:hover .avng-card-badge,
+.avng-card:hover .avng-card-category {
+    border-color: #5eff7a;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7), 0 0 16px rgba(94, 255, 122, 0.5);
+    transform: scale(1.03);
+}
+
+.avng-shield-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--avng-text-bright);
+    font-weight: 700;
+}
+
+.avng-shield-icon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 4px rgba(94, 255, 122, 0.8));
+}
+
+/* --------------------------------------------------------------------------
+   IMAGE AREA & INTERACTIVE CURSOR SPOTLIGHT (DEFAULT: FULL COLOR -> HOVER: B&W OUTSIDE SPOTLIGHT CIRCLE)
+   -------------------------------------------------------------------------- */
+.avng-card-img-wrap {
+    position: relative;
+    width: 100%;
+    height: 270px;
+    overflow: hidden;
+    background: #000;
+    cursor: crosshair;
+}
+
+/* Base Image Layer - Default: FULL COLOR. On Hover Spotlight Active: BLACK & WHITE */
+.avng-card-img-base {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(0%) brightness(1) contrast(1);
+    transition: filter 350ms cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                transform 0.5s ease;
+    will-change: filter, transform;
+}
+
+.avng-card:hover .avng-card-img-base {
+    transform: scale(1.04);
+}
+
+.avng-card-img-wrap.spotlight-active .avng-card-img-base {
+    filter: grayscale(100%) brightness(0.65) contrast(1.15);
+}
+
+/* Full-color Overlay Layer (Masked by Mouse Spotlight Circle) */
+.avng-card-img-color {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(1.05) contrast(1.1);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                transform 0.5s ease;
+    will-change: opacity, transform, -webkit-mask-image, mask-image;
+
+    /* Feathered circular mask (~150px radius) centered at mouse cursor */
+    -webkit-mask-image: radial-gradient(
+        circle 150px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(0, 0, 0, 1) 0%,
+        rgba(0, 0, 0, 0.85) 45%,
+        rgba(0, 0, 0, 0) 100%
+    );
+    mask-image: radial-gradient(
+        circle 150px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(0, 0, 0, 1) 0%,
+        rgba(0, 0, 0, 0.85) 45%,
+        rgba(0, 0, 0, 0) 100%
+    );
+}
+
+.avng-card-img-wrap.spotlight-active .avng-card-img-color {
+    opacity: 1;
+}
+
+.avng-card:hover .avng-card-img-color {
+    transform: scale(1.04);
+}
+
+/* Animated HUD Scan Line across Image (Disabled as requested) */
+.avng-scan-line {
+    display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   CARD CONTENT AREA
+   -------------------------------------------------------------------------- */
+.avng-card-body {
+    padding: 20px 22px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: flex-start;
+    background: linear-gradient(180deg, #10141C 0%, #0c1018 100%);
+    position: relative;
+    z-index: 4;
+}
+
+.avng-card-desc {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.88rem;
+    font-size: 0.94rem;
+    color: #b0c0d6;
+    line-height: 1.55;
+    margin-bottom: 12px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Information Panel (#181F29 Metallic Panel) */
+.avng-card-meta {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px 14px;
+    padding: 14px 16px;
+    background: #181F29;
+    border: 1px solid rgba(130, 90, 255, 0.22);
+    border-radius: 4px;
+    margin-bottom: 20px;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4);
+}
+
+.avng-meta-item {
+    font-family: 'Space Mono', monospace;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
+    color: #9cb0ce;
+    font-weight: 600;
+}
+
+.avng-meta-icon {
+    color: #5eff7a;
+    font-size: 0.98rem;
+}
+
+.avng-meta-val {
+    color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   CARD-FACE INFORMATION BOX (Domain | Time | Venue | Team)
+   -------------------------------------------------------------------------- */
+.avng-card-info-box {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    width: 100%;
+    margin: 12px 0;
+    padding: 10px 12px;
+    background: rgba(24, 31, 41, 0.85);
+    border: 1px solid rgba(94, 255, 122, 0.18);
+    border-radius: 5px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3), inset 0 0 8px rgba(0, 0, 0, 0.15);
+}
+
+.avng-card-info-cell {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    color: #8a99ad;
+    letter-spacing: 0.8px;
+    line-height: 1.35;
+    text-transform: uppercase;
+}
+
+.avng-card-info-cell strong {
+    color: #ffffff;
+    display: block;
+    margin-top: 1px;
+}
+
+/* --------------------------------------------------------------------------
+   SPONSORED BY SECTION (LEFT-ALIGNED HEADING, CENTERED LOGO, COMPACT SPACING)
+   -------------------------------------------------------------------------- */
+.avng-card-sponsor-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    margin-top: 0;
+    margin-bottom: 14px;
+    box-shadow: none;
+}
+
+.avng-sponsor-heading {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #5eff7a;
+    text-transform: uppercase;
+    text-align: left;
+    align-self: flex-start;
+    width: 100%;
+    margin: 0 0 8px 0;
+    text-shadow: 0 0 8px rgba(94, 255, 122, 0.4);
+}
+
+.avng-sponsor-logos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.avng-sponsor-logo {
+    max-width: 135px;
+    max-height: 55px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    object-position: center;
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), filter 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
+}
+
+.avng-sponsor-logo:hover {
+    transform: scale(1.03);
+    filter: drop-shadow(0 0 10px rgba(94, 255, 122, 0.4));
+}
+
+/* VIEW MORE BUTTON (Dark Metallic Purple with Hulk Green Hover Glow) */
+.btn-mission-dossier {
+    position: relative;
+    width: 100%;
+    margin-top: auto;
+    padding: 13px 20px;
+    background: linear-gradient(135deg, rgba(45, 27, 78, 0.85) 0%, rgba(24, 18, 43, 0.95) 100%);
+    border: 1px solid rgba(130, 90, 255, 0.5);
+    color: #ffffff;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+    box-shadow: 0 0 12px rgba(130, 90, 255, 0.2);
+}
+
+.btn-mission-dossier::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s ease;
+}
+
+.btn-mission-dossier:hover::before {
+    left: 100%;
+}
+
+.btn-mission-dossier:hover {
+    background: linear-gradient(135deg, rgba(55, 32, 98, 0.95) 0%, rgba(32, 22, 58, 0.98) 100%);
+    color: #ffffff;
+    border-color: #5eff7a;
+    box-shadow: 0 0 22px rgba(94, 255, 122, 0.5);
+}
+
+.btn-mission-dossier:hover .avng-btn-arrow {
+    transform: translateX(5px);
+}
+
+.avng-btn-arrow {
+    transition: transform 0.3s ease;
+    font-size: 1rem;
+}
+
+/* --------------------------------------------------------------------------
+   3D CARD FLIP CONTAINER & INNER
+   -------------------------------------------------------------------------- */
+.avng-card-flip-wrap {
+    perspective: 1000px;
+}
+
+.avng-card-inner {
+    position: relative;
+    width: 100%;
+    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-style: preserve-3d;
+}
+
+.avng-card-inner.is-flipped {
+    transform: rotateY(180deg);
+}
+
+.avng-card-front,
+.avng-card-back {
+    width: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.avng-card-back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: linear-gradient(135deg, #09120c 0%, #050a06 100%);
+    border: 2px solid #5eff7a;
+    transform: rotateY(180deg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(94, 255, 122, 0.35);
+    z-index: 10;
+}
+
+.avng-classified-stamp {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #5eff7a;
+    border: 4px solid #5eff7a;
+    padding: 10px 24px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    transform: rotate(-12deg);
+    box-shadow: 0 0 15px rgba(94, 255, 122, 0.5);
+    margin-bottom: 20px;
+}
+
+/* --------------------------------------------------------------------------
+   CINEMATIC DOSSIER MODAL WINDOW (HULK GREEN ENGINE)
+   -------------------------------------------------------------------------- */
+.avng-dossier-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(4, 7, 12, 0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 99999 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 350ms cubic-bezier(0.22, 1, 0.36, 1), 
+                visibility 350ms cubic-bezier(0.22, 1, 0.36, 1);
+    overflow-y: auto;
+}
+
+.avng-dossier-overlay.is-active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.avng-dossier-panel {
+    position: relative;
+    width: 100%;
+    max-width: 860px;
+    max-height: 90vh;
+    background: #09120c;
+    border: 2px solid rgba(94, 255, 122, 0.4);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 
+                0 0 40px rgba(94, 255, 122, 0.25),
+                inset 0 0 30px rgba(0, 0, 0, 0.8);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: scale(0.92) translateY(20px);
+    transition: transform 350ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.avng-dossier-overlay.is-active .avng-dossier-panel {
+    transform: scale(1) translateY(0);
+}
+
+/* Grid Pattern Overlay inside Modal */
+.avng-dossier-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(94, 255, 122, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(94, 255, 122, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Modal Header Bar */
+.avng-dossier-header {
+    position: relative;
+    z-index: 5;
+    background: linear-gradient(90deg, #061009 0%, #102317 100%);
+    padding: 16px 24px;
+    border-bottom: 2px solid rgba(94, 255, 122, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.avng-dossier-header-title {
+    font-family: 'Luckiest Guy', cursive, sans-serif;
+    letter-spacing: 2px;
+    font-weight: 400;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Modal Resource Person / Speaker Card */
+.avng-dossier-speaker-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-left: 3px solid #f2b705;
+    border-radius: 6px;
+    padding: 12px 18px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.avng-speaker-name {
+    font-family: 'Orbitron', 'Bebas Neue', Impact, sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #ffffff;
+    margin: 0 0 4px 0;
+}
+
+.avng-speaker-designation {
+    font-size: 0.88rem;
+    color: #00f0ff;
+    margin: 0 0 2px 0;
+}
+
+.avng-speaker-company {
+    font-size: 0.84rem;
+    color: #b0c0d6;
+    margin: 0;
+}
+
+.avng-dossier-close-btn {
+    background: rgba(230, 36, 41, 0.15);
+    border: 1px solid #e62429;
+    color: #ff4d4d;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 6px 14px;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    border-radius: 2px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.avng-dossier-close-btn:hover {
+    background: #e62429;
+    color: #fff;
+    box-shadow: 0 0 15px rgba(230, 36, 41, 0.8);
+}
+
+/* Modal Body Content Container */
+.avng-dossier-body {
+    position: relative;
+    z-index: 5;
+    padding: 30px;
+    overflow-y: auto;
+    color: #d1e0f0;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.avng-dossier-body::-webkit-scrollbar {
+    width: 8px;
+}
+.avng-dossier-body::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.4);
+}
+.avng-dossier-body::-webkit-scrollbar-thumb {
+    background: #5eff7a;
+    border-radius: 2px;
+}
+
+/* Document Inner Header */
+.avng-doc-hero {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 20px;
+    border-bottom: 1px dashed rgba(94, 255, 122, 0.25);
+    margin-bottom: 24px;
+}
+
+.avng-doc-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #5eff7a;
+    text-shadow: 0 0 15px rgba(94, 255, 122, 0.4);
+    margin: 0;
+}
+
+.avng-doc-code {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.85rem;
+    color: #38d96c;
+    letter-spacing: 2px;
+}
+
+/* Rules & Accordion Overrides inside Dossier */
+.avng-dossier-body .accordion-text {
+    background: rgba(94, 255, 122, 0.08) !important;
+    border: 1px solid rgba(94, 255, 122, 0.2) !important;
+    color: #fff !important;
+    font-family: 'Orbitron', sans-serif !important;
+    letter-spacing: 1.5px !important;
+    padding: 12px 18px !important;
+    margin-top: 15px !important;
+    border-radius: 2px !important;
+    transition: background 0.3s ease !important;
+}
+
+.avng-dossier-body .accordion-text:hover {
+    background: rgba(94, 255, 122, 0.2) !important;
+}
+
+.avng-dossier-body .ruleslist .rule-item {
+    margin-bottom: 10px;
+    padding-left: 5px;
+    border-left: 2px solid #5eff7a;
+}
+
+/* Lock Body Scroll when Modal Open */
+body.avng-modal-open {
+    overflow: hidden !important;
+    touch-action: none !important;
+}
+
+/* ==========================================================================
+   SPACING & RHYTHM ENHANCEMENT (ISSUE 3)
+   Hero Banner -> 90px -> Event Cards Grid -> 120px -> Next Section
+   ========================================================================== */
+.avng-hero-banner {
+    margin-bottom: 90px !important;
+}
+
+#workshop #card-container,
+#paperpresentation #card-container,
+#flagship #card-container,
+#card-container {
+    max-width: 1140px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+#workshop,
+#paperpresentation,
+#flagship {
+    margin-bottom: 120px !important;
+}
+
+/* ==========================================================================
+   MODAL & NAVBAR INTERACTION ENGINE (ISSUE 3)
+   ========================================================================== */
+/* Synchronized Navbar & Modal Transition (350ms, cubic-bezier(0.22, 1, 0.36, 1)) */
+.avng-desktop-nav,
+header,
+.ave-nav {
+    transition: transform 350ms cubic-bezier(0.22, 1, 0.36, 1), 
+                opacity 350ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+body.avng-modal-open .avng-desktop-nav,
+body.avng-modal-open header,
+body.avng-modal-open .ave-nav {
+    transform: translateY(-120%) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* Modal Window Fallback Transition Synchronization */
+.modal-window {
+    transition: opacity 350ms cubic-bezier(0.22, 1, 0.36, 1), 
+                visibility 350ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+/* Ensure Dossier Modal & Fallback Modals occupy Highest Z-Index Layer */
+.avng-dossier-overlay,
+.modal-window {
+    z-index: 99999 !important;
+}
+
+.avng-dossier-close-btn,
+.modal-close {
+    z-index: 100000 !important;
+}
+
+/* --------------------------------------------------------------------------
+   RESPONSIVE LAYOUT BREAKPOINTS
+   -------------------------------------------------------------------------- */
+@media (max-width: 991px) {
+    .avng-card {
+        max-width: 100%;
+    }
+    .avng-card-img-wrap {
+        height: 240px;
+    }
+}
+
+@media (max-width: 576px) {
+    .avng-card-header {
+        font-size: 0.65rem;
+        padding: 8px 12px;
+    }
+    .avng-card-img-wrap {
+        height: 200px;
+    }
+    .avng-card-title {
+        font-size: 1.1rem;
+    }
+    .avng-card-meta {
+        grid-template-columns: 1fr;
+    }
+    .avng-dossier-panel {
+        max-height: 95vh;
+    }
+    .avng-dossier-body {
+        padding: 18px;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   MOBILE RESPONSIVE: SINGLE-COLUMN CARD LAYOUT (≤768px)
+   Forces one card per row for readability on phones and small tablets.
+   Desktop and tablet (>768px) layouts are completely unaffected.
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+    /* Force single-column layout by overriding Bootstrap col-md-6 */
+    .avng-card-col {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        margin-bottom: 20px;
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+    }
+
+    /* Let cards fill the full column width */
+    .avng-card {
+        max-width: 100%;
+        width: 100%;
+        height: auto !important;
+        min-height: auto;
+    }
+
+    /* Allow card image area to breathe */
+    .avng-card-img-wrap {
+        height: 220px;
+    }
+
+    /* Card description: always fully visible, no clipping */
+    .avng-card-desc {
+        overflow: visible !important;
+        text-overflow: unset !important;
+        -webkit-line-clamp: unset !important;
+        display: block !important;
+        white-space: normal !important;
+    }
+
+    /* Card container: comfortable mobile padding */
+    #workshop #card-container,
+    #paperpresentation #card-container,
+    #flagship #card-container,
+    #card-container {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    /* Reduce hero-to-cards gap for tighter mobile flow */
+    .avng-hero-banner {
+        margin-bottom: 50px !important;
+    }
+
+    /* Reduce section gap on mobile */
+    #workshop,
+    #paperpresentation,
+    #flagship {
+        margin-bottom: 60px !important;
+    }
+
+    /* Row gap consistency */
+    .row {
+        gap: 0;
+    }
+}
+
+/* ==========================================================================
+   INLINE EXPANDING MISSION DOSSIER FOLDER COMPONENT (NO POPUPS)
+   ========================================================================== */
+
+/* Smooth Transition for Column Expansion */
+.avng-card-col {
+    transition: flex 700ms cubic-bezier(0.22, 1, 0.36, 1), 
+                max-width 700ms cubic-bezier(0.22, 1, 0.36, 1),
+                width 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.avng-card-col.is-expanded {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    z-index: 25;
+}
+
+.avng-card-flip-wrap {
+    transition: width 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.avng-card-inner {
+    transition: all 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Card Container in Expanded State (Fixed 85vh Height Viewport Panel) */
+.avng-card-col.is-expanded .avng-card {
+    max-width: 100% !important;
+    width: 100% !important;
+    height: 85vh !important;
+    max-height: 700px !important;
+    min-height: 500px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    border-color: rgba(94, 255, 122, 0.6) !important;
+    box-shadow: 0 25px 65px rgba(0, 0, 0, 0.95), 
+                0 0 40px rgba(130, 90, 255, 0.4),
+                0 0 20px rgba(94, 255, 122, 0.25) !important;
+    transform: none !important;
+    overflow: hidden !important;
+}
+
+/* Cover (Normal State: 100% Full Width Card Body. Expanded State: Fixed 380px Left Column) */
+.avng-card-cover {
+    width: 100%;
+    flex: 1 1 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 2;
+    background: transparent;
+    border-right: none;
+    transition: width 700ms cubic-bezier(0.22, 1, 0.36, 1),
+                flex 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.avng-card-col.is-expanded .avng-card-cover {
+    width: 380px;
+    flex: 0 0 380px;
+    height: 100% !important;
+    max-height: 100% !important;
+    overflow: hidden !important;
+    border-right: 1px solid rgba(94, 255, 122, 0.3);
+    background: linear-gradient(180deg, #10141C 0%, #161F2C 100%);
+    pointer-events: none;
+}
+
+.avng-card-col.is-expanded .btn-mission-dossier {
+    display: none !important;
+}
+
+/* Dossier Right Panel (Fixed Container Height, Unfolds Left to Right) */
+.avng-card-dossier-panel {
+    flex: 1 1 auto;
+    display: none !important;
+    flex-direction: column;
+    justify-content: space-between;
+    background: rgba(14, 18, 26, 0.98);
+    border-left: 1px solid rgba(94, 255, 122, 0.3);
+    padding: 20px 24px 0 24px;
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    transform: translateX(-15px);
+    transition: opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+                transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+    box-sizing: border-box;
+    height: 100% !important;
+    max-height: 100% !important;
+    overflow: hidden !important;
+}
+
+.avng-card-col.is-expanded .avng-card-dossier-panel {
+    display: flex !important;
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+}
+
+/* Header inside Dossier Panel — HIDDEN (Issue 1: remove CLASSIFIED // WORKSHOP) */
+.avng-dossier-panel-header {
+    display: none !important;
+}
+
+.avng-dossier-stamp-badge,
+.avng-dossier-header-icon {
+    display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   CONTINUOUS SCROLLABLE MISSION BRIEFING PANEL (NO TABS)
+   -------------------------------------------------------------------------- */
+
+/* Scrollable Content Container (Middle Section ONLY Scrolls) */
+.avng-dossier-scroll-contents {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    padding: 10px 12px 24px 0;
+    color: #d1e0f0;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    scrollbar-width: thin;
+    scrollbar-color: #5eff7a transparent;
+}
+
+/* Custom Avengers-Themed Thin Scrollbar */
+.avng-dossier-scroll-contents::-webkit-scrollbar {
+    width: 6px;
+}
+.avng-dossier-scroll-contents::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 3px;
+}
+.avng-dossier-scroll-contents::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #5eff7a 0%, #38d96c 100%);
+    border-radius: 3px;
+    box-shadow: 0 0 8px rgba(94, 255, 122, 0.5);
+}
+.avng-dossier-scroll-contents::-webkit-scrollbar-thumb:hover {
+    background: #5eff7a;
+    box-shadow: 0 0 12px rgba(94, 255, 122, 0.8);
+}
+
+/* Global box-sizing for all dossier panel descendants */
+.avng-card-dossier-panel *,
+.avng-card-dossier-panel *::before,
+.avng-card-dossier-panel *::after {
+    box-sizing: border-box;
+}
+
+/* Mission Section Blocks (40px-50px spacing with subtle dividers) */
+.avng-dossier-section-block {
+    margin-bottom: 40px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid rgba(94, 255, 122, 0.15);
+}
+
+.avng-dossier-section-block:last-child {
+    margin-bottom: 10px;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+/* Section Headings */
+.avng-dossier-section-title {
+    font-family: 'Luckiest Guy', cursive, sans-serif;
+    letter-spacing: 1.5px;
+    font-weight: 400;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #5eff7a;
+    letter-spacing: 2px;
+    margin-top: 0;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    text-shadow: 0 0 8px rgba(94, 255, 122, 0.3);
+}
+
+/* --------------------------------------------------------------------------
+   UNIFIED CONTENT BOXES (Reusable components for all sections)
+   -------------------------------------------------------------------------- */
+
+.avng-dossier-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin: 0 0 14px 0;
+    padding: 14px 16px;
+    background: rgba(24, 31, 41, 0.95);
+    border: 1px solid rgba(94, 255, 122, 0.18);
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), inset 0 0 12px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.avng-dossier-meta-cell {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.76rem;
+    color: #b8c4db;
+    line-height: 1.4;
+}
+
+.avng-dossier-meta-cell strong {
+    color: #ffffff;
+}
+
+.avng-dossier-rules-list {
+    margin: 0 0 14px 0;
+    padding: 14px 16px 14px 32px;
+    background: rgba(24, 31, 41, 0.95);
+    border: 1px solid rgba(94, 255, 122, 0.18);
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), inset 0 0 12px rgba(0, 0, 0, 0.2);
+    font-size: 0.92rem;
+    list-style-type: disc;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.avng-dossier-rules-list li {
+    margin-bottom: 6px;
+    color: #d1e0f0;
+}
+
+.avng-dossier-rules-list li::marker {
+    color: #5eff7a;
+}
+
+.avng-dossier-contact-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 0 0 14px 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.avng-dossier-contact-card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 14px 16px;
+    background: rgba(24, 31, 41, 0.95);
+    border: 1px solid rgba(94, 255, 122, 0.18);
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), inset 0 0 12px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+}
+
+.avng-dossier-contact-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: #5eff7a;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.avng-dossier-contact-phone {
+    font-family: 'Rajdhani', monospace;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: 1px;
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.avng-dossier-contact-phone:hover {
+    color: #00f0ff;
+    text-decoration: underline;
+}
+
+/* --- Contact Section: Row layout with Phone & WhatsApp Action Icons --- */
+.avng-dossier-contact-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0 0 14px 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.avng-dossier-contact-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: rgba(24, 31, 41, 0.95);
+    border: 1px solid rgba(94, 255, 122, 0.18);
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), inset 0 0 12px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.avng-dossier-contact-row:hover {
+    border-color: rgba(94, 255, 122, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), inset 0 0 12px rgba(94, 255, 122, 0.1);
+}
+
+.avng-contact-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.avng-contact-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 1.05rem;
+    line-height: 1;
+    transition: transform 0.18s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.18s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.18s ease, border-color 0.18s ease;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.avng-contact-icon-btn ion-icon {
+    font-size: 1.1rem;
+    pointer-events: none;
+}
+
+/* Phone Icon Button */
+.avng-btn-phone {
+    background: rgba(0, 240, 255, 0.12);
+    color: #00f0ff;
+    border: 1px solid rgba(0, 240, 255, 0.35);
+}
+
+.avng-btn-phone:hover,
+.avng-btn-phone:focus-visible {
+    transform: scale(1.14);
+    background: rgba(0, 240, 255, 0.28);
+    color: #ffffff;
+    border-color: #00f0ff;
+    box-shadow: 0 0 12px rgba(0, 240, 255, 0.6), 0 0 4px rgba(0, 240, 255, 0.8);
+}
+
+/* WhatsApp Icon Button */
+.avng-btn-whatsapp {
+    background: rgba(37, 211, 102, 0.12);
+    color: #25D366;
+    border: 1px solid rgba(37, 211, 102, 0.35);
+}
+
+.avng-btn-whatsapp:hover,
+.avng-btn-whatsapp:focus-visible {
+    transform: scale(1.14);
+    background: rgba(37, 211, 102, 0.28);
+    color: #ffffff;
+    border-color: #25D366;
+    box-shadow: 0 0 12px rgba(37, 211, 102, 0.6), 0 0 4px rgba(37, 211, 102, 0.8);
+}
+
+.avng-contact-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    min-width: 0;
+    flex: 1;
+}
+
+.avng-contact-dash {
+    color: rgba(94, 255, 122, 0.6);
+    font-weight: 600;
+    user-select: none;
+}
+
+.avng-dossier-section-block p {
+    margin: 0 0 14px 0;
+    padding: 14px 16px;
+    background: rgba(24, 31, 41, 0.95);
+    border: 1px solid rgba(94, 255, 122, 0.18);
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), inset 0 0 12px rgba(0, 0, 0, 0.2);
+    color: #d1e0f0;
+    line-height: 1.6;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* --------------------------------------------------------------------------
+   ACTION BAR — REGISTER NOW (left) + CLOSE (right)
+   -------------------------------------------------------------------------- */
+.avng-dossier-action-bar {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 14px 0 16px 0;
+    margin-top: auto;
+    border-top: 1px solid rgba(94, 255, 122, 0.18);
+    flex-shrink: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.btn-dossier-register {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: #0b0e14;
+    background: linear-gradient(135deg, #5eff7a 0%, #38d96c 100%);
+    border: 1px solid #5eff7a;
+    padding: 10px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 0 18px rgba(94, 255, 122, 0.4);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+
+.btn-dossier-register:hover {
+    box-shadow: 0 0 25px rgba(94, 255, 122, 0.75);
+    transform: translateY(-2px);
+    color: #000;
+}
+
+.btn-dossier-register.btn-registered {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    color: #ffffff !important;
+    border: 1px solid #34d399 !important;
+    box-shadow: 0 0 18px rgba(16, 185, 129, 0.45) !important;
+    cursor: default !important;
+    pointer-events: none;
+}
+
+.btn-dossier-close {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: #ffffff;
+    background: rgba(24, 31, 41, 0.95);
+    border: 1px solid rgba(94, 255, 122, 0.18);
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.btn-dossier-close:hover {
+    background: rgba(94, 255, 122, 0.1);
+    border-color: rgba(94, 255, 122, 0.5);
+    box-shadow: 0 0 15px rgba(94, 255, 122, 0.3);
+    color: #5eff7a;
+}
+
+/* ==========================================================================
+   MOBILE / TABLET VERTICAL ACCORDION EXPANSION (< 992px)
+   ========================================================================== */
+@media (max-width: 991px) {
+
+    .avng-card-col.is-expanded {
+        z-index: 25;
+    }
+
+    .avng-card-col.is-expanded .avng-card {
+        flex-direction: column !important;
+        height: auto !important;
+        max-height: none !important;
+        min-height: auto !important;
+        overflow: visible !important;
+    }
+
+    .avng-card-col.is-expanded .avng-card-cover {
+        width: 100% !important;
+        flex: 0 0 auto !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        border-right: none !important;
+        border-bottom: 1px solid rgba(94, 255, 122, 0.3) !important;
+        pointer-events: auto !important;
+        background: transparent !important;
+    }
+
+    .avng-card-dossier-panel {
+        border-left: none !important;
+        transform: translateY(-12px) !important;
+        transition: opacity 350ms ease-in-out,
+                    transform 350ms ease-in-out !important;
+    }
+
+    .avng-card-col.is-expanded .avng-card-dossier-panel {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+        border-top: 1px solid rgba(94, 255, 122, 0.3) !important;
+        border-left: none !important;
+        padding: 20px 16px 0 16px !important;
+    }
+
+    .avng-card-col.is-expanded .avng-dossier-scroll-contents {
+        overflow-y: visible !important;
+        overflow-x: visible !important;
+        height: auto !important;
+        max-height: none !important;
+        flex: 0 0 auto !important;
+    }
+
+    .avng-dossier-meta-grid {
+        grid-template-columns: 1fr;
+    }
+    .avng-dossier-contact-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .avng-card-col.is-expanded .avng-dossier-action-bar {
+        position: relative !important;
+        bottom: auto !important;
+        width: 100% !important;
+        padding: 16px !important;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   FLAGSHIP EVENT ROUND DETAILS STYLING
+   -------------------------------------------------------------------------- */
+.avng-dossier-round-title {
+    font-family: 'Orbitron', 'Rajdhani', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 1.5px;
+    margin-top: 0;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.avng-dossier-round-tagline {
+    font-family: 'Orbitron', 'Rajdhani', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #e2b714;
+    letter-spacing: 1.5px;
+    margin-top: 0;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+}
+
+.avng-dossier-round-desc {
+    color: #d1e0f0;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    margin: 0;
+}

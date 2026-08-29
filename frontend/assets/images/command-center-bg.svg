@@ -1,0 +1,86 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <!-- Background Gradient -->
+    <radialGradient id="bgGrad" cx="50%" cy="40%" r="75%">
+      <stop offset="0%" stop-color="#0a1226"/>
+      <stop offset="45%" stop-color="#050915"/>
+      <stop offset="100%" stop-color="#02040a"/>
+    </radialGradient>
+
+    <!-- Lab Glow Accents -->
+    <radialGradient id="cyanGlow" cx="20%" cy="30%" r="35%">
+      <stop offset="0%" stop-color="#00f2ff" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="purpleGlow" cx="80%" cy="25%" r="40%">
+      <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="goldGlow" cx="50%" cy="70%" r="45%">
+      <stop offset="0%" stop-color="#eab308" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Perspective Grid Pattern -->
+    <pattern id="gridPattern" width="80" height="80" patternUnits="userSpaceOnUse">
+      <path d="M 80 0 L 0 0 0 80" fill="none" stroke="#1e293b" stroke-width="0.75" stroke-opacity="0.25"/>
+      <circle cx="80" cy="0" r="1.5" fill="#38bdf8" fill-opacity="0.3"/>
+    </pattern>
+
+    <!-- Hex Grid -->
+    <pattern id="hexGrid" width="60" height="103.92" patternUnits="userSpaceOnUse">
+      <path d="M 30 0 L 60 17.32 L 60 51.96 L 30 69.28 L 0 51.96 L 0 17.32 Z" fill="none" stroke="#0ea5e9" stroke-width="0.5" stroke-opacity="0.12"/>
+    </pattern>
+  </defs>
+
+  <!-- Base Color -->
+  <rect width="1920" height="1080" fill="url(#bgGrad)"/>
+
+  <!-- Atmospheric Glow Clusters -->
+  <rect width="1920" height="1080" fill="url(#cyanGlow)"/>
+  <rect width="1920" height="1080" fill="url(#purpleGlow)"/>
+  <rect width="1920" height="1080" fill="url(#goldGlow)"/>
+
+  <!-- Lab Tech Structural Grids & Architecture -->
+  <rect width="1920" height="1080" fill="url(#gridPattern)" opacity="0.8"/>
+  <rect width="1920" height="1080" fill="url(#hexGrid)" opacity="0.5"/>
+
+  <!-- Holographic Command Center Wall Geometry -->
+  <g opacity="0.15" stroke="#38bdf8" stroke-width="1" fill="none">
+    <!-- Center Console Arc -->
+    <circle cx="960" cy="540" r="380" stroke-dasharray="12 8 4 8"/>
+    <circle cx="960" cy="540" r="460" stroke-opacity="0.5" stroke-dasharray="40 20 10 20"/>
+    <circle cx="960" cy="540" r="280" stroke-opacity="0.3"/>
+
+    <!-- Perspective Ceiling/Floor Lines -->
+    <line x1="0" y1="0" x2="680" y2="380"/>
+    <line x1="1920" y1="0" x2="1240" y2="380"/>
+    <line x1="0" y1="1080" x2="680" y2="700"/>
+    <line x1="1920" y1="1080" x2="1240" y2="700"/>
+
+    <!-- Side Terminal Outlines -->
+    <path d="M 100 200 L 450 200 L 520 350 L 100 350 Z" fill="#0284c7" fill-opacity="0.03"/>
+    <path d="M 1820 200 L 1470 200 L 1400 350 L 1820 350 Z" fill="#7c3aed" fill-opacity="0.03"/>
+  </g>
+
+  <!-- Mission Control Screen Target Crosshairs & Ring Nodes -->
+  <g opacity="0.2">
+    <circle cx="320" cy="280" r="40" stroke="#00f2ff" stroke-width="1" fill="none" stroke-dasharray="6 3"/>
+    <line x1="320" y1="230" x2="320" y2="330" stroke="#00f2ff" stroke-width="0.75"/>
+    <line x1="270" y1="280" x2="370" y2="280" stroke="#00f2ff" stroke-width="0.75"/>
+
+    <circle cx="1600" cy="280" r="50" stroke="#a855f7" stroke-width="1" fill="none" stroke-dasharray="8 4"/>
+    <line x1="1600" y1="220" x2="1600" y2="340" stroke="#a855f7" stroke-width="0.75"/>
+    <line x1="1540" y1="280" x2="1660" y2="280" stroke="#a855f7" stroke-width="0.75"/>
+  </g>
+
+  <!-- Ambient Vignette Layer -->
+  <radialGradient id="vignette" cx="50%" cy="50%" r="70%">
+    <stop offset="0%" stop-color="#000000" stop-opacity="0"/>
+    <stop offset="60%" stop-color="#000000" stop-opacity="0.4"/>
+    <stop offset="100%" stop-color="#000000" stop-opacity="0.85"/>
+  </radialGradient>
+  <rect width="1920" height="1080" fill="url(#vignette)"/>
+</svg>

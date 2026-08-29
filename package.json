@@ -1,0 +1,33 @@
+{
+  "name": "srishti_2k25_node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "seed": "node scripts/seedAdmin.js",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:mongo": "docker compose up -d mongodb",
+    "docker:logs": "docker compose logs -f"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "connect-mongo": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "express-validator": "^7.3.2",
+    "helmet": "^8.3.0",
+    "mongoose": "^9.8.0",
+    "morgan": "^1.11.0",
+    "node-mailjet": "^6.0.11",
+    "nodemailer": "^9.0.3"
+  }
+}

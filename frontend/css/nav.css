@@ -1,0 +1,323 @@
+/* @import url("https://fonts.googleapis.com/css2?family=Arimo:wght@600&family=Comic+Neue&family=Imprima&family=Poppins&family=Roboto&family=Sora:wght@800&family=Yatra+One&display=swap"); */
+@import url("https://fonts.googleapis.com/css2?family=Arimo:wght@600&family=Comic+Neue&family=Imprima&family=Poppins&family=Roboto&family=Rubik:wght@300&family=Sora:wght@800&family=Yatra+One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nova+Round&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+@font-face {
+  font-family: production;
+  src: url("../assets/fonts/production.ttf");
+}
+
+@font-face {
+  font-family: Aquatico;
+  src: url("../assets/fonts/Aquatico-Regular.otf");
+}
+
+@font-face {
+  font-family: Flare;
+  src: url("../assets/fonts/Flare-Regular.otf");
+}
+
+@font-face {
+  font-family: AquireBold;
+  src: url("../assets/fonts/AquireBold.otf");
+}
+
+@font-face {
+  font-family: MonumentExtended;
+  src: url("../assets/fonts/MonumentExtended-Regular.otf");
+}
+
+@font-face {
+  font-family: Agency FB;
+  src: url("../assets/fonts/AgencyFB-Bold.ttf");
+}
+
+@font-face {
+  font-family: recoleta;
+  src: url("../assets/fonts/Recoleta-Regular.otf");
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.navbar > .container {
+  width: 16rem !important;
+  border: 3px solid black;
+  border-radius: 5rem;
+  background-color: white;
+  z-index: 1;
+  text-align: center !important;
+  /* background: rgba( 255, 255, 255, 0.1 ); */
+  /* backdrop-filter: blur( 20px ); */
+  /* border: 1px solid rgba( 255, 255, 255, 0.18 ); */
+
+}
+
+.menu-text {
+  font-size: 16px;
+  font-family: recoleta;
+  font-weight: 800;
+  text-align: center;
+  /* margin-left:35px; */
+  color: #141227;
+  /* text-decoration: none !important; */
+}
+
+.navbar-toggler-icon {
+  background-image: none !important;
+  padding-right: 0px;
+}
+
+.offcanvas {
+  width: 18rem !important;
+  /* height: 30rem !important; */
+  /* margin: 0px auto !important; */
+  margin-bottom: 6rem !important;
+  /* border-radius: 3rem 10rem 3rem 10rem !important; */
+  border-radius: 1.15rem !important;
+  /* background:#8D88C9 !important; */
+  /* background-color: rgba(0, 0, 0, 0) !important; */
+  /* background-color: rgba(20, 18, 39, 0.5) !important;
+  backrop-filter: blur(50px) !important; */
+  background: rgba( 255, 255, 255, 0.2 ) !important;
+  box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 ) !important;
+  backdrop-filter: blur( 12px ) !important;
+  -webkit-backdrop-filter: blur( 12px ) !important;
+  border-radius: 10px !important;
+  border: 1px solid rgba( 255, 255, 255, 0.18 ) !important;
+  
+}
+
+.btn-close {
+  position: absolute;
+  top: 4%;
+  right: 8%;
+  background-color: #684C44 !important;
+  border-radius: 50% !important;
+  width: 1rem !important;
+  height: 1rem !important;
+  padding: 0.5rem;
+  color: #46111c !important;
+}
+/* Hide scrollbar for IE, Edge and Firefox */
+.offcanvas-body {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  /* margin: auto; */
+  justify-content: center;
+  z-index: 1;
+}
+
+.menu-icon {
+  color: white;
+  font-size: 1.5rem;
+}
+
+.navbar-nav{
+  align-items:left !important;
+}
+
+.nav-link {
+  font-family: "Poppins" !important;
+  color: #ffff !important;
+  font-size: 0.9rem !important;
+  align-items:left !important;
+}
+
+.item {
+  text-decoration: none;
+  color: #141227;
+  font-family: "Poppins" !important;
+  font-weight: 400 !important;
+  align-items:left !important;
+
+}
+
+@media (max-width: 320px) {
+  .navbar {
+    width: 18rem;
+    border-radius: 1.5rem;
+    justify-content: center;
+    margin: 0px auto;
+  }
+
+  .navbar > .container {
+    align-items: center;
+    vertical-align: center;
+  }
+
+  .navbar-brand img {
+    width: 24px;
+    height: 28px;
+  }
+
+  .navbar-brand .menu-text {
+    font-size: 14px;
+    padding: 5px 0px;
+    margin-left: 35px;
+  }
+
+  .offcanvas {
+    width: 20rem;
+    margin: 0px auto;
+    border-radius: 1.5rem;
+  }
+
+  .logos {
+    width: 50px;
+  }
+}
+
+@media (min-width: 320px) and (max-width: 475px) {
+  .navbar {
+    width: 18rem;
+    border-radius: 1.5rem;
+    justify-content: center;
+    margin: 0px auto;
+  }
+
+  .navbar > .container {
+    align-items: center;
+    vertical-align: center;
+  }
+
+  .navbar-brand img {
+    width: 24px;
+    height: 28px;
+  }
+
+  .navbar-brand .menu-text {
+    font-size: 14px;
+    padding: 5px 0px;
+    margin-left: 35px;
+  }
+
+  .offcanvas {
+    width: 20rem;
+    margin: 0px auto;
+    border-radius: 1.5rem;
+  }
+
+  .logos {
+    width: 50px;
+  }
+}
+
+@media (min-width: 475px) and (max-width: 992px) {
+  .navbar {
+    width: 20rem;
+    border-radius: 1.5rem;
+    justify-content: center;
+    margin: 0px auto;
+  }
+
+  .navbar > .container {
+    align-items: center;
+    vertical-align: center;
+  }
+
+  .navbar-brand img {
+    width: 24px;
+    height: 28px;
+  }
+
+  .navbar-brand .menu-text {
+    font-size: 16px;
+    padding: 8px 0px;
+    margin-left: 35px;
+  }
+
+  .offcanvas {
+    width: 20rem;
+    margin: 0px auto;
+    border-radius: 1.5rem;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1200px) {
+  .navbar {
+    width: 20rem;
+    border-radius: 1.5rem;
+    justify-content: center;
+    margin: 0px auto;
+  }
+
+  .navbar > .container {
+    align-items: center;
+    vertical-align: center;
+  }
+
+  .navbar-brand img {
+    width: 24px;
+    height: 28px;
+  }
+
+  .offcanvas {
+    width: 20rem;
+    margin: 0px auto;
+    border-radius: 1.5rem;
+  }
+
+  .navbar-brand .menu-text {
+    font-size: 14px;
+    padding: 6px 0px;
+    margin-left: 35px;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .navbar {
+    width: 30rem;
+    border-radius: 1.5rem;
+    justify-content: center;
+    margin: 0px auto;
+  }
+
+  .navbar > .container {
+    align-items: center;
+    vertical-align: center;
+  }
+
+  .navbar-brand img {
+    width: 24px;
+    height: 28px;
+  }
+
+  .navbar-brand .menu-text {
+    font-size: 18px;
+    padding: 6px 0px;
+    margin-left: 35px;
+  }
+
+  .sub {
+    width: 80%;
+    height: auto;
+  }
+
+  .offcanvas {
+    width: 30rem;
+    margin: 0px auto;
+    border-radius: 1.5rem;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(50px) !important;
+  }
+}
+
+/* Extra small devices (phones, 600px and down) */
+/* @media only screen and (max-width: 600px) {} */
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+/* @media only screen and (min-width: 600px) {...} */
+
+/* Medium devices (landscape tablets, 768px and up) */
+/* @media only screen and (min-width: 768px) {...} */
+
+/* Large devices (laptops/desktops, 992px and up) */
+/* @media only screen and (min-width: 992px) {...} */
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+/* @media only screen and (min-width: 1200px) {...} */

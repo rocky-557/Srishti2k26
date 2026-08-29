@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Dossier | SRiSHTi 2k26</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Outfit:wght@300;400;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --gold: #ffb700;
+            --gold-glow: rgba(255, 183, 0, 0.4);
+            --red-glow: rgba(226, 54, 54, 0.4);
+            --cyan: #00cfff;
+            --bg-dark: #05070d;
+            --card-bg: rgba(13, 17, 28, 0.75);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #f1f5f9;
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(ellipse at 10% 20%, rgba(226, 54, 54, 0.12) 0%, transparent 40%),
+                radial-gradient(ellipse at 90% 80%, rgba(0, 207, 255, 0.08) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 2.5rem;
+            background: rgba(5, 7, 13, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand-logo {
+            font-family: 'Cinzel', serif;
+            font-weight: 900;
+            font-size: 1.5rem;
+            color: #fff;
+            text-decoration: none;
+            letter-spacing: 3px;
+        }
+        .brand-logo span { color: var(--gold); }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+        .nav-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: #fff; }
+
+        .btn-logout {
+            background: rgba(226, 54, 54, 0.15);
+            color: #ff6b6b;
+            border: 1px solid rgba(226, 54, 54, 0.3);
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+        .btn-logout:hover {
+            background: rgba(226, 54, 54, 0.3);
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1140px;
+            margin: 2.5rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .dossier-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            backdrop-filter: blur(16px);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .dossier-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .agent-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: 2px;
+        }
+        .srishti-tag {
+            background: rgba(255, 183, 0, 0.15);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 0.35rem 0.9rem;
+            border-radius: 20px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: 1px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.2rem;
+        }
+        .info-item label {
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #64748b;
+            margin-bottom: 0.3rem;
+        }
+        .info-item .val {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+
+        .badge-paid {
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+        .badge-unpaid {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .tab-nav {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: 0.6rem 1.2rem;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        .tab-btn.active {
+            background: rgba(255, 183, 0, 0.12);
+            color: var(--gold);
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .items-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+        .item-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.2rem;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .item-box:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 183, 0, 0.4);
+        }
+        .item-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: 0.4rem;
+        }
+        .item-meta {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #64748b;
+        }
+        .empty-state i {
+            font-size: 2.5rem;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, #ffb700 0%, #d49000 100%);
+            color: #000;
+            border: none;
+            padding: 0.6rem 1.4rem;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: opacity 0.2s;
+        }
+        .btn-gold:hover { opacity: 0.9; }
+
+        .spin-animation {
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 680px) {
+            .navbar {
+                padding: 1rem 1.2rem;
+                flex-wrap: wrap;
+                gap: 0.8rem;
+            }
+            .container {
+                margin: 1.5rem auto;
+                padding: 0 1rem;
+            }
+            .dossier-card {
+                padding: 1.4rem 1.1rem;
+            }
+            .dossier-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.9rem;
+            }
+            .dossier-header > div:last-child {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .tab-nav {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 0.8rem;
+            }
+            .tab-btn {
+                white-space: nowrap;
+                font-size: 0.95rem;
+                padding: 0.5rem 0.8rem;
+            }
+            .info-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .items-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="home.html" class="brand-logo">SRiSHTi <span>2K26</span></a>
+        <div class="nav-links">
+            <a href="home.html">Home</a>
+            <a href="event.html">Events</a>
+            <a href="workshop.html">Workshops</a>
+            <button class="btn-logout" id="logoutBtn"><i class="bi bi-box-arrow-right"></i> Sign Out</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- User Dossier Card -->
+        <div class="dossier-card">
+            <div class="dossier-header">
+                <div>
+                    <h1 class="agent-title" id="userName">Loading Profile...</h1>
+                    <div style="color: #94a3b8; font-size: 0.9rem;" id="userCollege">PSG College of Technology</div>
+                </div>
+                <div style="display: flex; gap: 0.8rem; align-items: center; flex-wrap: wrap;">
+                    <button id="syncEmsBtn" class="btn-gold" onclick="syncWithEms()" style="font-size: 0.85rem; padding: 0.45rem 1rem; display: flex; align-items: center; gap: 0.4rem;">
+                        <i class="bi bi-arrow-repeat" id="syncIcon"></i> <span id="syncText">Update Details</span>
+                    </button>
+                    <span class="srishti-tag" id="srishtiId">SRiSHTi ID: ---</span>
+                </div>
+            </div>
+
+            <div id="syncAlertBox" style="display:none; margin-bottom: 1.2rem; padding: 0.8rem 1.2rem; border-radius: 8px; font-size: 0.95rem;"></div>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>Email Address</label>
+                    <div class="val" id="userEmail">---</div>
+                </div>
+                <div class="info-item">
+                    <label>Mobile Number</label>
+                    <div class="val" id="userMobile">---</div>
+                </div>
+                <div class="info-item">
+                    <label>Department</label>
+                    <div class="val" id="userDept">---</div>
+                </div>
+                <div class="info-item">
+                    <label>General Registration Fee</label>
+                    <div class="val" id="genFeeStatus"><span class="badge-unpaid">Unpaid</span></div>
+                </div>
+                <div class="info-item">
+                    <label>Accommodation</label>
+                    <div class="val" id="userAccom">No</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Registered Tracks -->
+        <div class="dossier-card">
+            <div class="tab-nav">
+                <button class="tab-btn active" data-tab="events">Events (<span id="eventCount">0</span>)</button>
+                <button class="tab-btn" data-tab="workshops">Workshops (<span id="wsCount">0</span>)</button>
+                <button class="tab-btn" data-tab="papers">Paper Presentations (<span id="ppCount">0</span>)</button>
+                <button class="tab-btn" data-tab="flagship">Flagship Battles (<span id="flCount">0</span>)</button>
+            </div>
+
+            <div id="tabContent">
+                <div id="itemsContainer" class="items-list">
+                    <!-- Dynamic registrations loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js?v=9"></script>
+    <script>
+        let profileData = null;
+        let activeTab = 'events';
+
+        async function loadProfile() {
+            try {
+                const res = await fetch('/api/user/profile', { credentials: 'same-origin' });
+                if (res.status === 401) {
+                    window.location.href = 'login.html?redirect=profile.html';
+                    return;
+                }
+                const data = await res.json();
+                profileData = data;
+
+                document.getElementById('userName').textContent = data.name || 'Operative';
+                document.getElementById('userCollege').textContent = data.college || 'Participant';
+                document.getElementById('srishtiId').textContent = data.srishtiId ? `${data.srishtiId}` : 'ID: Pending';
+                document.getElementById('userEmail').textContent = data.email || '---';
+                document.getElementById('userMobile').textContent = data.mobile || '---';
+                document.getElementById('userDept').textContent = data.department || '---';
+                document.getElementById('userAccom').textContent = data.accommodation || 'No';
+
+                const isPaid = (data.genfee === 'paid' || data.genfee === 'Paid');
+                let badgeHtml = isPaid 
+                    ? `<span class="badge-paid"><i class="bi bi-check-circle-fill"></i> Paid</span>`
+                    : `<span class="badge-unpaid">Unpaid</span> <a href="https://events.psginstitutions.in/EMS/register/696AE7EB187" target="_blank" class="btn-gold" style="margin-left:8px; padding:3px 10px; font-size:0.8rem;"><i class="bi bi-credit-card"></i> Pay via EMS</a>`;
+
+                if (isPaid && data.emsRegId) {
+                    badgeHtml += ` <span style="font-size:0.75rem; color:#94a3b8; margin-left:4px;">(EMS #${data.emsRegId})</span>`;
+                }
+
+                document.getElementById('genFeeStatus').innerHTML = badgeHtml;
+
+                document.getElementById('eventCount').textContent = (data.events || []).length;
+                document.getElementById('wsCount').textContent = (data.workshops || []).length;
+                document.getElementById('ppCount').textContent = (data.papers || []).length;
+                document.getElementById('flCount').textContent = (data.flagship || []).length;
+
+                renderTabContent();
+            } catch (err) {
+                console.error('Failed to load profile:', err);
+                document.getElementById('userName').textContent = 'Error Loading Profile';
+            }
+        }
+
+        async function syncWithEms() {
+            const btn = document.getElementById('syncEmsBtn');
+            const icon = document.getElementById('syncIcon');
+            const text = document.getElementById('syncText');
+            const alertBox = document.getElementById('syncAlertBox');
+
+            btn.disabled = true;
+            icon.classList.add('spin-animation');
+            text.textContent = 'Syncing...';
+            alertBox.style.display = 'none';
+
+            try {
+                const res = await fetch('/api/user/sync-ems', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({ eventId: '187' })
+                });
+                const result = await res.json();
+
+                if (result.success) {
+                    alertBox.style.display = 'block';
+                    alertBox.style.background = 'rgba(34, 197, 94, 0.15)';
+                    alertBox.style.border = '1px solid rgba(34, 197, 94, 0.4)';
+                    alertBox.style.color = '#4ade80';
+                    alertBox.innerHTML = `<i class="bi bi-check-circle-fill"></i> <strong>Synced:</strong> ${result.message}`;
+                    await loadProfile();
+                } else {
+                    alertBox.style.display = 'block';
+                    alertBox.style.background = 'rgba(239, 68, 68, 0.15)';
+                    alertBox.style.border = '1px solid rgba(239, 68, 68, 0.4)';
+                    alertBox.style.color = '#f87171';
+                    alertBox.innerHTML = `<i class="bi bi-exclamation-triangle-fill"></i> ${result.message}`;
+                }
+            } catch (err) {
+                alertBox.style.display = 'block';
+                alertBox.style.background = 'rgba(239, 68, 68, 0.15)';
+                alertBox.style.border = '1px solid rgba(239, 68, 68, 0.4)';
+                alertBox.style.color = '#f87171';
+                alertBox.innerHTML = `<i class="bi bi-x-circle-fill"></i> Error connecting to sync service. Please try again.`;
+            } finally {
+                btn.disabled = false;
+                icon.classList.remove('spin-animation');
+                text.textContent = 'Update Details';
+            }
+        }
+
+        function renderTabContent() {
+            if (!profileData) return;
+            const container = document.getElementById('itemsContainer');
+            const items = profileData[activeTab] || [];
+
+            if (items.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <i class="bi bi-shield-slash"></i>
+                        <p>No ${activeTab} registered yet.</p>
+                        <a href="${activeTab === 'workshops' ? 'workshop.html' : 'event.html'}" class="btn-gold" style="margin-top:1rem;">Explore ${activeTab}</a>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = items.map(item => {
+                const itemName = typeof item === 'string' ? item : (item.name || 'Track');
+                const itemStatus = (typeof item === 'object' && item.status) ? item.status : 'Registered';
+                const isPaidStatus = itemStatus.toLowerCase() === 'paid';
+
+                return `
+                    <div class="item-box">
+                        <div class="item-name">${itemName}</div>
+                        <div class="item-meta">
+                            <span class="${isPaidStatus ? 'badge-paid' : ''}" style="${!isPaidStatus ? 'color:#4ade80; font-size:0.85rem; font-weight:600;' : ''}">
+                                <i class="bi bi-check-circle-fill"></i> ${itemStatus}
+                            </span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeTab = btn.getAttribute('data-tab');
+                renderTabContent();
+            });
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            if (window.SrishtiApp && window.SrishtiApp.Auth) {
+                window.SrishtiApp.Auth.logout();
+            } else {
+                fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' }).then(() => window.location.href = 'home.html');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', loadProfile);
+    </script>
+</body>
+</html>

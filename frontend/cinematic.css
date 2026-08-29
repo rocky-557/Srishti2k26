@@ -1,0 +1,229 @@
+/* ==========================================================
+   CINEMATIC LIGHTING LAYER  –  login page
+   All layers: pointer-events:none, GPU-accelerated via
+   will-change: transform / opacity, fixed positioning.
+
+   Z-index ladder:
+     body bg image (avengers.jpg)    — untouched, no z-index
+     .cin-overlay  (dark 40% layer)  z: 2
+     .cin-glow-*   (character glows) z: 3
+     .cin-glow-card                  z: 3
+     .cin-bloom-layer                z: 3
+     .cin-vignette                   z: 4
+     .cin-rays-wrap (light rays)     z: 5
+     #particleCanvas (sparks/embers) z: 6
+     .page-wrapper  (content)        z: 10
+   ========================================================== */
+
+/* ── Shared base: all layers fixed, no pointer events ── */
+.cin-overlay,
+.cin-glow-iron,
+.cin-glow-thor,
+.cin-glow-witch,
+.cin-glow-card,
+.cin-bloom-layer,
+.cin-vignette,
+.cin-rays-wrap,
+#particleCanvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* ============================================================
+   DARK READABILITY OVERLAY
+   Sits directly above avengers.jpg. Keeps text readable
+   without touching the original image in any way.
+   ============================================================ */
+.cin-overlay {
+  z-index: 2;
+  background: rgba(4, 6, 14, 0.25);
+}
+
+/* ============================================================
+   CHARACTER AMBIENT GLOWS
+   Positioned to approximate Iron Man (left), Thor (upper-centre),
+   Scarlet Witch (lower-left) in the Avengers wallpaper.
+   ============================================================ */
+
+/* Iron Man — warm amber/orange outer + cyan arc-reactor core */
+.cin-glow-iron {
+  z-index: 3;
+  background:
+    radial-gradient(
+      ellipse 28% 32% at 18% 54%,
+      rgba(100, 210, 255, 0.22) 0%,
+      rgba(255, 160,  30, 0.16) 35%,
+      rgba(255,  98,   0, 0.08) 60%,
+      transparent 80%
+    );
+  animation: ironManGlow 4s ease-in-out infinite alternate;
+  will-change: opacity, transform;
+}
+
+@keyframes ironManGlow {
+  0%   { opacity: 0.70; transform: scale(0.97); }
+  100% { opacity: 1.00; transform: scale(1.04); }
+}
+
+/* Thor — electric blue-white bolt halo, upper-centre */
+.cin-glow-thor {
+  z-index: 3;
+  background:
+    radial-gradient(
+      ellipse 20% 22% at 58% 20%,
+      rgba(180, 220, 255, 0.18) 0%,
+      rgba(100, 160, 255, 0.10) 45%,
+      transparent 75%
+    );
+  animation: thorGlow 6s ease-in-out infinite alternate;
+  animation-delay: -2s;
+  will-change: opacity;
+}
+
+@keyframes thorGlow {
+  0%   { opacity: 0.55; }
+  100% { opacity: 1.00; }
+}
+
+/* Scarlet Witch — crimson/magenta, lower-left */
+.cin-glow-witch {
+  z-index: 3;
+  background:
+    radial-gradient(
+      ellipse 18% 20% at 10% 78%,
+      rgba(210, 40, 80, 0.20) 0%,
+      rgba(150, 20, 60, 0.10) 50%,
+      transparent 78%
+    );
+  animation: witchGlow 8s ease-in-out infinite alternate;
+  animation-delay: -4s;
+  will-change: opacity, transform;
+}
+
+@keyframes witchGlow {
+  0%   { opacity: 0.55; transform: scale(0.95); }
+  100% { opacity: 1.00; transform: scale(1.06); }
+}
+
+/* ============================================================
+   SOFT RADIAL GLOW — behind the login card (~72% x)
+   Creates a warm focal dark-bloom that draws eyes to the form
+   ============================================================ */
+.cin-glow-card {
+  z-index: 3;
+  background:
+    radial-gradient(
+      ellipse 48% 58% at 73% 52%,
+      rgba(255, 140, 20, 0.16) 0%,
+      rgba(255,  98,  0, 0.09) 45%,
+      transparent 75%
+    );
+  animation: cardGlowPulse 7s ease-in-out infinite alternate;
+  will-change: opacity, transform;
+}
+
+@keyframes cardGlowPulse {
+  0%   { opacity: 0.70; transform: scale(1);    }
+  100% { opacity: 1.00; transform: scale(1.06); }
+}
+
+/* ============================================================
+   WARM BLOOM LAYER — adds gentle colour warmth to bright areas
+   ============================================================ */
+.cin-bloom-layer {
+  z-index: 3;
+  background:
+    radial-gradient(ellipse 35% 25% at  4%  4%, rgba(255, 120,  0, 0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 30% 22% at 96% 96%, rgba(200,  60,  0, 0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 25% 20% at 90%  5%, rgba(160, 200, 255, 0.06) 0%, transparent 70%);
+  animation: bloomPulse 12s ease-in-out infinite alternate;
+  will-change: opacity;
+}
+
+@keyframes bloomPulse {
+  0%   { opacity: 0.75; }
+  100% { opacity: 1.00; }
+}
+
+/* ============================================================
+   VIGNETTE — darkens edges, focuses attention on the centre
+   ============================================================ */
+.cin-vignette {
+  z-index: 4;
+  background: radial-gradient(
+    ellipse 90% 85% at 50% 50%,
+    transparent 45%,
+    rgba(2, 4, 10, 0.55) 100%
+  );
+}
+
+/* ============================================================
+   DIAGONAL VOLUMETRIC LIGHT RAYS
+   3 staggered beams sweep left-to-right at 20°, every 9–12 s.
+   ============================================================ */
+.cin-rays-wrap {
+  z-index: 5;
+  overflow: hidden;
+}
+
+.cin-ray {
+  position: absolute;
+  top: -30%;
+  height: 220%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 210, 120, 0.09) 35%,
+    rgba(255, 230, 160, 0.15) 50%,
+    rgba(255, 210, 120, 0.09) 65%,
+    transparent 100%
+  );
+  transform: rotate(20deg) translateX(-260%);
+  will-change: transform, opacity;
+  filter: blur(8px);
+  border-radius: 50%;
+}
+
+/* Ray 1 — wide, 10 s cycle */
+.cin-ray-1 {
+  left: 12%;
+  width: 130px;
+  animation: raySwipe 10s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+  animation-delay: 0s;
+}
+
+/* Ray 2 — medium, 12 s cycle */
+.cin-ray-2 {
+  left: 42%;
+  width: 85px;
+  opacity: 0.75;
+  animation: raySwipe 12s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+  animation-delay: 3.8s;
+}
+
+/* Ray 3 — thin accent, 9 s cycle */
+.cin-ray-3 {
+  left: 68%;
+  width: 50px;
+  opacity: 0.55;
+  animation: raySwipe 9s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+  animation-delay: 7.0s;
+}
+
+@keyframes raySwipe {
+  0%   { transform: rotate(20deg) translateX(-260%); opacity: 0;   }
+  4%   { opacity: 1; }
+  28%  { transform: rotate(20deg) translateX(370%);  opacity: 0;   }
+  29%  { transform: rotate(20deg) translateX(-260%); opacity: 0;   }
+  100% { transform: rotate(20deg) translateX(-260%); opacity: 0;   }
+}
+
+/* ============================================================
+   PARTICLE CANVAS — floating sparks & embers
+   ============================================================ */
+#particleCanvas {
+  z-index: 6;
+  width: 100%;
+  height: 100%;
+}

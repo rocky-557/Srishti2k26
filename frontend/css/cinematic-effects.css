@@ -1,0 +1,488 @@
+/*
+ * cinematic-effects.css
+ * =====================
+ * Marvel Cinematic Universe — Atmosphere Layer for SRiSHTi 2K25 Events Page.
+ *
+ * Rules:
+ *   - All elements are position:fixed with pointer-events:none — zero interference.
+ *   - Purely additive layer. Nothing here touches existing selectors.
+ *   - Linked ONLY from event.html — not shared with any other page.
+ *
+ * Z-index map (existing page reference):
+ *   cosmos canvas   : -1   (existing)
+ *   cin-nebula/fog/hud/arc/canvas : 0  (above cosmos, below content)
+ *   stones far      : 2
+ *   stones mid      : 3
+ *   stones near     : 4
+ *   lightning/sparks: 5
+ *   nav / topbar    : 20
+ *   modals          : 999999
+ */
+
+/* ─────────────────────────────────────────────
+   INFINITY STONE COLOR TOKENS
+   ───────────────────────────────────────────── */
+:root {
+  --cin-space-rgb: 37, 99, 235;
+  --cin-reality-rgb: 220, 38, 38;
+  --cin-mind-rgb: 234, 179, 8;
+  --cin-time-rgb: 22, 163, 74;
+  --cin-soul-rgb: 234, 88, 12;
+  --cin-power-rgb: 124, 58, 237;
+}
+
+/* ─────────────────────────────────────────────
+   SHARED LAYER BASE
+   ───────────────────────────────────────────── */
+.cin-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+/* ─────────────────────────────────────────────
+   0. CINEMATIC BACKGROUND IMAGE (Ken Burns)
+   ───────────────────────────────────────────── */
+#cin-bg {
+  position: fixed;
+  inset: -10%;
+  z-index: -4;
+  pointer-events: none;
+  background-image: url('../assets/images/command-center-bg.svg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  will-change: transform;
+  animation: cin-ken-burns 65s ease-in-out infinite alternate;
+}
+
+@keyframes cin-ken-burns {
+  0% {
+    transform: scale(1.10) translate(0%, 0%) rotate(0deg);
+  }
+
+  33% {
+    transform: scale(1.22) translate(-2.5%, -1.2%) rotate(0.4deg);
+  }
+
+  66% {
+    transform: scale(1.18) translate(2.0%, 1.5%) rotate(-0.3deg);
+  }
+
+  100% {
+    transform: scale(1.26) translate(-1.2%, 2.2%) rotate(0.2deg);
+  }
+}
+
+/* ─────────────────────────────────────────────
+   0B. DARK CINEMATIC OVERLAY / COLOR GRADE
+   ───────────────────────────────────────────── */
+#cin-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at center, rgba(4, 7, 18, 0.58) 0%, rgba(2, 4, 10, 0.86) 75%, rgba(1, 2, 6, 0.95) 100%),
+    linear-gradient(180deg, rgba(6, 12, 28, 0.45) 0%, rgba(2, 5, 14, 0.60) 50%, rgba(4, 7, 18, 0.75) 100%);
+}
+
+/* ─────────────────────────────────────────────
+   0C. FILM GRAIN
+   ───────────────────────────────────────────── */
+#cin-grain {
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  animation: cin-grain-shake 0.75s steps(4) infinite alternate;
+}
+
+@keyframes cin-grain-shake {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  25% {
+    transform: translate(-1.5%, 1.2%);
+  }
+
+  50% {
+    transform: translate(1.2%, -1.8%);
+  }
+
+  75% {
+    transform: translate(-0.8%, -0.9%);
+  }
+
+  100% {
+    transform: translate(1.5%, 1.5%);
+  }
+}
+
+/* ─────────────────────────────────────────────
+   1. NEBULA BACKGROUND
+   ───────────────────────────────────────────── */
+#cin-nebula {
+  position: fixed !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 75% 55% at 10% 18%, rgba(124, 58, 237, 0.20) 0%, transparent 58%),
+    radial-gradient(ellipse 58% 48% at 90% 80%, hsla(221, 83%, 53%, 0.18) 0%, transparent 58%),
+    radial-gradient(ellipse 48% 38% at 55% 55%, rgba(234, 88, 12, 0.10) 0%, transparent 58%),
+    radial-gradient(ellipse 62% 30% at 70% 6%, rgba(220, 38, 38, 0.12) 0%, transparent 58%);
+  animation: cin-nebula-drift 55s ease-in-out infinite alternate;
+}
+
+@keyframes cin-nebula-drift {
+  0% {
+    transform: scale(1) translate(0, 0);
+  }
+
+  30% {
+    transform: scale(1.03) translate(1.8%, -1.2%);
+  }
+
+  65% {
+    transform: scale(1.02) translate(-1.2%, 1.8%);
+  }
+
+  100% {
+    transform: scale(1.06) translate(0.8%, 1.2%);
+  }
+}
+
+/* ─────────────────────────────────────────────
+   2. COSMIC FOG
+   ───────────────────────────────────────────── */
+#cin-fog {
+  position: fixed !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  z-index: 0;
+}
+
+#cin-fog::before,
+#cin-fog::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(70px);
+}
+
+#cin-fog::before {
+  width: 68vw;
+  height: 52vh;
+  top: 4%;
+  left: -14%;
+  background: radial-gradient(ellipse at center, rgba(124, 58, 237, 0.12) 0%, transparent 58%);
+  animation: cin-fog-a 38s ease-in-out infinite alternate;
+}
+
+#cin-fog::after {
+  width: 58vw;
+  height: 42vh;
+  bottom: 2%;
+  right: -12%;
+  background: radial-gradient(ellipse at center, rgba(37, 99, 235, 0.12) 0%, transparent 58%);
+  animation: cin-fog-b 29s ease-in-out infinite alternate;
+}
+
+@keyframes cin-fog-a {
+  from {
+    transform: translate(0, 0) scale(1);
+  }
+
+  to {
+    transform: translate(9vw, 7vh) scale(1.18);
+  }
+}
+
+@keyframes cin-fog-b {
+  from {
+    transform: translate(0, 0) scale(1);
+  }
+
+  to {
+    transform: translate(-7vw, -5vh) scale(1.12);
+  }
+}
+
+/* ─────────────────────────────────────────────
+   3. IRON MAN HUD SCAN LINES
+   ───────────────────────────────────────────── */
+#cin-hud {
+  position: fixed !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  z-index: 0;
+  background: repeating-linear-gradient(0deg,
+      transparent 0px, transparent 3px,
+      rgba(255, 255, 255, 0.035) 3px, rgba(255, 255, 255, 0.035) 4px);
+}
+
+#cin-hud::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 90px;
+  background: linear-gradient(180deg, transparent 0%, rgba(56, 189, 248, 0.10) 50%, transparent 100%);
+  animation: cin-hud-sweep 12s linear infinite;
+}
+
+@keyframes cin-hud-sweep {
+  0% {
+    top: -90px;
+    opacity: 0;
+  }
+
+  7% {
+    opacity: 1;
+  }
+
+  93% {
+    opacity: 1;
+  }
+
+  100% {
+    top: 100vh;
+    opacity: 0;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   4. ARC REACTOR GLOW (behind heading)
+   ───────────────────────────────────────────── */
+#cin-arc {
+  position: fixed !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  z-index: 0;
+  display: flex;
+  justify-content: center;
+  padding-top: 14vh;
+}
+
+#cin-arc-reactor {
+  width: 340px;
+  height: 340px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center,
+      rgba(0, 191, 255, 0.22) 0%, rgba(37, 99, 235, 0.14) 40%,
+      rgba(124, 58, 237, 0.07) 72%, transparent 100%);
+  filter: blur(5px);
+  animation: cin-arc-pulse 5.5s ease-in-out infinite;
+}
+
+@keyframes cin-arc-pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+
+  50% {
+    transform: scale(1.20);
+    opacity: 0.95;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   5. PARTICLE CANVAS
+   ID-selector overrides global canvas rule in
+   events-hold.css (canvas { z-index:-1 !important })
+   ───────────────────────────────────────────── */
+#cin-canvas {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  opacity: 1 !important;
+  backdrop-filter: none !important;
+}
+
+/* ─────────────────────────────────────────────
+   6. INFINITY STONES
+   JS sets transform:translate(x,y) each frame.
+   CSS handles shape, color gradient, glow pulse.
+   Position fixed removes them from normal document flow.
+   ───────────────────────────────────────────── */
+.cin-stone {
+  display: none !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  pointer-events: none !important;
+  border-radius: 38% 62% 55% 45% / 47% 43% 57% 53%;
+  will-change: transform;
+  transform-origin: center center;
+}
+
+.cin-depth-far {
+  z-index: 2;
+}
+
+.cin-depth-mid {
+  z-index: 3;
+}
+
+.cin-depth-near {
+  z-index: 4;
+}
+
+.cin-stone[data-stone="space"] {
+  background: radial-gradient(circle at 33% 30%, #93c5fd 0%, #2563eb 55%, #1e3a8a 100%);
+  animation: cin-glow-space 4.2s ease-in-out infinite alternate;
+}
+
+@keyframes cin-glow-space {
+  from {
+    box-shadow: 0 0 12px 5px rgba(37, 99, 235, 0.40), 0 0 38px 18px rgba(37, 99, 235, 0.15);
+  }
+
+  to {
+    box-shadow: 0 0 26px 10px rgba(37, 99, 235, 0.65), 0 0 68px 28px rgba(37, 99, 235, 0.25);
+  }
+}
+
+.cin-stone[data-stone="reality"] {
+  background: radial-gradient(circle at 33% 30%, #fca5a5 0%, #dc2626 55%, #7f1d1d 100%);
+  animation: cin-glow-reality 5.0s ease-in-out infinite alternate;
+  animation-delay: -1.6s;
+}
+
+@keyframes cin-glow-reality {
+  from {
+    box-shadow: 0 0 12px 5px rgba(220, 38, 38, 0.40), 0 0 38px 18px rgba(220, 38, 38, 0.15);
+  }
+
+  to {
+    box-shadow: 0 0 26px 10px rgba(220, 38, 38, 0.65), 0 0 68px 28px rgba(220, 38, 38, 0.25);
+  }
+}
+
+.cin-stone[data-stone="mind"] {
+  background: radial-gradient(circle at 33% 30%, #fef08a 0%, #eab308 55%, #713f12 100%);
+  animation: cin-glow-mind 3.6s ease-in-out infinite alternate;
+  animation-delay: -2.1s;
+}
+
+@keyframes cin-glow-mind {
+  from {
+    box-shadow: 0 0 12px 5px rgba(234, 179, 8, 0.46), 0 0 38px 18px rgba(234, 179, 8, 0.17);
+  }
+
+  to {
+    box-shadow: 0 0 26px 10px rgba(234, 179, 8, 0.72), 0 0 68px 28px rgba(234, 179, 8, 0.27);
+  }
+}
+
+.cin-stone[data-stone="time"] {
+  background: radial-gradient(circle at 33% 30%, #86efac 0%, #16a34a 55%, #052e16 100%);
+  animation: cin-glow-time 4.7s ease-in-out infinite alternate;
+  animation-delay: -3.2s;
+}
+
+@keyframes cin-glow-time {
+  from {
+    box-shadow: 0 0 12px 5px rgba(22, 163, 74, 0.40), 0 0 38px 18px rgba(22, 163, 74, 0.15);
+  }
+
+  to {
+    box-shadow: 0 0 26px 10px rgba(22, 163, 74, 0.65), 0 0 68px 28px rgba(22, 163, 74, 0.25);
+  }
+}
+
+.cin-stone[data-stone="soul"] {
+  background: radial-gradient(circle at 33% 30%, #fdba74 0%, #ea580c 55%, #7c2d12 100%);
+  animation: cin-glow-soul 3.9s ease-in-out infinite alternate;
+  animation-delay: -0.9s;
+}
+
+@keyframes cin-glow-soul {
+  from {
+    box-shadow: 0 0 12px 5px rgba(234, 88, 12, 0.40), 0 0 38px 18px rgba(234, 88, 12, 0.15);
+  }
+
+  to {
+    box-shadow: 0 0 26px 10px rgba(234, 88, 12, 0.65), 0 0 68px 28px rgba(234, 88, 12, 0.25);
+  }
+}
+
+.cin-stone[data-stone="power"] {
+  background: radial-gradient(circle at 33% 30%, #d8b4fe 0%, #7c3aed 55%, #3b0764 100%);
+  animation: cin-glow-power 4.4s ease-in-out infinite alternate;
+  animation-delay: -2.8s;
+}
+
+@keyframes cin-glow-power {
+  from {
+    box-shadow: 0 0 12px 5px rgba(124, 58, 237, 0.40), 0 0 38px 18px rgba(124, 58, 237, 0.15);
+  }
+
+  to {
+    box-shadow: 0 0 26px 10px rgba(124, 58, 237, 0.65), 0 0 68px 28px rgba(124, 58, 237, 0.25);
+  }
+}
+
+/* ─────────────────────────────────────────────
+   7. THOR LIGHTNING FLASH
+   JS appends child divs and applies this keyframe.
+   ───────────────────────────────────────────── */
+/* #cin-lightning { z-index: 5; pointer-events: none; }
+
+@keyframes cin-bolt-flash {
+  0%   { opacity: 0; }
+  5%   { opacity: 1; }
+  10%  { opacity: 0.08; }
+  16%  { opacity: 0.90; }
+  24%  { opacity: 0; }
+  100% { opacity: 0; }
+} */
+
+/* ─────────────────────────────────────────────
+   8. DOCTOR STRANGE PORTAL SPARKS
+   JS creates & removes these transient elements.
+   ───────────────────────────────────────────── */
+/* .cin-portal-spark {
+  position: fixed;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 5;
+  transform-origin: center center;
+} */
+
+/* ─────────────────────────────────────────────
+   REDUCED MOTION — disable all cinematic effects
+   ───────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+
+  .cin-layer,
+  #cin-bg,
+  #cin-overlay,
+  #cin-grain,
+  #cin-nebula,
+  #cin-fog,
+  #cin-hud,
+  #cin-arc,
+  #cin-canvas,
+  .cin-stone,
+  #cin-lightning,
+  .cin-portal-spark {
+    display: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="1; url=ad-login.html">
+    <title>SRiSHTi 2k26 | Admin Panel Redirect</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/avengers-admin.css">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            margin: 0;
+        }
+        .loader-box {
+            background: rgba(5, 8, 16, 0.78);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            padding: 3rem;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 0 40px var(--gold-glow);
+            position: relative;
+            z-index: 10;
+            max-width: 400px;
+            width: 90%;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(201, 162, 39, 0.2);
+            border-top: 3px solid var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1.5rem;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cinematic Layers -->
+    <div class="cin-overlay"></div>
+    <div class="cin-glow-iron"></div>
+    <div class="cin-glow-thor"></div>
+    <div class="cin-vignette"></div>
+    <div class="avengers-grid-bg"></div>
+
+    <div class="loader-box">
+        <div class="spinner"></div>
+        <h3 class="section-title fs-3 mb-2">SRiSHTi 2k26</h3>
+        <p style="color: var(--text-muted);" class="mb-0">Initializing Admin Terminal...</p>
+    </div>
+
+    <script>
+        setTimeout(function() {
+            window.location.href = "ad-login.html";
+        }, 800);
+    </script>
+</body>
+</html>

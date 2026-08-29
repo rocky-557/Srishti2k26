@@ -1,0 +1,1298 @@
+/* ============================================================
+   AVENGERS THEME — SRiSHTi 2k25
+   Scoped via [data-avengers-theme] on <body>
+   Load AFTER all existing CSS files for clean override.
+   ============================================================ */
+
+/* --- Google Fonts ------------------------------------------ */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap');
+
+/* --- Custom Properties ------------------------------------- */
+[data-avengers-theme] {
+  /* Command base */
+  --avng-bg:           #0A0C12;
+  --avng-panel:        #12151F;
+  --avng-panel-2:      #181C2A;
+  --avng-hairline:     #2A2F42;
+
+  /* Text */
+  --avng-text:         #EFE9DD;
+  --avng-text-dim:     #A9AEC2;
+
+  /* Iron Man / Workshops */
+  --avng-iron-red:     #A61B1B;
+  --avng-iron-dark:    #7A1212;
+  --avng-iron-gold:    #F2B705;
+
+  /* Captain America / Paper Presentation */
+  --avng-cap-navy:     #1B3A6B;
+  --avng-cap-dark:     #12274A;
+  --avng-cap-red:      #A61B1B;
+  --avng-cap-white:    #EFE9DD;
+
+  /* Infinity Stones / Flagship */
+  --avng-stone-purple: #6C3AC7;
+  --avng-stone-blue:   #2F6FED;
+  --avng-stone-red:    #E3222D;
+  --avng-stone-orange: #E8730B;
+  --avng-stone-yellow: #F2C230;
+  --avng-stone-green:  #21A96B;
+
+  /* Fonts */
+  --avng-font-display: 'Bebas Neue', 'Oswald', Impact, sans-serif;
+  --avng-font-body:    'Inter', 'Poppins', sans-serif;
+}
+
+/* ============================================================
+   0.  LOADING SCREEN — Hexagon-A mark
+   ============================================================ */
+.avng-loading {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background: var(--avng-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transition: opacity 0.4s ease;
+  pointer-events: all;
+}
+.avng-loading.avng-loading--done {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Hexagon badge */
+.avng-loading__hex {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+  background: linear-gradient(180deg, var(--avng-iron-red), var(--avng-iron-dark));
+  animation: avngHexPulse 0.8s ease-out forwards;
+}
+.avng-loading__hex::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+  background: var(--avng-bg);
+}
+.avng-loading__letter {
+  position: relative;
+  z-index: 2;
+  font-family: var(--avng-font-display);
+  font-size: 56px;
+  line-height: 1;
+  background: linear-gradient(180deg, #EFE9DD, #A9AEC2 40%, #6b6f7d);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: avngSheenSweep 0.8s ease-out forwards;
+}
+
+/* Metallic sheen sweep across the letter */
+@keyframes avngSheenSweep {
+  0%   { filter: brightness(0.5); transform: scale(0.6); }
+  50%  { filter: brightness(1.8); transform: scale(1.05); }
+  100% { filter: brightness(1);   transform: scale(1); }
+}
+@keyframes avngHexPulse {
+  0%   { transform: scale(0.3); opacity: 0; }
+  60%  { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ============================================================
+   1.  GLOBAL BODY / BACKGROUND — Hex grid + glow blooms
+   ============================================================ */
+[data-avengers-theme] {
+  background-color: var(--avng-bg) !important;
+  /* Hex grid texture — subtle, low-contrast against #0A0C12 */
+  background-image:
+    linear-gradient(30deg,  #12151F 12%, transparent 12.5%, transparent 87%, #12151F 87.5%, #12151F),
+    linear-gradient(150deg, #12151F 12%, transparent 12.5%, transparent 87%, #12151F 87.5%, #12151F),
+    linear-gradient(30deg,  #12151F 12%, transparent 12.5%, transparent 87%, #12151F 87.5%, #12151F),
+    linear-gradient(150deg, #12151F 12%, transparent 12.5%, transparent 87%, #12151F 87.5%, #12151F) !important;
+  background-size: 80px 140px !important;
+  background-position: 0 0, 0 0, 40px 70px, 40px 70px !important;
+  background-attachment: fixed !important;
+  color: var(--avng-text);
+}
+
+/* Glow layer — 3 colored energy blooms positioned behind hero sections */
+[data-avengers-theme]::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 10% 15%, rgba(166,27,27,0.22), transparent 30%),
+    radial-gradient(circle at 90% 40%, rgba(27,58,107,0.22), transparent 30%),
+    radial-gradient(circle at 50% 85%, rgba(108,58,199,0.22), transparent 35%);
+  animation: pulse-glow 6s ease-in-out infinite alternate;
+}
+@keyframes pulse-glow {
+  from { opacity: 0.84; }
+  to { opacity: 1; }
+}
+
+/* ============================================================
+   1b. SECTION-SPECIFIC BACKGROUND REINFORCEMENT
+   ============================================================ */
+/* Workshop — red/gold bias */
+[data-avengers-theme] .workshop {
+  position: relative;
+}
+[data-avengers-theme] .workshop::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(ellipse 80% 50% at 30% 30%,
+    rgba(166, 27, 27, 0.08), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 70% 60%,
+    rgba(242, 183, 5, 0.05), transparent 60%);
+}
+
+/* Paper Presentation — navy/red bias */
+[data-avengers-theme] .paperpresentation {
+  position: relative;
+}
+[data-avengers-theme] .paperpresentation::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(ellipse 80% 50% at 70% 30%,
+    rgba(27, 58, 107, 0.10), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 30% 60%,
+    rgba(166, 27, 27, 0.06), transparent 60%);
+}
+
+/* Flagship — infinity-strip color bleed */
+[data-avengers-theme] .flagship {
+  position: relative;
+}
+[data-avengers-theme] .flagship::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 50% 40% at 20% 40%, rgba(108, 58, 199, 0.08), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 50% 50%, rgba(47, 111, 237, 0.06), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 40%, rgba(227, 34, 45, 0.06), transparent 60%);
+}
+
+/* Particle container (populated by JS) */
+.avng-particles {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.avng-particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(242, 183, 5, 0.4);
+  box-shadow: 0 0 6px rgba(242, 183, 5, 0.3);
+  will-change: transform;
+  animation: avngParticleDrift linear infinite;
+}
+.avng-particle:nth-child(even) {
+  background: rgba(239, 233, 221, 0.3);
+  box-shadow: 0 0 4px rgba(239, 233, 221, 0.2);
+  width: 2px;
+  height: 2px;
+}
+@keyframes avngParticleDrift {
+  0%   { transform: translateY(0) translateX(0); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateY(-100vh) translateX(var(--drift-x, 30px)); opacity: 0; }
+}
+
+/* ============================================================
+   2.  WORDMARK — Metallic "AVENGERS" display type
+   ============================================================ */
+.avng-wordmark {
+  font-family: var(--avng-font-display) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: linear-gradient(180deg, #EFE9DD, #A9AEC2 40%, #6b6f7d);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.7));
+  position: relative;
+}
+
+/* ============================================================
+   3.  STICKY HEADER / LOGOHEADER OVERRIDES
+   ============================================================ */
+[data-avengers-theme] .logoheader {
+  background: rgba(10, 12, 18, 0.85) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-bottom: 1px solid var(--avng-hairline) !important;
+  transition: background 0.3s ease, backdrop-filter 0.3s ease;
+  top: 0 !important; /* Reset since nav moved to bottom */
+  z-index: 900 !important;
+}
+[data-avengers-theme] .logoheader.avng-nav-scrolled {
+  background: rgba(10, 12, 18, 0.97) !important;
+}
+[data-avengers-theme] .wheader-title,
+[data-avengers-theme] .header-assoc {
+  color: var(--avng-text) !important;
+  /* font-family: var(--avng-font-display) !important; */
+  letter-spacing: 0.1em;
+}
+
+/* Base Modal z-index */
+[data-avengers-theme] .modal-window {
+  z-index: 3000 !important; /* Always above nav (1000) */
+}
+
+[data-avengers-theme] .header-title {
+  font-family: var(--avng-font-display) !important;
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  letter-spacing: 0.12em;
+  background: linear-gradient(180deg, #EFE9DD, #A9AEC2 40%, #6b6f7d) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.7));
+}
+
+/* ============================================================
+   4.  CUSTOM NAV (.ave-nav) & OVERLAY MENU — Hulk Gamma Theme
+   ============================================================ */
+/* Ensure page content isn't hidden under the fixed bottom nav — mobile only */
+@media (max-width: 992px) {
+  body[data-avengers-theme] {
+    padding-bottom: 80px;
+  }
+}
+
+/* Hide the bottom hamburger nav on desktop */
+@media (min-width: 993px) {
+  [data-avengers-theme] .ave-nav {
+    display: none !important;
+  }
+}
+
+[data-avengers-theme] .ave-nav {
+  position: fixed;
+  top: auto;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(94%, 640px);
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.7rem 1.2rem;
+  z-index: 1000;
+  background: rgba(8, 12, 10, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(120, 255, 120, 0.15);
+  border-bottom: 2px solid transparent;
+  border-image: linear-gradient(90deg,
+    rgba(94, 255, 122, 0.0) 0%,
+    rgba(56, 217, 108, 0.6) 30%,
+    rgba(94, 255, 122, 0.8) 50%,
+    rgba(56, 217, 108, 0.6) 70%,
+    rgba(94, 255, 122, 0.0) 100%
+  ) 1;
+  box-shadow: 0 4px 24px rgba(94, 255, 122, 0.08);
+}
+
+/* Nav Logo — Gamma Pulse & Scroll to Top */
+[data-avengers-theme] .ave-nav .logo-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 rgba(94, 255, 122, 0.4);
+  animation: hulk-repulsor-pulse 2.5s infinite;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  outline: none;
+  transition: transform 0.2s ease, filter 0.2s ease;
+  touch-action: manipulation;
+}
+[data-avengers-theme] .ave-nav .logo-icon:hover,
+[data-avengers-theme] .ave-nav .logo-icon:active {
+  transform: scale(1.18);
+  filter: drop-shadow(0 0 8px rgba(94, 255, 122, 0.8));
+}
+[data-avengers-theme] .ave-nav .logo-icon svg {
+  stroke: #5EFF7A;
+  transition: stroke 0.2s ease;
+}
+@keyframes hulk-repulsor-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(94, 255, 122, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(94, 255, 122, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(94, 255, 122, 0); }
+}
+
+/* Nav Menu Text */
+[data-avengers-theme] .ave-nav .menu-text {
+  color: rgba(200, 210, 200, 0.9);
+  font-family: var(--avng-font-display);
+  letter-spacing: 0.1em;
+  font-size: 1.1rem;
+  margin: 0;
+  padding: 0;
+}
+
+/* Hamburger button */
+[data-avengers-theme] .ave-hamburger {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 24px;
+  height: 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+[data-avengers-theme] .ave-hamburger span {
+  width: 24px;
+  height: 2px;
+  background: #5EFF7A;
+  border-radius: 2px;
+  transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+  transform-origin: 1px;
+  box-shadow: 0 0 4px rgba(94, 255, 122, 0.3);
+}
+body.ave-menu-open [data-avengers-theme] .ave-hamburger span:nth-child(1) {
+  transform: rotate(45deg);
+}
+body.ave-menu-open [data-avengers-theme] .ave-hamburger span:nth-child(2) {
+  opacity: 0;
+  transform: translateX(20px);
+}
+body.ave-menu-open [data-avengers-theme] .ave-hamburger span:nth-child(3) {
+  transform: rotate(-45deg);
+}
+
+/* Overlay Menu Backdrop */
+[data-avengers-theme] .ave-menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 12, 8, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 180ms ease, visibility 180ms ease;
+}
+[data-avengers-theme] .ave-menu-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Menu Card — Dark metallic glass */
+[data-avengers-theme] .ave-menu-card {
+  background: rgba(10, 15, 10, 0.95);
+  border-radius: 18px;
+  border: 1px solid rgba(120, 255, 120, 0.18);
+  box-shadow:
+    0 0 40px rgba(94, 255, 122, 0.1),
+    0 0 80px rgba(56, 217, 108, 0.04);
+  max-width: 380px;
+  width: 90%;
+  padding: 2rem 1.5rem;
+  position: relative;
+  transform: scale(0.92);
+  transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+[data-avengers-theme] .ave-menu-overlay.is-open .ave-menu-card {
+  transform: scale(1);
+}
+
+/* Close button inside card */
+[data-avengers-theme] .ave-menu-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(18, 26, 18, 0.6);
+  color: rgba(200, 210, 200, 0.6);
+  border: 1px solid rgba(120, 255, 120, 0.1);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+[data-avengers-theme] .ave-menu-close:hover,
+[data-avengers-theme] .ave-menu-close:focus-visible {
+  color: #5EFF7A;
+  background: rgba(18, 26, 18, 0.9);
+  border-color: rgba(94, 255, 122, 0.3);
+  box-shadow: 0 0 12px rgba(94, 255, 122, 0.15);
+  outline: none;
+}
+
+/* Navigation List */
+[data-avengers-theme] .ave-menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+[data-avengers-theme] .ave-menu-list a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: rgba(200, 210, 200, 0.85);
+  font-family: var(--avng-font-body);
+  font-size: 1.1rem;
+  padding: 1rem;
+  border-radius: 10px;
+  position: relative;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+[data-avengers-theme] .ave-menu-list a .icon {
+  margin-right: 1rem;
+  color: rgba(200, 210, 200, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+[data-avengers-theme] .ave-menu-list a .icon svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+[data-avengers-theme] .ave-menu-list a:hover,
+[data-avengers-theme] .ave-menu-list a:focus-visible {
+  background: rgba(94, 255, 122, 0.06);
+  color: #5EFF7A;
+  outline: none;
+}
+[data-avengers-theme] .ave-menu-list a:hover .icon,
+[data-avengers-theme] .ave-menu-list a:focus-visible .icon {
+  color: #5EFF7A;
+}
+[data-avengers-theme] .ave-menu-list a::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 10%;
+  bottom: 10%;
+  width: 3px;
+  background: #5EFF7A;
+  border-radius: 0 4px 4px 0;
+  opacity: 0;
+  transition: opacity 0.2s;
+  box-shadow: 0 0 8px rgba(94, 255, 122, 0.3);
+}
+[data-avengers-theme] .ave-menu-list a:hover::before,
+[data-avengers-theme] .ave-menu-list a:focus-visible::before {
+  opacity: 1;
+}
+
+/* Active state for mobile menu links */
+[data-avengers-theme] .ave-menu-list a.active {
+  color: #5EFF7A;
+  background: rgba(94, 255, 122, 0.08);
+}
+[data-avengers-theme] .ave-menu-list a.active .icon {
+  color: #5EFF7A;
+}
+[data-avengers-theme] .ave-menu-list a.active::before {
+  opacity: 1;
+}
+
+/* Prefers reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  [data-avengers-theme] .ave-menu-card {
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
+/* ============================================================
+   5.  HERO BANNERS — full-width per section
+   ============================================================ */
+.avng-hero-banner {
+  position: relative;
+  width: 100%;
+  padding: 4rem 2rem 3rem;
+  text-align: center;
+  overflow: visible;
+  margin-bottom: 1rem;
+}
+.avng-hero-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+/* — Iron Man / Workshops — */
+.avng-hero-workshop {
+  background: linear-gradient(135deg, var(--avng-iron-dark) 0%, var(--avng-bg) 60%, var(--avng-panel) 100%);
+}
+.avng-hero-workshop::before {
+  background: radial-gradient(circle at 50% 50%, var(--avng-iron-gold) 0%, transparent 60%);
+  opacity: 0.12;
+}
+.avng-hero-workshop .avng-hero-banner__icon {
+  /* Repulsor glow circle */
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(242, 183, 5, 0.5) 0%, rgba(242, 183, 5, 0.15) 40%, transparent 70%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  animation: avngRepulsorPulse 3s ease-in-out infinite alternate;
+}
+@keyframes avngRepulsorPulse {
+  0%   { opacity: 0.4; transform: translate(-50%, -50%) scale(0.9); }
+  100% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.15); }
+}
+
+/* — Captain America / Paper Presentation — */
+.avng-hero-paper {
+  background: linear-gradient(135deg, var(--avng-cap-dark) 0%, var(--avng-bg) 60%, var(--avng-panel) 100%);
+}
+.avng-hero-paper::before {
+  background: radial-gradient(circle at 50% 50%, var(--avng-cap-navy) 0%, transparent 60%);
+  opacity: 0.15;
+}
+.avng-hero-paper .avng-hero-banner__icon {
+  /* Concentric shield rings — no star, no A */
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 4px solid rgba(166, 27, 27, 0.4);
+  box-shadow:
+    inset 0 0 0 12px rgba(27, 58, 107, 0.3),
+    inset 0 0 0 24px rgba(239, 233, 221, 0.15),
+    inset 0 0 0 36px rgba(166, 27, 27, 0.2);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  animation: avngShieldSpin 12s linear infinite;
+}
+@keyframes avngShieldSpin {
+  0%   { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* — Infinity Stones / Flagship — */
+.avng-hero-flagship {
+  background: linear-gradient(135deg, #1a0e30 0%, var(--avng-bg) 60%, var(--avng-panel) 100%);
+}
+.avng-hero-flagship::before {
+  background: linear-gradient(90deg,
+    var(--avng-stone-purple),
+    var(--avng-stone-blue),
+    var(--avng-stone-red),
+    var(--avng-stone-orange),
+    var(--avng-stone-yellow),
+    var(--avng-stone-green)
+  );
+  opacity: 0.06;
+}
+
+/* Infinity strip — 6-color gradient bar */
+.avng-infinity-strip {
+  height: 3px;
+  width: 100%;
+  max-width: 400px;
+  margin: 1rem auto 0;
+  background: linear-gradient(90deg,
+    var(--avng-stone-purple),
+    var(--avng-stone-blue),
+    var(--avng-stone-red),
+    var(--avng-stone-orange),
+    var(--avng-stone-yellow),
+    var(--avng-stone-green)
+  );
+  border-radius: 2px;
+}
+
+/* Hero banner heading overrides */
+.avng-hero-banner__title {
+  font-family: AquireBold !important;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  letter-spacing: 0.1em;
+  color: var(--avng-text);
+  text-transform: uppercase;
+  position: relative;
+  z-index: 2;
+  margin: 0;
+}
+.avng-hero-banner__tagline {
+  font-family: var(--avng-font-body);
+  font-size: clamp(0.85rem, 2vw, 1.1rem);
+  color: var(--avng-text-dim);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-top: 0.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* ============================================================
+   6.  SECTION TITLE OVERRIDES
+   ============================================================ */
+[data-avengers-theme] #section-title {
+  font-family: var(--avng-font-display) !important;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  letter-spacing: 0.1em;
+  background: linear-gradient(180deg, #EFE9DD 0%, #A9AEC2 70%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  padding-top: 2rem;
+  padding-bottom: 1.5rem;
+}
+
+/* ============================================================
+   7.  CARD OVERRIDES — dark panel, colored borders, tags
+   ============================================================ */
+[data-avengers-theme] .card {
+  background: var(--avng-panel) !important;
+  border: 1px solid var(--avng-hairline) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5) !important;
+  overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+              box-shadow 0.4s ease,
+              border-color 0.3s ease !important;
+  position: relative;
+  /* Preserve 3D for tilt */
+  transform-style: preserve-3d;
+}
+[data-avengers-theme] .card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 20;
+  background: var(--avng-hairline);
+  transition: background 0.3s ease;
+}
+
+/* Section-specific colored top border */
+[data-avengers-theme] .workshop .card::before {
+  background: linear-gradient(90deg, var(--avng-iron-red), var(--avng-iron-gold));
+}
+[data-avengers-theme] .paperpresentation .card::before {
+  background: linear-gradient(90deg, var(--avng-cap-navy), var(--avng-cap-red));
+}
+[data-avengers-theme] .flagship .card::before {
+  background: linear-gradient(90deg,
+    var(--avng-stone-purple),
+    var(--avng-stone-blue),
+    var(--avng-stone-red),
+    var(--avng-stone-orange),
+    var(--avng-stone-yellow),
+    var(--avng-stone-green)
+  );
+}
+
+/* Card hover glow */
+[data-avengers-theme] .card:hover {
+  border-color: rgba(239, 233, 221, 0.15) !important;
+}
+[data-avengers-theme] .workshop .card:hover {
+  box-shadow: 0 8px 40px rgba(166, 27, 27, 0.25),
+              0 0 60px rgba(242, 183, 5, 0.1) !important;
+}
+[data-avengers-theme] .paperpresentation .card:hover {
+  box-shadow: 0 8px 40px rgba(27, 58, 107, 0.35),
+              0 0 60px rgba(166, 27, 27, 0.1) !important;
+}
+[data-avengers-theme] .flagship .card:hover {
+  box-shadow: 0 8px 40px rgba(108, 58, 199, 0.25),
+              0 0 60px rgba(47, 111, 237, 0.1) !important;
+}
+
+/* Events page — generic dark treatment for tech/nontech/gaming */
+[data-avengers-theme] .tech-events .card::before {
+  background: linear-gradient(90deg, var(--avng-iron-red), var(--avng-iron-gold));
+}
+[data-avengers-theme] .nontech-events .card::before {
+  background: linear-gradient(90deg, var(--avng-cap-navy), var(--avng-cap-red));
+}
+
+/* Card inner overrides */
+[data-avengers-theme] .card .pic {
+  border-radius: 12px 12px 0 0;
+}
+[data-avengers-theme] .card .eimg {
+  border-radius: 12px;
+  transition: transform 0.5s ease, filter 0.5s ease;
+}
+[data-avengers-theme] .card:hover .eimg {
+  transform: scale(1.05);
+  filter: brightness(0.7);
+}
+
+/* Card event name */
+[data-avengers-theme] .ename {
+  background-color: rgba(10, 12, 18, 0.75) !important;
+  backdrop-filter: blur(8px);
+  color: var(--avng-text) !important;
+  font-family: var(--avng-font-display) !important;
+  letter-spacing: 0.05em;
+}
+
+/* Card hover text overlay */
+[data-avengers-theme] .card .text {
+  background: rgba(10, 12, 18, 0.92);
+}
+[data-avengers-theme] .event-title,
+[data-avengers-theme] .gevent-title {
+  background: linear-gradient(180deg, var(--avng-text), var(--avng-text-dim)) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  font-family: var(--avng-font-display) !important;
+  letter-spacing: 0.05em;
+}
+[data-avengers-theme] .card .content {
+  color: var(--avng-text-dim);
+}
+[data-avengers-theme] .card .content p {
+  color: var(--avng-text-dim);
+  -webkit-text-fill-color: var(--avng-text-dim);
+  background: none !important;
+  -webkit-background-clip: unset !important;
+}
+
+/* — Diagonal hexagon corner tag — */
+.avng-section-tag {
+  position: absolute;
+  top: 12px;
+  right: -6px;
+  z-index: 25;
+  font-family: var(--avng-font-display);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--avng-text);
+  padding: 3px 14px 3px 10px;
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%);
+}
+.avng-section-tag--workshop {
+  background: linear-gradient(90deg, var(--avng-iron-red), var(--avng-iron-dark));
+}
+.avng-section-tag--paper {
+  background: linear-gradient(90deg, var(--avng-cap-navy), var(--avng-cap-dark));
+}
+.avng-section-tag--flagship {
+  background: linear-gradient(90deg, var(--avng-stone-purple), var(--avng-stone-blue));
+}
+
+/* ============================================================
+   8.  ZIGZAG DIVIDER between sections
+   ============================================================ */
+.avng-zigzag-divider {
+  position: relative;
+  width: 100%;
+  height: 30px;
+  margin: 3rem 0;
+  overflow: hidden;
+}
+.avng-zigzag-divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--avng-hairline);
+}
+.avng-zigzag-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 20px;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 5px,
+    var(--avng-hairline) 5px,
+    var(--avng-hairline) 6px
+  );
+  mask-image: linear-gradient(90deg, transparent, black 20%, black 80%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 20%, black 80%, transparent);
+}
+
+/* Lightning-bolt energy divider variant */
+.avng-zigzag-divider--energy::after {
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 5px,
+    var(--avng-iron-gold) 5px,
+    var(--avng-iron-gold) 6px
+  );
+  opacity: 0.4;
+}
+
+/* ============================================================
+   9.  HEXAGONAL BADGE ICON
+   ============================================================ */
+.avng-hex-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+  font-family: var(--avng-font-display);
+  font-size: 16px;
+  color: var(--avng-text);
+  line-height: 1;
+}
+.avng-hex-badge--iron {
+  background: linear-gradient(180deg, var(--avng-iron-red), var(--avng-iron-dark));
+}
+.avng-hex-badge--cap {
+  background: linear-gradient(180deg, var(--avng-cap-navy), var(--avng-cap-dark));
+}
+.avng-hex-badge--infinity {
+  background: linear-gradient(180deg, var(--avng-stone-purple), var(--avng-stone-blue));
+}
+
+/* ============================================================
+   10. REPULSOR GLOW (Workshop accent)
+   ============================================================ */
+.avng-repulsor-glow {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(242, 183, 5, 0.6) 0%,
+    rgba(255, 255, 255, 0.2) 20%,
+    transparent 60%
+  );
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* ============================================================
+   11. SHIELD RINGS (Paper Presentation accent)
+   ============================================================ */
+.avng-shield-rings {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 3px solid rgba(166, 27, 27, 0.5);
+  box-shadow:
+    inset 0 0 0 8px rgba(27, 58, 107, 0.4),
+    inset 0 0 0 16px rgba(239, 233, 221, 0.2);
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+/* ============================================================
+   12. BUTTON MICRO-INTERACTIONS
+       SCOPED to .interior .btn ("View More" buttons on cards)
+       and NOT .btn-close or Bootstrap utility .btn classes.
+   ============================================================ */
+[data-avengers-theme] .interior .btn {
+  background: linear-gradient(135deg, var(--avng-iron-red), var(--avng-iron-dark)) !important;
+  color: var(--avng-text) !important;
+  border: 1px solid rgba(166, 27, 27, 0.5) !important;
+  border-radius: 6px !important;
+  font-family: var(--avng-font-display) !important;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  padding: 8px 20px !important;
+  transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.3s ease !important;
+  position: relative;
+  overflow: hidden;
+}
+[data-avengers-theme] .interior .btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(242, 183, 5, 0.3), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+[data-avengers-theme] .interior .btn:hover,
+[data-avengers-theme] .interior .btn:focus-visible {
+  transform: scale(1.06);
+  box-shadow: 0 0 20px rgba(166, 27, 27, 0.4), 0 0 40px rgba(242, 183, 5, 0.15) !important;
+}
+[data-avengers-theme] .interior .btn:hover::after,
+[data-avengers-theme] .interior .btn:focus-visible::after {
+  opacity: 1;
+}
+
+/* Register / Submit button */
+[data-avengers-theme] .submitBtn {
+  background: linear-gradient(135deg, var(--avng-iron-gold), #D4A005) !important;
+  color: var(--avng-bg) !important;
+  border: 1px solid rgba(242, 183, 5, 0.5) !important;
+  font-family: var(--avng-font-display) !important;
+  letter-spacing: 0.12em;
+  font-size: 15px;
+  padding: 0.8rem 2.5rem;
+  border-radius: 6px;
+  transition: transform 0.2s ease, box-shadow 0.3s ease !important;
+}
+[data-avengers-theme] .submitBtn:hover,
+[data-avengers-theme] .submitBtn:focus-visible {
+  transform: scale(1.06);
+  box-shadow: 0 0 24px rgba(242, 183, 5, 0.4) !important;
+  background: linear-gradient(135deg, #D4A005, var(--avng-iron-gold)) !important;
+  color: var(--avng-bg) !important;
+}
+
+/* ============================================================
+   13. MODAL OVERRIDES — dark themed panels
+   ============================================================ */
+[data-avengers-theme] .modal-window {
+  background-color: rgba(10, 12, 18, 0.85) !important;
+  backdrop-filter: blur(20px) !important;
+}
+[data-avengers-theme] .modal-window > div {
+  background: var(--avng-panel) !important;
+  border: 1px solid var(--avng-hairline) !important;
+  border-radius: 12px !important;
+  position: relative;
+  overflow: hidden;
+}
+/* Colored top border on modals */
+[data-avengers-theme] .modal-window > div::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--avng-iron-red), var(--avng-iron-gold));
+  z-index: 5;
+}
+[data-avengers-theme] .modal-workshop .modal-window > div::before {
+  background: linear-gradient(90deg, var(--avng-iron-red), var(--avng-iron-gold));
+}
+[data-avengers-theme] .modal-paper .modal-window > div::before,
+[data-avengers-theme] section.paperpresentation ~ section .modal-window > div::before {
+  background: linear-gradient(90deg, var(--avng-cap-navy), var(--avng-cap-red));
+}
+[data-avengers-theme] .modal-flagship .modal-window > div::before,
+[data-avengers-theme] section.flagship ~ section .modal-window > div::before {
+  background: linear-gradient(90deg,
+    var(--avng-stone-purple), var(--avng-stone-blue),
+    var(--avng-stone-red), var(--avng-stone-orange));
+}
+
+/* Modal fade+scale transition (enhanced) */
+[data-avengers-theme] .modal-window {
+  transition: opacity 0.35s ease, visibility 0.35s ease !important;
+}
+[data-avengers-theme] .modal-window > div {
+  transform: scale(0.92);
+  transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1) !important;
+}
+[data-avengers-theme] .modal-window[style*="opacity: 1"] > div,
+[data-avengers-theme] .modal-window[style*="visibility: visible"] > div {
+  transform: scale(1);
+}
+
+/* Accordion inside modal */
+[data-avengers-theme] .accordion {
+  background: var(--avng-panel) !important;
+}
+[data-avengers-theme] .accordion article {
+  background: var(--avng-panel) !important;
+  border-radius: 8px !important;
+}
+[data-avengers-theme] .accordion-text {
+  background: var(--avng-panel-2) !important;
+  color: var(--avng-iron-gold) !important;
+  border-radius: 8px !important;
+  font-family: var(--avng-font-display) !important;
+  letter-spacing: 0.08em;
+}
+[data-avengers-theme] .accordion-text:hover,
+[data-avengers-theme] .selected .accordion-text {
+  background: var(--avng-hairline) !important;
+  color: var(--avng-text) !important;
+}
+[data-avengers-theme] .accordion-content {
+  background: var(--avng-bg) !important;
+  color: var(--avng-text-dim) !important;
+  border-radius: 0 0 8px 8px !important;
+}
+[data-avengers-theme] .selected .accordion-content {
+  background: var(--avng-bg) !important;
+}
+[data-avengers-theme] .accordion-content p {
+  color: var(--avng-text-dim) !important;
+}
+[data-avengers-theme] .accordion-content h3 {
+  color: var(--avng-iron-gold) !important;
+}
+[data-avengers-theme] .accordion-content h6 {
+  color: var(--avng-text) !important;
+}
+[data-avengers-theme] #accordion-title {
+  background: linear-gradient(180deg, var(--avng-text), var(--avng-text-dim)) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  font-family: var(--avng-font-display) !important;
+  letter-spacing: 0.08em;
+}
+
+/* Accordion +/- indicators */
+[data-avengers-theme] .accordion-text:before,
+[data-avengers-theme] .accordion-text:after {
+  background: var(--avng-iron-gold) !important;
+}
+
+/* Modal close button */
+[data-avengers-theme] .leftright,
+[data-avengers-theme] .rightleft {
+  background-color: var(--avng-text-dim) !important;
+}
+[data-avengers-theme] .close-container:hover .leftright,
+[data-avengers-theme] .close-container:hover .rightleft {
+  background-color: var(--avng-iron-red) !important;
+}
+
+/* Rule items, contact styling */
+[data-avengers-theme] .rule-item::before {
+  color: var(--avng-iron-gold) !important;
+}
+[data-avengers-theme] .rule-item a,
+[data-avengers-theme] .ref {
+  color: var(--avng-iron-gold) !important;
+}
+[data-avengers-theme] .dt-item span {
+  color: var(--avng-iron-gold) !important;
+}
+[data-avengers-theme] .pricetag {
+  color: var(--avng-iron-gold) !important;
+  font-family: var(--avng-font-display) !important;
+  font-size: 2rem !important;
+  letter-spacing: 0.1em;
+}
+[data-avengers-theme] .phn {
+  color: var(--avng-cap-navy) !important;
+  font-size: 24px;
+}
+[data-avengers-theme] .wp {
+  color: var(--avng-stone-green) !important;
+  font-size: 24px;
+}
+[data-avengers-theme] .spec-sheet {
+  color: var(--avng-iron-gold) !important;
+}
+
+/* ============================================================
+   14. SCROLL-REVEAL ANIMATION STATES
+   ============================================================ */
+[data-avengers-theme] .avng-scroll-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+              transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+[data-avengers-theme] .avng-scroll-reveal--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================================
+   15. FOOTER OVERRIDES
+   ============================================================ */
+[data-avengers-theme] footer {
+  background: var(--avng-panel) !important;
+  border-top: 1px solid var(--avng-hairline);
+}
+[data-avengers-theme] .ft-end {
+  background-color: var(--avng-bg) !important;
+  color: var(--avng-text-dim) !important;
+}
+[data-avengers-theme] .ftcard-title {
+  color: var(--avng-text-dim) !important;
+}
+[data-avengers-theme] .contact-link {
+  color: var(--avng-text-dim) !important;
+}
+[data-avengers-theme] .ft-asso {
+  color: var(--avng-text-dim) !important;
+}
+
+/* ============================================================
+   16. EXISTING LOADING SCREEN OVERRIDE
+   ============================================================ */
+[data-avengers-theme] .loading {
+  background: var(--avng-bg) !important;
+}
+[data-avengers-theme] .loader {
+  border-color: var(--avng-hairline) !important;
+  border-top-color: var(--avng-iron-gold) !important;
+}
+
+/* ============================================================
+   17. CANVAS (cosmos background) tint
+   ============================================================ */
+[data-avengers-theme] canvas#cosmosCanvas {
+  opacity: 0.3 !important;
+}
+
+/* ============================================================
+   18. KEYBOARD FOCUS STATES
+   ============================================================ */
+[data-avengers-theme] *:focus-visible {
+  outline: 2px solid var(--avng-iron-gold) !important;
+  outline-offset: 2px;
+}
+[data-avengers-theme] .interior .btn:focus-visible,
+[data-avengers-theme] .submitBtn:focus-visible {
+  outline: 2px solid var(--avng-iron-gold) !important;
+  outline-offset: 3px;
+}
+[data-avengers-theme] .close-container:focus-visible {
+  outline: 2px solid var(--avng-iron-gold) !important;
+  outline-offset: 4px;
+}
+
+/* ============================================================
+   19. PREFERS-REDUCED-MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  [data-avengers-theme] * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .avng-loading {
+    transition: none !important;
+  }
+  [data-avengers-theme] .avng-scroll-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  [data-avengers-theme] .card {
+    transition: none !important;
+  }
+}
+
+/* ============================================================
+   20. RESPONSIVE BREAKPOINTS
+   ============================================================ */
+
+/* ≤ 576px (small phones) */
+@media (max-width: 576px) {
+  .avng-hero-banner {
+    padding: 3rem 1rem 2rem;
+  }
+  .avng-hero-banner__title {
+    font-size: clamp(1.5rem, 6vw, 2.2rem);
+  }
+  .avng-loading__hex {
+    width: 90px;
+    height: 90px;
+  }
+  .avng-loading__letter {
+    font-size: 40px;
+  }
+  .avng-zigzag-divider {
+    margin: 2rem 0;
+  }
+  .avng-section-tag {
+    font-size: 0.55rem;
+    padding: 2px 10px 2px 8px;
+  }
+}
+
+/* ≤ 360px (extra small) */
+@media (max-width: 360px) {
+  .avng-hero-banner {
+    padding: 2rem 0.75rem 1.5rem;
+  }
+  .avng-hero-banner__title {
+    font-size: 1.4rem;
+  }
+  [data-avengers-theme] #section-title {
+    font-size: 1.4rem !important;
+  }
+  .avng-loading__hex {
+    width: 72px;
+    height: 72px;
+  }
+  .avng-loading__letter {
+    font-size: 32px;
+  }
+}
+
+/* ≥ 1200px (large screens) */
+@media (min-width: 1200px) {
+  .avng-hero-banner {
+    padding: 5rem 3rem 4rem;
+  }
+}
+
+/* ============================================================
+   21. PREFERS-REDUCED-MOTION — particle layer
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .avng-particles {
+    display: none !important;
+  }
+}

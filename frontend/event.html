@@ -1,0 +1,2617 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-YBDL7HG7JM"></script>
+<script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-YBDL7HG7JM');
+    </script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="css/bootstrap.min.css" rel="stylesheet"/>
+<link href="css/common-styles.css" rel="stylesheet"/>
+<link href="css/events-hold.css" rel="stylesheet"/>
+<link href="css/cinematic-effects.css" rel="stylesheet"/>
+<link href="css/background.css" rel="stylesheet"/>
+<link href="css/nav.css" rel="stylesheet"/>
+<!-- <link rel="stylesheet" href="css/loader.css"> -->
+<link href="css/footer.css" rel="stylesheet"/>
+<link href="css/desktop-nav.css" rel="stylesheet"/>
+<link href="css/avengers-theme.css" rel="stylesheet">
+<!-- Mobile-only fixes: section titles, card order, close button -->
+<style>
+        /* Hero Title Word Stacking & Alignment */
+        .hero-word {
+            display: block !important;
+            white-space: nowrap !important;
+        }
+
+        .hero-word span {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(40px);
+            animation: letter 0.2s forwards;
+        }
+
+        .hero-word span:nth-child(1) {
+            animation-delay: .05s;
+        }
+
+        .hero-word span:nth-child(2) {
+            animation-delay: .1s;
+        }
+
+        .hero-word span:nth-child(3) {
+            animation-delay: .15s;
+        }
+
+        .hero-word span:nth-child(4) {
+            animation-delay: .2s;
+        }
+
+        .hero-word span:nth-child(5) {
+            animation-delay: .25s;
+        }
+
+        .hero-word span:nth-child(6) {
+            animation-delay: .3s;
+        }
+
+        .hero-word span:nth-child(7) {
+            animation-delay: .35s;
+        }
+
+        .hero-word span:nth-child(8) {
+            animation-delay: .4s;
+        }
+
+        .hero-word span:nth-child(9) {
+            animation-delay: .45s;
+        }
+
+        .hero-word span:nth-child(10) {
+            animation-delay: .5s;
+        }
+
+        .hero-word span:nth-child(11) {
+            animation-delay: .55s;
+        }
+
+        .hero-word span:nth-child(12) {
+            animation-delay: .6s;
+        }
+
+        .hero-word span:nth-child(13) {
+            animation-delay: .65s;
+        }
+
+        @media (max-width: 992px) {
+
+            /* 1. Fix section hero titles wrapping awkwardly on mobile */
+            .hero-text h1.hero-title,
+            .hero-text h1.hero-title1,
+            h1.hero-title,
+            h1.hero-title1 {
+                font-size: clamp(2rem, 9.5vw, 3.5rem) !important;
+                letter-spacing: 3px !important;
+                line-height: 1.15 !important;
+                word-break: keep-all !important;
+                overflow-wrap: normal !important;
+            }
+
+            /* 2. Event cards: image ABOVE description on mobile */
+            .event-row-front>.row {
+                display: flex !important;
+                flex-direction: column-reverse !important;
+            }
+
+            /* 3. Clean 2-button layout for Mobile Dossier Modals */
+            .reg-btn,
+            .dossier-info-col .reg-btn,
+            center.reg-btn {
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 12px !important;
+                width: 100% !important;
+                margin-top: 1.5rem !important;
+                margin-bottom: 0.5rem !important;
+                padding: 0 !important;
+                position: relative !important;
+                z-index: 100 !important;
+                text-align: center !important;
+            }
+
+            /* Enforce identical twin design (height, shape, typography) for both buttons */
+            .reg-btn .submitBtn,
+            .reg-btn .mobile-close-btn,
+            .mobile-close-btn {
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                flex: 1 1 0px !important;
+                max-width: 140px !important;
+                min-width: 110px !important;
+                height: 42px !important;
+                padding: 0 0.8rem !important;
+                border-radius: 50px !important;
+                font-family: 'Poppins', sans-serif !important;
+                font-weight: 700 !important;
+                font-size: 0.85rem !important;
+                letter-spacing: 1.2px !important;
+                text-transform: uppercase !important;
+                text-align: center !important;
+                line-height: 1 !important;
+                margin: 0 !important;
+                position: static !important;
+                transform: none !important;
+                animation: none !important;
+                box-sizing: border-box !important;
+                cursor: pointer !important;
+                white-space: nowrap !important;
+                vertical-align: middle !important;
+            }
+
+            /* Register button override on mobile */
+            .reg-btn .submitBtn {
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+            }
+
+            /* Mobile Close button matching twin design */
+            .mobile-close-btn {
+                background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%) !important;
+                color: #ffffff !important;
+                border: 1.5px solid #f87171 !important;
+                box-shadow: 0 4px 15px rgba(220, 38, 38, 0.35) !important;
+            }
+
+            .mobile-close-btn:hover,
+            .mobile-close-btn:active {
+                background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%) !important;
+                border-color: #ffffff !important;
+                box-shadow: 0 0 20px rgba(239, 68, 68, 0.7) !important;
+            }
+
+            /* Add body padding for fixed bottom nav */
+            body {
+                padding-bottom: 80px;
+            }
+        }
+
+        /* Hide mobile close button on desktop */
+        @media (min-width: 993px) {
+            .mobile-close-btn {
+                display: none !important;
+            }
+        }
+    </style>
+<link href="assets/SRiSHTi-logo.png" rel="icon"/>
+<!-- <link rel="stylesheet" href="css/font-awesome.min.css"> -->
+<title>SRiSHTi 2k26 | EVENTS</title>
+<link href="./assets/SRiSHTi-logo.png" rel="icon" sizes="32x32"/>
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.bundle.min.js"></script>
+<!-- <script src="js/background.js"></script> -->
+<script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js" type="module"></script>
+<script nomodule="" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+<script type="text/javascript">
+        $(document).ready(function () {
+            // Technical Events
+            $("#btn_1").click(function () {
+                registerEvent("TECH NEXUS");
+            });
+            $("#btn_2").click(function () {
+                registerEvent("BRAINBYTE 2026");
+            });
+            $("#btn_3").click(function () {
+                registerEvent("THRILLER TECHSCAPE");
+            });
+            $("#btn_4").click(function () {
+                registerEvent("TECHTOPIA");
+            });
+            $("#btn_5").click(function () {
+                registerEvent("CASE ZERO : THE FINAL VERDICT");
+            });
+
+            // Non-Technical Events
+            $("#btn_6").click(function () {
+                registerEvent("Road To End Game");
+            });
+            $("#btn_7").click(function () {
+                registerEvent("MYSTERY VOYAGE – Unveil the truth");
+            });
+            $("#btn_8").click(function () {
+                registerEvent("INFINITY CHASE");
+            });
+            $("#btn_9").click(function () {
+                registerEvent("Movie Mafia");
+            });
+            $("#btn_10").click(function () {
+                registerEvent("Multiverse Manhunt");
+            });
+            $("#btn_11").click(function () {
+                registerEvent("Movie Mafia");
+            });
+        });
+
+
+        function registerEvent(evname) {
+            $.ajax({
+                type: "POST",
+                url: "/api/register/event",
+                contentType: "application/json",
+                data: JSON.stringify({ evname: evname }),
+                xhrFields: { withCredentials: true },
+                success: function (html) {
+                    if (html == 'true') {
+                        alert(`You have successfully registered for ${evname}!`);
+                    } else if (html == 'rem' || html == 'already') {
+                        alert(`You are already registered for ${evname}.`);
+                    } else if (html == 'genfee') {
+                        var val = confirm(
+                            "General Registration is required to register for this event.\n\nWould you like to proceed to the EMS Payment Portal now?"
+                        );
+                        if (val == true) {
+                            generalfee();
+                        }
+                    } else if (html == 'full') {
+                        alert(
+                            "Oops! We're sorry. All slots are full for this Event. Thank you for checking out."
+                        );
+                    } else {
+                        alert("Please log in to your account before registering for an event.");
+                        window.location.href = "login.html?redirect=event.html";
+                    }
+                },
+                error: function () {
+                    alert("Please log in to your account before registering for an event.");
+                    window.location.href = "login.html?redirect=event.html";
+                }
+            });
+        }
+
+        function generalfee() {
+            window.open("https://events.psginstitutions.in/EMS/register/696AE7EB187", "_blank");
+        }
+    </script>
+<script src="js/app.js?v=9"></script>
+</head>
+<body data-avengers-theme="">
+<div class="loading">
+<span class="loader"></span>
+</div>
+<canvas id="cosmosCanvas"></canvas>
+<script src="js/cosmos.js"></script>
+<!-- ═══════════════════════════════════════════════════════
+         CINEMATIC ATMOSPHERE LAYER — pointer-events:none on all
+         All elements are purely decorative and additive.
+         Linked only from event.html.
+         ═══════════════════════════════════════════════════════ -->
+<!-- Nebula background tint (slow drift) -->
+<div class="cin-layer" id="cin-nebula"></div>
+<!-- Cosmic fog / smoke blobs -->
+<div class="cin-layer" id="cin-fog"></div>
+<!-- Iron Man HUD scan-line grid + sweep -->
+<div class="cin-layer" id="cin-hud"></div>
+<!-- Arc Reactor glow behind the heading -->
+<div class="cin-layer" id="cin-arc">
+<div id="cin-arc-reactor"></div>
+</div>
+<!-- Thor lightning flash container -->
+<div class="cin-layer" id="cin-lightning"></div>
+<!-- Energy particle + cosmic dust canvas -->
+<canvas id="cin-canvas"></canvas>
+<!-- <div class="box">
+        <div class="effect"></div>
+        <div class="effect"></div>
+        <div class="effect"></div>
+        <div class="effect"></div>
+        <div class="effect"></div>
+        <div class="effect"></div>
+        <div class="effect"></div>
+        <div class="effect"></div>
+        <div class="effect"></div>
+        <div class="effect"></div>
+        <div class="effect"></div>
+        <div class="effect"></div>
+        <div class="effect"></div>
+        <div class="effect"></div>
+    </div> -->
+<main>
+<img class="bg-image" src="assets/Events_img/background.png"/>
+<div class="bg-overlay"></div>
+<!-- <section class="header">
+            <div
+                class="logoheader fixed-top m-0 d-flex flex-row justify-content-center content-center align-items-center gap-5">
+                --<div class="header-logo">
+                    <img src="assets/SRISHTIFULL24_WHITE.png" alt>
+                </div>--
+                <div class="header-assoc">
+                    <h2 class="header-title">EVENTS</h2>
+                </div>
+                <canvas id="cosmosCanvas"></canvas>
+                <script src="js/cosmos.js"></script>
+            </div>
+        </section> -->
+<!-- Desktop Navigation (visible ≥993px) -->
+<nav class="avng-desktop-nav" data-active="events" id="navbar">
+<div class="avng-desktop-nav__logos">
+<a href="https://www.psgtech.edu/" target="_blank"><img alt="PSG Logo" src="assets/psg_logo.png"/></a>
+<a href="https://www.ieee.org/" target="_blank"><img alt="IEEE Logo" src="assets/ieee_logo.png"/></a>
+<a href="https://www.psgtech.edu/dept/ece/ieee/" target="_blank"><img alt="IEEE SC Logo" src="assets/ieee_logo_sc.png"/></a>
+<a href="#"><img alt="100 YRS Logo" src="assets/icons/100 YRS.png"/></a>
+</div>
+<ul class="avng-desktop-nav__links">
+<li><a data-nav-id="home" href="home.html">Home</a></li>
+<li><a class="avng-nav-active" data-nav-id="events" href="event.html">Events</a></li>
+<li><a data-nav-id="workshop" href="workshop.html#workshop">Workshop</a></li>
+<li><a data-nav-id="paperpresentation" href="workshop.html#paperpresentation">Paper Presentation</a>
+</li>
+<li><a data-nav-id="flagship" href="workshop.html#flagship">Flagship</a></li>
+<li><a data-nav-id="contact" href="home.html#contact">Contact</a></li>
+<li><a data-nav-id="campusmap" href="https://3d-test-sepia.vercel.app/" target="_blank">Campus Map</a>
+</li>
+</ul>
+<div class="avng-desktop-nav__register">
+<a href="register.html">Register Now</a>
+</div>
+</nav>
+<!-- Mobile Top Logo Bar (visible ≤992px) -->
+<div class="avng-mobile-top-bar">
+<a href="https://www.psgtech.edu/" target="_blank"><img alt="PSG Logo" src="assets/psg_logo.png"/></a>
+<a href="https://www.ieee.org/" target="_blank"><img alt="IEEE Logo" src="assets/ieee_logo.png"/></a>
+<a href="https://www.psgtech.edu/dept/ece/ieee/" target="_blank"><img alt="IEEE SC Logo" src="assets/ieee_logo_sc.png"/></a>
+<a href="#"><img alt="100 YRS Logo" src="assets/icons/100 YRS.png"/></a>
+</div>
+<!-- Mobile Navigation (visible ≤992px) -->
+<header>
+<nav class="ave-nav">
+<button aria-label="Scroll to top" class="logo-icon" id="aveScrollTop" title="Scroll to top" type="button">
+<svg fill="none" height="24" stroke="var(--avng-iron-gold)" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24">
+<circle cx="12" cy="12" r="10"></circle>
+<path d="M12 18V8"></path>
+<path d="M8 12l4-4 4 4"></path>
+</svg>
+</button>
+<p class="menu-text">MENU</p>
+<button aria-label="Toggle menu" class="ave-hamburger" id="aveMenuToggle">
+<span></span><span></span><span></span>
+</button>
+</nav>
+</header>
+<section class="events">
+<!-- Technical Events -->
+<section class="tech-events">
+<section class="event-hero">
+<img alt="Technical Event" class="event-art" src="assets/Events_img/technical_bg.png"/>
+<div class="hero-text">
+<span class="comic-badge">THE ARENA</span>
+<h1 class="hero-title">
+<span class="hero-word"><span>T</span><span>E</span><span>C</span><span>H</span><span>N</span><span>I</span><span>C</span><span>A</span><span>L</span></span>
+<span class="hero-word"><span>E</span><span>V</span><span>E</span><span>N</span><span>T</span><span>S</span></span>
+</h1>
+<p>Suit Up. Build. Innovate.</p>
+</div>
+</section>
+<div class="editorial-row-container container-fluid px-lg-5" id="card-container">
+<!-- Event 1 -->
+<div class="event-row scroll-reveal palette-ironman" id="event-row-1">
+<div class="hero-bg-glow"></div>
+<div class="event-row-inner container">
+<div class="event-row-front">
+<div class="row align-items-center g-4 g-lg-5">
+<div class="col-lg-7 event-text-col">
+<div class="kicker-label">
+<svg class="hero-icon arc-icon" viewbox="0 0 24 24">
+<circle cx="12" cy="12" fill="none" r="9" stroke="currentColor" stroke-width="1.5"></circle>
+<circle cx="12" cy="12" fill="none" r="5" stroke="currentColor" stroke-width="1.5"></circle>
+<circle cx="12" cy="12" fill="currentColor" r="2"></circle>
+</svg>
+                                            TECHNICAL EVENT
+                                        </div>
+<h2 class="ename card-front z-2">TECH NEXUS</h2>
+<div class="tagline-italic">Connecting ideas. Creating impact</div>
+<div class="meta-row">
+<span class="meta-item">TEAM OF 2-3</span>
+<span class="meta-dot">•</span>
+<span class="meta-item">2 ROUNDS</span>
+<span class="meta-dot">•</span>
+<span class="meta-item">WEB DEVELOPMENT</span>
+</div>
+<div class="text">
+<div class="title" style="display:none;">
+<h1 class="event-title">TECH NEXUS</h1>
+</div>
+<div class="content">
+<p>Tech Nexus is an exciting technical event that combines web-based
+                                                    engineering challenges with strategic gameplay to test participants'
+                                                    logical thinking, teamwork, and problem-solving abilities.</p>
+</div>
+<div class="interior">
+<button class="btn" id="div-1">
+<span>View More</span>
+<ion-icon class="btn-arrow" name="arrow-forward-outline"></ion-icon>
+</button>
+</div>
+</div>
+</div>
+<div class="col-lg-5 event-img-col d-flex justify-content-center align-items-center">
+<div class="card my-5" style="border: 0;">
+<div class="pic">
+<img alt="TECH NEXUS" class="eimg" src="assets/Icons_Srishti24_img/ICONS/Technical/Tech_1.png"/>
+<div class="texture-overlay"></div>
+</div>
+<div class="square_1"></div>
+<div class="square_2"></div>
+<div class="energy-sparks"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="event-row-back dossier-panel modal-window palette-ironman" id="id1">
+<div>
+<div class="dossier-scanline"></div>
+<div class="hud-bracket hud-tl"></div>
+<div class="hud-bracket hud-tr"></div>
+<div class="hud-bracket hud-bl"></div>
+<div class="hud-bracket hud-br"></div>
+<div class="dossier-topbar">
+<div class="modal-close" title="Close">
+<div class="close-container" id="modal_close_1">
+<div class="leftright"></div>
+<div class="rightleft"></div>
+<label class="close">close</label>
+</div>
+</div>
+</div>
+<div class="dossier-body">
+<div class="hero-char-col">
+<div class="hero-char-img">
+<img alt="TECH NEXUS" class="placeholder-hero-img" src="assets/Icons_Srishti24_img/ICONS/Technical/Tech_1.png"/>
+</div>
+</div>
+<div class="dossier-info-col">
+<h1 class="text-center justify-content-center" id="accordion-title">TECH
+                                                NEXUS</h1>
+<span class="dossier-title-bar"></span>
+<div class="dossier-stat-bar">
+<div class="stat-box"><span class="stat-label">TEAM SIZE</span><span class="stat-value">2-3 MEMBERS</span></div>
+<div class="stat-box"><span class="stat-label">DURATION</span><span class="stat-value">2 ROUNDS</span></div>
+</div>
+<div class="dossier-tab-content">
+<div class="dossier-tab-pane active" data-pane="overview">
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">DESCRIPTION</h2>
+<div class="dossier-section-body">
+<p class="desc">Tech Nexus is a hybrid technical event
+                                                                combining a web-based engineering challenge with a live
+                                                                strategy card game. Teams complete five technical
+                                                                missions through a custom web application, with
+                                                                performance evaluated by progression and completion
+                                                                time. The top five teams advance to a card-based
+                                                                engineering arena, where they combine technology assets,
+                                                                trade resources, and complete missions to score points,
+                                                                promoting logical thinking, teamwork, strategy, and
+                                                                problem-solving.</p>
+<h3 style="text-align:center;">ROUND 1</h3>
+<h6 style="text-align:center;">SQUAD MECHANICS - Every Click
+                                                                Counts. Every Second Matters.</h6>
+<p class="desc">Round 1 is a web-based challenge featuring
+                                                                five interactive tasks that test memory, logical
+                                                                thinking, problem-solving, coordination, and teamwork.
+                                                                Teams earn Infinity Stones by completing each task
+                                                                within the time limit. Progress and performance are
+                                                                automatically tracked, with rankings based on completion
+                                                                level, progression, and overall completion time.</p>
+<h3 style="text-align:center;">ROUND 2</h3>
+<h6 style="text-align:center;">ENGINEERING ARENA - Every
+                                                                Card Shapes Your Victory.</h6>
+<p class="desc">Round 2 is a strategy-based engineering card
+                                                                game where teams solve real-world engineering missions
+                                                                using Technology and Action Cards. Success depends on
+                                                                engineering logic, strategic planning, resource
+                                                                management, trading, negotiation, and teamwork. Teams
+                                                                earn points by completing missions efficiently, with
+                                                                rankings based on score, missions completed, and
+                                                                completion time.</p>
+<h3 style="text-align:center; margin-top:20px;"><b>VENUE &amp; SCHEDULE</b>
+</h3>
+<p class="desc" style="text-align:center;"><strong>DAY 1</strong> • Hall: <strong>G 504, G 505, G 508</strong>
+</p>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">GENERAL RULES</h2>
+<div class="dossier-section-body">
+<ol class="ruleslist"><li class="rule-item">All participants must bring their valid College ID.</li><li class="rule-item">All participants must bring a Bonafide Certificate from their respective colleges, except PSG Tech students.</li><li class="rule-item"><strong>All participants must bring a Xerox copy of the front page of their passbook.</strong></li><li class="rule-item">Participants must report to the venue at least 15 minutes before the scheduled start time.</li><li class="rule-item">Strict formal / decent college dress code must be adhered to at all times inside the campus.</li><li class="rule-item">Spot entries will be subject to availability and organizer discretion.</li><li class="rule-item">Use of any unauthorized materials, internet browsing, or malpractice will lead to immediate disqualification.</li><li class="rule-item">The decision of the event coordinators and judges will be final and binding.</li></ol>
+</div>
+</div><div class="dossier-section-block"><h2 class="dossier-section-heading">EVENT RULES</h2><div class="dossier-section-body"><ol class="ruleslist"><li class="rule-item">Round 1 will be conducted through
+                                                                    the official web application.</li><li class="rule-item">Only the teams scoring above
+                                                                    qualification cutoff from Round 1 will advance to
+                                                                    Round 2.</li><li class="rule-item">Teams must adhere to the time
+                                                                    limits and rules of each round.</li><li class="rule-item">Any unfair practices will lead to
+                                                                    disqualification.</li></ol></div></div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">TEAM SIZE</h2>
+<div class="dossier-section-body">
+<p>2-3 Participants</p>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">DATE AND TIME</h2>
+<div class="dossier-section-body">
+<ul class="datetimelist">
+<li class="dt-item"><span>DATE:</span> 10<sup>th</sup> OCT 2026 (DAY 1)</li>
+<li class="dt-item"><span>TIME:</span> 9:00 AM – 5:00 PM</li>
+</ul>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">CONTACT</h2>
+<div class="dossier-section-body">
+<ul class="contactlist">
+<li class="contact-item">
+<a class="phn" href="tel:6382703728"><ion-icon name="call-outline"></ion-icon></a>
+<a class="wp" href="https://wa.me/+6382703728"><ion-icon name="logo-whatsapp"></ion-icon></a>
+<span>Keerthana R (24R221) - </span><a href="tel:6382703728">6382703728</a>
+</li>
+<li class="contact-item">
+<a class="phn" href="tel:9952636612"><ion-icon name="call-outline"></ion-icon></a>
+<a class="wp" href="https://wa.me/+9952636612"><ion-icon name="logo-whatsapp"></ion-icon></a>
+<span>Vedavyaas M R (24Z374) - </span><a href="tel:9952636612">9952636612</a>
+</li>
+</ul>
+</div>
+</div>
+<center class="reg-btn">
+<button class="submitBtn" id="btn_1" type="button"><b>Register</b></button>
+<button class="mobile-close-btn modal-close" type="button"><b>Close</b></button>
+</center>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Event 2 -->
+<div class="event-row scroll-reveal palette-cap" id="event-row-2">
+<div class="hero-bg-glow"></div>
+<div class="event-row-inner container">
+<div class="event-row-front">
+<div class="row align-items-center g-4 g-lg-5">
+<div class="col-lg-7 event-text-col">
+<div class="kicker-label">
+<svg class="hero-icon star-icon" viewbox="0 0 24 24">
+<polygon fill="none" points="12,2 15,9 22,9 16.5,13.5 18.5,21 12,16.5 5.5,21 7.5,13.5 2,9 9,9" stroke="currentColor" stroke-width="1.5"></polygon>
+</svg>
+                                            TECHNICAL EVENT
+                                        </div>
+<h2 class="ename card-front z-2">BRAINBYTE 2026</h2>
+<div class="tagline-italic">Think. Discover. Code.</div>
+<div class="meta-row">
+<span class="meta-item">CODING</span>
+<span class="meta-dot">•</span>
+<span class="meta-item">PROBLEM SOLVING</span>
+<span class="meta-dot">•</span>
+<span class="meta-item">TECH QUIZ</span>
+</div>
+<div class="text">
+<div class="title" style="display:none;">
+<h1 class="event-title">BRAINBYTE 2026</h1>
+</div>
+<div class="content">
+<p>Think smart. Solve fast. Code better. Brain-Byte 2026 pushes
+                                                    participants through exciting technical challenges that reward
+                                                    analytical thinking, innovation, and programming excellence.</p>
+</div>
+<div class="interior">
+<button class="btn" id="div-2">
+<span>View More</span>
+<ion-icon class="btn-arrow" name="arrow-forward-outline"></ion-icon>
+</button>
+</div>
+</div>
+</div>
+<div class="col-lg-5 event-img-col d-flex justify-content-center align-items-center">
+<div class="card my-5" style="border: 0;">
+<div class="pic">
+<img alt="BRAINBYTE" class="eimg" src="assets/Icons_Srishti24_img/ICONS/Technical/Tech_2.png"/>
+<div class="texture-overlay"></div>
+</div>
+<div class="square_1"></div>
+<div class="square_2"></div>
+<div class="energy-sparks"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="event-row-back dossier-panel modal-window palette-cap" id="id2">
+<div>
+<div class="dossier-scanline"></div>
+<div class="hud-bracket hud-tl"></div>
+<div class="hud-bracket hud-tr"></div>
+<div class="hud-bracket hud-bl"></div>
+<div class="hud-bracket hud-br"></div>
+<div class="dossier-topbar">
+<div class="modal-close" title="Close">
+<div class="close-container" id="modal_close_2">
+<div class="leftright"></div>
+<div class="rightleft"></div>
+<label class="close">close</label>
+</div>
+</div>
+</div>
+<div class="dossier-body">
+<div class="hero-char-col">
+<div class="hero-char-img">
+<img alt="BRAINBYTE" class="placeholder-hero-img" src="assets/Icons_Srishti24_img/ICONS/Technical/Tech_2.png"/>
+</div>
+</div>
+<div class="dossier-info-col">
+<h1 class="text-center justify-content-center" id="accordion-title">
+                                                BRAINBYTE 2026</h1>
+<span class="dossier-title-bar"></span>
+<div class="dossier-stat-bar">
+<div class="stat-box"><span class="stat-label">TEAM SIZE</span><span class="stat-value">2 MEMBERS</span></div>
+<div class="stat-box"><span class="stat-label">FORMAT</span><span class="stat-value">CODING</span></div>
+</div>
+<div class="dossier-tab-content">
+<div class="dossier-tab-pane active" data-pane="overview">
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">DESCRIPTION</h2>
+<div class="dossier-section-body">
+<p class="desc">Brain-Byte 2026 is a three-stage technical
+                                                                event that challenges participants in logical reasoning,
+                                                                technical awareness, and coding skills. Through engaging
+                                                                quests and interactive activities, teams think
+                                                                critically, discover innovative solutions, and code
+                                                                efficiently.</p>
+<h3 style="text-align:center;">ROUND 1</h3>
+<h6 style="text-align:center;">MIND MATRIX (THINK) - Think
+                                                                Fast. Solve Smart. Win Big.</h6>
+<p class="desc">Participants will dive into a curated mix of
+                                                                logical puzzles, analytical reasoning scenarios, and
+                                                                aptitude-based challenges to evaluate critical thinking,
+                                                                lateral problem-solving, and decision-making under time
+                                                                pressure. Complete a fun activity to earn hints. Teams
+                                                                scoring more than 30 points will qualify for the next
+                                                                round.</p>
+<h3 style="text-align:center;">ROUND 2</h3>
+<h6 style="text-align:center;">TECH-TONIC QUIZ - Rapid Fire.
+                                                                Pure Intellect.</h6>
+<p class="desc">Participants will compete in a multi-domain
+                                                                technical quiz featuring MCQs, rapid-fire, and
+                                                                application-based questions covering Computer Science,
+                                                                Electronics, IEEE, Programming, Networking, Artificial
+                                                                Intelligence, Emerging Technologies, and General
+                                                                Engineering. Complete a fun activity to unlock bonus
+                                                                points or hints. Teams scoring more than 30 points will
+                                                                qualify for the next round.</p>
+<h3 style="text-align:center;">ROUND 3</h3>
+<h6 style="text-align:center;">CODE CRACKER (CODE) - Debug.
+                                                                Optimize. Execute.</h6>
+<p class="desc">Participants will solve coding problems
+                                                                involving algorithms, logical programming, arrays,
+                                                                strings, basic data structures, and debugging within a
+                                                                given time limit. Complete a fun activity to earn an
+                                                                additional coding hint. The final round includes
+                                                                negative marking, with half the allotted marks deducted
+                                                                for every incorrect answer.</p>
+<h3 style="text-align:center; margin-top:20px;"><b>VENUE &amp; SCHEDULE</b>
+</h3>
+<p class="desc" style="text-align:center;"><strong>DAY 2</strong> • Hall: <strong>G 407, G 408</strong></p>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">GENERAL RULES</h2>
+<div class="dossier-section-body">
+<ol class="ruleslist"><li class="rule-item">All participants must bring their valid College ID.</li><li class="rule-item">All participants must bring a Bonafide Certificate from their respective colleges, except PSG Tech students.</li><li class="rule-item"><strong>All participants must bring a Xerox copy of the front page of their passbook.</strong></li><li class="rule-item">Participants must report to the venue at least 15 minutes before the scheduled start time.</li><li class="rule-item">Strict formal / decent college dress code must be adhered to at all times inside the campus.</li><li class="rule-item">Spot entries will be subject to availability and organizer discretion.</li><li class="rule-item">Use of any unauthorized materials, internet browsing, or malpractice will lead to immediate disqualification.</li><li class="rule-item">The decision of the event coordinators and judges will be final and binding.</li></ol>
+</div>
+</div><div class="dossier-section-block"><h2 class="dossier-section-heading">EVENT RULES</h2><div class="dossier-section-body"><ol class="ruleslist"><li class="rule-item">Open to all departments. Report 15
+                                                                    minutes early.</li><li class="rule-item">No electronic gadgets unless
+                                                                    permitted.</li><li class="rule-item">Complete each round within the
+                                                                    allotted time.</li><li class="rule-item">Only qualified teams proceed.</li><li class="rule-item">Ties will be broken based on the
+                                                                    fastest completion time.</li><li class="rule-item">Judge’s decision is final.</li></ol></div></div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">TEAM SIZE</h2>
+<div class="dossier-section-body">
+<p>2 Participants</p>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">DATE AND TIME</h2>
+<div class="dossier-section-body">
+<ul class="datetimelist">
+<li class="dt-item"><span>DATE:</span> 11<sup>th</sup> OCT 2026 (DAY 2)</li>
+<li class="dt-item"><span>TIME:</span> 9:00 AM – 4:00 PM</li>
+</ul>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">CONTACT</h2>
+<div class="dossier-section-body">
+<ul class="contactlist">
+<li class="contact-item"><a class="phn" href="tel:9345400018"><ion-icon name="call-outline"></ion-icon></a><a class="wp" href="https://wa.me/+9345400018"><ion-icon name="logo-whatsapp"></ion-icon></a><span>Suriya V (24E648) - </span><a href="tel:9345400018">9345400018</a></li>
+<li class="contact-item"><a class="phn" href="tel:9342230260"><ion-icon name="call-outline"></ion-icon></a><a class="wp" href="https://wa.me/+9342230260"><ion-icon name="logo-whatsapp"></ion-icon></a><span>Srikeerthana N (24L151) - </span><a href="tel:9342230260">9342230260</a></li>
+</ul>
+</div>
+</div>
+<center class="reg-btn">
+<button class="submitBtn" id="btn_2" type="button"><b>Register</b></button>
+<button class="mobile-close-btn modal-close" type="button"><b>Close</b></button>
+</center>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Event 3 -->
+<div class="event-row scroll-reveal palette-hulk" id="event-row-3">
+<div class="hero-bg-glow"></div>
+<div class="event-row-inner container">
+<div class="event-row-front">
+<div class="row align-items-center g-4 g-lg-5">
+<div class="col-lg-7 event-text-col">
+<div class="kicker-label">
+<svg class="hero-icon gamma-icon" viewbox="0 0 24 24">
+<polygon fill="none" points="12,2 20,7 20,17 12,22 4,17 4,7" stroke="currentColor" stroke-width="1.5"></polygon>
+<circle cx="12" cy="12" fill="currentColor" r="3"></circle>
+</svg>
+                                            TECHNICAL EVENT
+                                        </div>
+<h2 class="ename card-front z-2">THRILLER TECHSCAPE</h2>
+<div class="tagline-italic"></div>
+<div class="meta-row">
+<span class="meta-item">TECH STATIONS</span>
+<span class="meta-dot">•</span>
+<span class="meta-item">INFINITY CHALLENGE</span>
+<span class="meta-dot">•</span>
+<span class="meta-item">TEAM WORK</span>
+</div>
+<div class="text">
+<div class="title" style="display:none;">
+<h1 class="event-title">THRILLER TECHSCAPE</h1>
+</div>
+<div class="content">
+<p>Challenge your technical skills, creativity, and collaboration in an
+                                                    exciting multi-round competition. Solve diverse engineering
+                                                    challenges, conquer the Infinity Stone Challenge, and prove your
+                                                    team's all-round technical prowess.</p>
+</div>
+<div class="interior">
+<button class="btn" id="div-3">
+<span>View More</span>
+<ion-icon class="btn-arrow" name="arrow-forward-outline"></ion-icon>
+</button>
+</div>
+</div>
+</div>
+<div class="col-lg-5 event-img-col d-flex justify-content-center align-items-center">
+<div class="card my-5" style="border: 0;">
+<div class="pic">
+<img alt="THRILLER TECHSCAPE" class="eimg" src="assets/Icons_Srishti24_img/ICONS/Technical/Tech_3.jpg" style="object-fit: cover; object-position: top center;"/>
+<div class="texture-overlay"></div>
+</div>
+<div class="square_1"></div>
+<div class="square_2"></div>
+<div class="energy-sparks"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="event-row-back dossier-panel modal-window palette-hulk" id="id3">
+<div>
+<div class="dossier-scanline"></div>
+<div class="hud-bracket hud-tl"></div>
+<div class="hud-bracket hud-tr"></div>
+<div class="hud-bracket hud-bl"></div>
+<div class="hud-bracket hud-br"></div>
+<div class="dossier-topbar">
+<div class="modal-close" title="Close">
+<div class="close-container" id="modal_close_3">
+<div class="leftright"></div>
+<div class="rightleft"></div>
+<label class="close">close</label>
+</div>
+</div>
+</div>
+<div class="dossier-body">
+<div class="hero-char-col">
+<div class="hero-char-img">
+<img alt="THRILLER TECHSCAPE" class="placeholder-hero-img" src="assets/Icons_Srishti24_img/ICONS/Technical/Tech_3.jpg" style="object-fit: cover; object-position: top center;"/>
+</div>
+</div>
+<div class="dossier-info-col">
+<h1 class="text-center justify-content-center" id="accordion-title">THRILLER
+                                                TECHSCAPE</h1>
+<span class="dossier-title-bar"></span>
+<div class="dossier-stat-bar">
+<div class="stat-box"><span class="stat-label">TEAM SIZE</span><span class="stat-value">2 MEMBERS</span></div>
+<div class="stat-box"><span class="stat-label">FORMAT</span><span class="stat-value">INNOVATION</span></div>
+</div>
+<div class="dossier-tab-content">
+<div class="dossier-tab-pane active" data-pane="overview">
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">DESCRIPTION</h2>
+<div class="dossier-section-body">
+<p class="desc">The Ultimate Check is a fast-paced technical
+                                                                competition that tests engineering knowledge, logical
+                                                                reasoning, creativity, and teamwork through interactive
+                                                                challenges. Teams compete across multiple technical
+                                                                stations before advancing to the Infinity Stone
+                                                                Challenge, where they solve coding, AI, circuit
+                                                                simulation, aptitude, and analytical tasks to earn the
+                                                                highest score and emerge as champions.</p>
+<h3 style="text-align:center;">ROUND 1</h3>
+<h6 style="text-align:center;">TECHFINITY – THE ESCAPE
+                                                                CIRCUIT - Think. Solve. Escape.</h6>
+<p class="desc">It is an escape-room-inspired technical
+                                                                challenge that tests participants' technical knowledge,
+                                                                logical thinking, observation, memory, communication,
+                                                                and teamwork. Teams progress through 10 sequential
+                                                                stations, completing randomly assigned technical tasks
+                                                                to advance. Incorrect answers have limited retries, with
+                                                                repeated failures resulting in Penalty Cards that
+                                                                require revisiting previous stations. Star Questions can
+                                                                earn Life Cards, allowing teams to skip one station.
+                                                                The teams that complete all stations in the shortest
+                                                                time qualify for Round 2 – Infinity Stone Challenge.</p>
+<h3 style="text-align:center;">ROUND 2</h3>
+<h6 style="text-align:center;">OPERATION ENDGAME - Collect
+                                                                the Stones. Conquer the Impossible</h6>
+<p class="desc">The Infinity Stone Challenge is the final
+                                                                round where qualified teams compete in independent
+                                                                technical challenges across coding, engineering, logic,
+                                                                creativity, and problem-solving. Teams may attempt
+                                                                challenges in any order, allowing strategic gameplay
+                                                                based on their strengths. The objective is to collect
+                                                                the maximum number of Infinity Stones within the
+                                                                allotted time to become the champions.</p>
+<h3 style="text-align:center; margin-top:20px;"><b>VENUE &amp; SCHEDULE</b>
+</h3>
+<p class="desc" style="text-align:center;"><strong>DAY 2</strong> • Hall: <strong>G 503, G 504, G 505</strong></p>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">GENERAL RULES</h2>
+<div class="dossier-section-body">
+<ol class="ruleslist"><li class="rule-item">All participants must bring their valid College ID.</li><li class="rule-item">All participants must bring a Bonafide Certificate from their respective colleges, except PSG Tech students.</li><li class="rule-item"><strong>All participants must bring a Xerox copy of the front page of their passbook.</strong></li><li class="rule-item">Participants must report to the venue at least 15 minutes before the scheduled start time.</li><li class="rule-item">Strict formal / decent college dress code must be adhered to at all times inside the campus.</li><li class="rule-item">Spot entries will be subject to availability and organizer discretion.</li><li class="rule-item">Use of any unauthorized materials, internet browsing, or malpractice will lead to immediate disqualification.</li><li class="rule-item">The decision of the event coordinators and judges will be final and binding.</li></ol>
+</div>
+</div><div class="dossier-section-block"><h2 class="dossier-section-heading">EVENT RULES</h2><div class="dossier-section-body"><ol class="ruleslist"><li class="rule-item">Each team must consist of 2
+                                                                    participants.</li><li class="rule-item">All teams are required to follow
+                                                                    the instructions of the event coordinators
+                                                                    throughout the competition.</li><li class="rule-item">Mobile phones and external
+                                                                    reference materials are not permitted unless
+                                                                    explicitly allowed for a specific task.</li></ol></div></div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">TEAM SIZE</h2>
+<div class="dossier-section-body">
+<p>2 Participants</p>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">DATE AND TIME</h2>
+<div class="dossier-section-body">
+<ul class="datetimelist">
+<li class="dt-item"><span>DATE:</span> 11<sup>th</sup> OCT 2026 (DAY 2)</li>
+<li class="dt-item"><span>TIME:</span> 9:00 AM – 4:00 PM</li>
+</ul>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">CONTACT</h2>
+<div class="dossier-section-body">
+<ul class="contactlist">
+<li class="contact-item"><a class="phn" href="tel:9384242709"><ion-icon name="call-outline"></ion-icon></a><a class="wp" href="https://wa.me/+919384242709"><ion-icon name="logo-whatsapp"></ion-icon></a><span>Munu Brinda M (24L236) - </span><a href="tel:9384242709">9384242709</a></li>
+<li class="contact-item"><a class="phn" href="tel:9025803103"><ion-icon name="call-outline"></ion-icon></a><a class="wp" href="https://wa.me/+919025803103"><ion-icon name="logo-whatsapp"></ion-icon></a><span>Dharshan G (24U212) - </span><a href="tel:9025803103">9025803103</a></li>
+</ul>
+</div>
+</div>
+<center class="reg-btn">
+<button class="submitBtn" id="btn_3" type="button"><b>Register</b></button>
+<button class="mobile-close-btn modal-close" type="button"><b>Close</b></button>
+</center>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Event 4 -->
+<div class="event-row scroll-reveal palette-thor" id="event-row-4">
+<div class="hero-bg-glow"></div>
+<div class="event-row-inner container">
+<div class="event-row-front">
+<div class="row align-items-center g-4 g-lg-5">
+<div class="col-lg-7 event-text-col">
+<div class="kicker-label">
+<svg class="hero-icon lightning-icon" viewbox="0 0 24 24">
+<polygon fill="none" points="13 2 4 14 11 14 9 22 20 10 13 10 13 2" stroke="currentColor" stroke-width="1.5"></polygon>
+</svg>
+                                            TECHNICAL EVENT
+                                        </div>
+<h2 class="ename card-front z-2">TECHTOPIA</h2>
+<div class="tagline-italic">Decode Reality. Debug the Future.</div>
+<div class="meta-row">
+<span class="meta-item">AI AWARENESS</span>
+<span class="meta-dot">•</span>
+<span class="meta-item">TROUBLESHOOTING</span>
+<span class="meta-dot">•</span>
+<span class="meta-item">CRITICAL THINKING</span>
+</div>
+<div class="text">
+<div class="title" style="display:none;">
+<h1 class="event-title">TECHTOPIA</h1>
+</div>
+<div class="content">
+<p>Decode the fake, debug the real — TechTopia puts your instincts to
+                                                    the ultimate test.
+                                                    Four rounds. One winner. Zero room for error.</p>
+</div>
+<div class="interior">
+<button class="btn" id="div-4">
+<span>View More</span>
+<ion-icon class="btn-arrow" name="arrow-forward-outline"></ion-icon>
+</button>
+</div>
+</div>
+</div>
+<div class="col-lg-5 event-img-col d-flex justify-content-center align-items-center">
+<div class="card my-5" style="border: 0;">
+<div class="pic">
+<img alt="TECHTOPIA" class="eimg" src="assets/Icons_Srishti24_img/ICONS/Technical/Tech_4.png"/>
+<div class="texture-overlay"></div>
+</div>
+<div class="square_1"></div>
+<div class="square_2"></div>
+<div class="energy-sparks"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="event-row-back dossier-panel modal-window palette-thor" id="id4">
+<div>
+<div class="dossier-scanline"></div>
+<div class="hud-bracket hud-tl"></div>
+<div class="hud-bracket hud-tr"></div>
+<div class="hud-bracket hud-bl"></div>
+<div class="hud-bracket hud-br"></div>
+<div class="dossier-topbar">
+<div class="modal-close" title="Close">
+<div class="close-container" id="modal_close_4">
+<div class="leftright"></div>
+<div class="rightleft"></div>
+<label class="close">close</label>
+</div>
+</div>
+</div>
+<div class="dossier-body">
+<div class="hero-char-col">
+<div class="hero-char-img">
+<img alt="TECHTOPIA" class="placeholder-hero-img" src="assets/Icons_Srishti24_img/ICONS/Technical/Tech_4.png"/>
+</div>
+</div>
+<div class="dossier-info-col">
+<h1 class="text-center justify-content-center" id="accordion-title">
+                                                TECHTOPIA</h1>
+<span class="dossier-title-bar"></span>
+<div class="dossier-stat-bar">
+<div class="stat-box"><span class="stat-label">TEAM SIZE</span><span class="stat-value">3-4 MEMBERS</span></div>
+<div class="stat-box"><span class="stat-label">FORMAT</span><span class="stat-value">CIRCUIT DEBUGGING</span></div>
+</div>
+<div class="dossier-tab-content">
+<div class="dossier-tab-pane active" data-pane="overview">
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">DESCRIPTION</h2>
+<div class="dossier-section-body">
+<p class="desc">TechTopia is a multi-stage technical
+                                                                competition that tests participants' engineering
+                                                                knowledge, creativity, AI awareness, and troubleshooting
+                                                                skills through interactive challenges. From identifying
+                                                                technical concepts and detecting AI-generated media to
+                                                                debugging faulty circuits, teams must demonstrate speed,
+                                                                accuracy, critical thinking, and teamwork to overcome
+                                                                each stage and emerge as the ultimate technical
+                                                                champions.</p>
+<h3 style="text-align:center;">ROUND 1</h3>
+<h6 style="text-align:center;">DOODLE – DUPE - Lies don't
+                                                                stand a chance against the clock.Every line tells a
+                                                                technical story.</h6>
+<p class="desc">Round 1 is a fast-paced technical challenge
+                                                                that combines logical reasoning and visual
+                                                                communication. Teams identify false technical statements
+                                                                and compete in Technical Pictionary, sketching and
+                                                                guessing engineering concepts under time constraints.
+                                                                The round evaluates technical knowledge, creativity,
+                                                                communication, teamwork, and quick decision-making, with
+                                                                speed and accuracy determining the highest-scoring
+                                                                teams.</p>
+<h3 style="text-align:center;">ROUND 2</h3>
+<h6 style="text-align:center;">ILLUSION HUNT - Seeing isn't
+                                                                believing anymore. Faults hide. Skill finds them.</h6>
+<p class="desc">Round 2 is an advanced technical challenge
+                                                                combining Deepfake Detective and Circuit/Program
+                                                                Debugging. Teams identify AI-generated media and
+                                                                troubleshoot faulty circuits or simulations under time
+                                                                constraints. Scores are based on accuracy,
+                                                                technical justification, successful fixes, and time
+                                                                efficiency, determining the overall champions.</p>
+<h3 style="text-align:center; margin-top:20px;"><b>VENUE &amp; SCHEDULE</b>
+</h3>
+<p class="desc" style="text-align:center;"><strong>DAY 1</strong> • Hall: <strong>G 404, G 405</strong></p>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">GENERAL RULES</h2>
+<div class="dossier-section-body">
+<ol class="ruleslist"><li class="rule-item">All participants must bring their valid College ID.</li><li class="rule-item">All participants must bring a Bonafide Certificate from their respective colleges, except PSG Tech students.</li><li class="rule-item"><strong>All participants must bring a Xerox copy of the front page of their passbook.</strong></li><li class="rule-item">Participants must report to the venue at least 15 minutes before the scheduled start time.</li><li class="rule-item">Strict formal / decent college dress code must be adhered to at all times inside the campus.</li><li class="rule-item">Spot entries will be subject to availability and organizer discretion.</li><li class="rule-item">Use of any unauthorized materials, internet browsing, or malpractice will lead to immediate disqualification.</li><li class="rule-item">The decision of the event coordinators and judges will be final and binding.</li></ol>
+</div>
+</div><div class="dossier-section-block"><h2 class="dossier-section-heading">EVENT RULES</h2><div class="dossier-section-body"><ol class="ruleslist"><li class="rule-item">Team size: 3–4.</li><li class="rule-item">Fair play must be maintained.</li><li class="rule-item">Based on their score Teams from
+                                                                    Round 1 – Doodle Dupe qualify for Round 2 – Illusion
+                                                                    hunt .</li><li class="rule-item">Scoring is based on accuracy,
+                                                                    speed, and teamwork.</li></ol></div></div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">TEAM SIZE</h2>
+<div class="dossier-section-body">
+<p>3-4 Participants</p>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">DATE AND TIME</h2>
+<div class="dossier-section-body">
+<ul class="datetimelist">
+<li class="dt-item"><span>DATE:</span> 10<sup>th</sup> OCT 2026 (DAY 1)</li>
+<li class="dt-item"><span>TIME:</span> 9:00 AM – 5:00 PM</li>
+</ul>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">CONTACT</h2>
+<div class="dossier-section-body">
+<ul class="contactlist">
+<li class="contact-item"><a class="phn" href="tel:7904242900"><ion-icon name="call-outline"></ion-icon></a><a class="wp" href="https://wa.me/+917904242900"><ion-icon name="logo-whatsapp"></ion-icon></a><span>Madhan S S (24E626) - </span><a href="tel:7904242900">7904242900</a></li>
+<li class="contact-item"><a class="phn" href="tel:9894862513"><ion-icon name="call-outline"></ion-icon></a><a class="wp" href="https://wa.me/+919894862513"><ion-icon name="logo-whatsapp"></ion-icon></a><span>Shreya S (24U245) - </span><a href="tel:9894862513">9894862513</a></li>
+</ul>
+</div>
+</div>
+<center class="reg-btn">
+<button class="submitBtn" id="btn_4" type="button"><b>Register</b></button>
+<button class="mobile-close-btn modal-close" type="button"><b>Close</b></button>
+</center>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Comic Panel Impact Burst Divider -->
+<div class="comic-divider tech-to-nontech">
+<svg class="divider-svg" preserveaspectratio="none" viewbox="0 0 1440 120">
+<polygon fill="rgba(15,23,42,0.85)" points="0,0 1440,40 1440,120 0,120"></polygon>
+<polygon fill="#090d16" points="0,20 1440,60 1440,120 0,120"></polygon>
+<path d="M 0 35 Q 360 80 720 30 T 1440 45 L 1440 120 L 0 120 Z" fill="rgba(230,36,41,0.15)"></path>
+</svg>
+</div>
+<!-- Non-Technical Events -->
+<section class="nontech-events">
+<section class="event-hero">
+<img alt="Technical Event" class="event-art" src="assets/Events_img/Nontechimg.png"/>
+<div class="section-header text-center">
+<span class="comic-badge nontech-badge">CREATIVE CLASH</span>
+<div class="hero-text">
+<h1 class="hero-title1">
+<span class="hero-word"><span>N</span><span>O</span><span>N</span><span>-</span><span>T</span><span>E</span><span>C</span><span>H</span><span>N</span><span>I</span><span>C</span><span>A</span><span>L</span></span>
+<span class="hero-word"><span>E</span><span>V</span><span>E</span><span>N</span><span>T</span><span>S</span></span>
+</h1>
+<p>Compete. Create. Celebrate.</p>
+</div>
+</div>
+</section>
+<div class="editorial-row-container container-fluid px-lg-5" id="card-container">
+<!-- Event 5 -->
+<div class="event-row scroll-reveal palette-widow" id="event-row-5">
+<div class="hero-bg-glow"></div>
+<div class="event-row-inner container">
+<div class="event-row-front">
+<div class="row align-items-center g-4 g-lg-5">
+<div class="col-lg-7 event-text-col">
+<div class="kicker-label">
+<svg class="hero-icon stealth-icon" viewbox="0 0 24 24">
+<polygon fill="none" points="4 2 20 2 12 12 20 22 4 22 12 12" stroke="currentColor" stroke-width="1.5"></polygon>
+</svg>
+                                            NON-TECHNICAL EVENT
+                                        </div>
+<h2 class="ename card-front z-2">CASE ZERO : THE FINAL VERDICT</h2>
+<div class="tagline-italic">Unite. Celebrate. Shine.</div>
+<div class="meta-row">
+<span class="meta-item">TEAM OF 3-4</span>
+<span class="meta-dot">•</span>
+<span class="meta-item">2 ROUNDS</span>
+<span class="meta-dot">•</span>
+<span class="meta-item">CRIME MYSTERY</span>
+</div>
+<div class="text">
+<div class="title" style="display:none;">
+<h1 class="event-title">CASE ZERO : THE FINAL VERDICT</h1>
+</div>
+<div class="content">
+<p>
+                                                    Step into the shoes of a detective and solve thrilling crime
+                                                    mysteries through observation, logic, and teamwork. Uncover hidden
+                                                    clues, eliminate red herrings, and prove your investigative skills
+                                                    to crack the case.
+                                                </p>
+</div>
+<div class="interior">
+<button class="btn" id="div-5">
+<span>View More</span>
+<ion-icon class="btn-arrow" name="arrow-forward-outline"></ion-icon>
+</button>
+</div>
+</div>
+</div>
+<div class="col-lg-5 event-img-col d-flex justify-content-center align-items-center">
+<div class="card my-5" style="border: 0;">
+<div class="pic">
+<img alt="CASE ZERO : THE FINAL VERDICT" class="eimg" src="assets/Icons_Srishti24_img/ICONS FOR WEBSITE SRiSHTi/Non Technical/nontech_1img1.png"/>
+<div class="texture-overlay"></div>
+</div>
+<div class="square_1"></div>
+<div class="square_2"></div>
+<div class="energy-sparks"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="event-row-back dossier-panel modal-window palette-widow" id="id5">
+<div>
+<div class="dossier-scanline"></div>
+<div class="hud-bracket hud-tl"></div>
+<div class="hud-bracket hud-tr"></div>
+<div class="hud-bracket hud-bl"></div>
+<div class="hud-bracket hud-br"></div>
+<div class="dossier-topbar">
+<div class="modal-close" title="Close">
+<div class="close-container" id="modal_close_5">
+<div class="leftright"></div>
+<div class="rightleft"></div>
+<label class="close">close</label>
+</div>
+</div>
+</div>
+<div class="dossier-body">
+<div class="hero-char-col">
+<div class="hero-char-img">
+<img alt="CASE ZERO : THE FINAL VERDICT" class="placeholder-hero-img" src="assets/Icons_Srishti24_img/ICONS FOR WEBSITE SRiSHTi/Non Technical/nontech1_img2.png"/>
+</div>
+</div>
+<div class="dossier-info-col">
+<div class="dossier-kicker text-center">INTENSE • INVESTIGATIVE • STRATEGIC
+                                            </div>
+<h1 class="text-center justify-content-center" id="accordion-title">
+                                                CASE ZERO : THE FINAL VERDICT</h1>
+<span class="dossier-title-bar"></span>
+<div class="dossier-stat-bar">
+<div class="stat-box"><span class="stat-label">OBJECTIVE</span><span class="stat-value">Crack the Case</span></div>
+<div class="stat-box"><span class="stat-label">CHALLENGE</span><span class="stat-value">Separate Truth from Lies</span></div>
+<div class="stat-box"><span class="stat-label">REWARD</span><span class="stat-value">Claim the Final Verdict</span></div>
+</div>
+<div class="dossier-tab-content">
+<div class="dossier-tab-pane active" data-pane="overview">
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">DESCRIPTION</h2>
+<div class="dossier-section-body">
+<p class="desc">The Final Verdict is a two-round
+                                                                investigative mystery challenge where teams solve a
+                                                                high-profile murder case by examining crime scenes,
+                                                                analyzing forensic evidence, interrogating suspects, and
+                                                                reconstructing events. Participants must apply
+                                                                observation, critical thinking, logical reasoning,
+                                                                communication, and teamwork to present a well-supported
+                                                                verdict under time pressure.</p>
+<h3 style="text-align:center;">ROUND 1</h3>
+<h6 style="text-align:center;">THE HIDDEN TRAIL
+                                                            </h6>
+<p class="desc">Level 1 Case file analysis-objective is to
+                                                                analyze the information, identify misleading or false
+                                                                statements.LEVEL 2 – Evidence Investigation
+                                                                teams will enter the Evidence Room, where they will
+                                                                examine physical evidence
+                                                                related to their assigned case. The evidence may include
+                                                                items such as
+                                                                fingerprints, documents,personal belongings,
+                                                                photographs, footprints, and
+                                                                other crime scene props, along with a few red herrings
+                                                            </p>
+<h3 style="text-align:center;">ROUND 2</h3>
+<h6 style="text-align:center;">THE FINAL RECKONING</h6>
+<p class="desc">Teams receive the final confidential case
+                                                                file. By combining the information gathered in Round 1
+                                                                with the new evidence, witness statements, timeline, and
+                                                                investigation findings, they reconstruct the complete
+                                                                crime, identify misleading evidence, and submit their
+                                                                final investigation report with logical justification.
+                                                            </p>
+<h3 style="text-align:center; margin-top:20px;"><b>VENUE &amp; SCHEDULE</b>
+</h3>
+<p class="desc" style="text-align:center;"><strong>DAY 1</strong> • Hall: <strong>G 603, G 604, G 605</strong>
+</p>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">GENERAL RULES</h2>
+<div class="dossier-section-body">
+<ol class="ruleslist"><li class="rule-item">All participants must bring their valid College ID.</li><li class="rule-item">All participants must bring a Bonafide Certificate from their respective colleges, except PSG Tech students.</li><li class="rule-item"><strong>All participants must bring a Xerox copy of the front page of their passbook.</strong></li><li class="rule-item">Participants must report to the venue at least 15 minutes before the scheduled start time.</li><li class="rule-item">Strict formal / decent college dress code must be adhered to at all times inside the campus.</li><li class="rule-item">Spot entries will be subject to availability and organizer discretion.</li><li class="rule-item">Use of any unauthorized materials, internet browsing, or malpractice will lead to immediate disqualification.</li><li class="rule-item">The decision of the event coordinators and judges will be final and binding.</li></ol>
+</div>
+</div><div class="dossier-section-block"><h2 class="dossier-section-heading">EVENT RULES</h2><div class="dossier-section-body"><ol class="ruleslist"><li class="rule-item">Usage of mobile phones is strictly
+                                                                    prohibited.</li><li class="rule-item">Participants should strictly
+                                                                    adhere to the time limit.</li></ol></div></div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">TEAM SIZE</h2>
+<div class="dossier-section-body">
+<ul class="datetimelist">
+<li class="dt-item">3 - 4 Members</li>
+</ul>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">DATE AND TIME</h2>
+<div class="dossier-section-body">
+<ul class="datetimelist">
+<li class="dt-item"><span>DATE:</span> 10<sup>th</sup> OCT 2026 (DAY 1)</li>
+<li class="dt-item"><span>TIME:</span> 9:00 AM – 5:00 PM</li>
+</ul>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">CONTACT</h2>
+<div class="dossier-section-body">
+<ul class="contactlist">
+<li class="contact-item">
+<a class="phn" href="tel:6381941268"><ion-icon name="call-outline"></ion-icon></a>
+<a class="wp" href="https://wa.me/+916381941268"><ion-icon name="logo-whatsapp"></ion-icon></a>
+<span>Janani Sri S (24D215) - </span><a href="tel: 6381941268">6381941268</a>
+</li>
+<li class="contact-item">
+<a class="phn" href="tel:9487552525"><ion-icon name="call-outline"></ion-icon></a>
+<a class="wp" href="https://wa.me/+919487552525"><ion-icon name="logo-whatsapp"></ion-icon></a>
+<span>Maha Matheswaran (24U225) - </span><a href="tel:9487552525">9487552525</a>
+</li>
+</ul>
+</div>
+</div>
+<center class="reg-btn">
+<button class="submitBtn" id="btn_5" type="button"><b>Register</b></button>
+<button class="mobile-close-btn modal-close" type="button"><b>Close</b></button>
+</center>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Event 6 -->
+<div class="event-row scroll-reveal palette-ironman" id="event-row-6">
+<div class="hero-bg-glow"></div>
+<div class="event-row-inner container">
+<div class="event-row-front">
+<div class="row align-items-center g-4 g-lg-5">
+<div class="col-lg-7 event-text-col">
+<div class="kicker-label">
+<svg class="hero-icon arc-icon" viewbox="0 0 24 24">
+<circle cx="12" cy="12" fill="none" r="9" stroke="currentColor" stroke-width="1.5"></circle>
+<circle cx="12" cy="12" fill="none" r="5" stroke="currentColor" stroke-width="1.5"></circle>
+<circle cx="12" cy="12" fill="currentColor" r="2"></circle>
+</svg>
+                                            NON-TECHNICAL EVENT
+                                        </div>
+<h2 class="ename card-front z-2">Road To End Game</h2>
+<div class="tagline-italic">Spin the Wheel, Test Your Mettle!
+                                        </div>
+<div class="meta-row">
+<span class="meta-item">TEAM OF 2-3</span>
+<span class="meta-dot">•</span>
+<span class="meta-item">2 ROUNDS</span>
+<span class="meta-dot">•</span>
+<span class="meta-item">MULTIMEDIA QUIZ</span>
+</div>
+<div class="text">
+<div class="title" style="display:none;">
+<h1 class="event-title">Road To End Game</h1>
+</div>
+<div class="content">
+<p>Listen closely, watch carefully, and put your memory to the test as
+                                                    you decode before time runs out. Spin the wheel, answer right, and
+                                                    move ahead- make every move count to be the first team to reach
+                                                    victory!</p>
+</div>
+<div class="interior">
+<button class="btn" id="div-6">
+<span>View More</span>
+<ion-icon class="btn-arrow" name="arrow-forward-outline"></ion-icon>
+</button>
+</div>
+</div>
+</div>
+<div class="col-lg-5 event-img-col d-flex justify-content-center align-items-center">
+<div class="card my-5" style="border: 0;">
+<div class="pic">
+<img alt="Road To End Game" class="eimg" src="assets/Icons_Srishti24_img/ICONS FOR WEBSITE SRiSHTi/Non Technical/NONTECH3_IMG.png"/>
+<div class="texture-overlay"></div>
+</div>
+<div class="square_1"></div>
+<div class="square_2"></div>
+<div class="energy-sparks"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="event-row-back dossier-panel modal-window palette-ironman" id="id6">
+<div>
+<div class="dossier-scanline"></div>
+<div class="hud-bracket hud-tl"></div>
+<div class="hud-bracket hud-tr"></div>
+<div class="hud-bracket hud-bl"></div>
+<div class="hud-bracket hud-br"></div>
+<div class="dossier-topbar">
+<div class="modal-close" title="Close">
+<div class="close-container" id="modal_close_6">
+<div class="leftright"></div>
+<div class="rightleft"></div>
+<label class="close">close</label>
+</div>
+</div>
+</div>
+<div class="dossier-body">
+<div class="hero-char-col">
+<div class="hero-char-img">
+<img alt="Road To End Game" class="placeholder-hero-img" src="assets/Icons_Srishti24_img/ICONS FOR WEBSITE SRiSHTi/Non Technical/NONTECH3_IMG.png"/>
+</div>
+</div>
+<div class="dossier-info-col">
+<div class="dossier-kicker text-center">FUN • FAST-PACED • COMPETITIVE</div>
+<h1 class="text-center justify-content-center" id="accordion-title">Road To
+                                                End Game
+                                            </h1>
+<span class="dossier-title-bar"></span>
+<div class="dossier-stat-bar">
+<div class="stat-box"><span class="stat-label">OBJECTIVE</span><span class="stat-value">Reach the Finish Line</span></div>
+<div class="stat-box"><span class="stat-label">CHALLENGE</span><span class="stat-value">Recall Before Time Runs Out</span></div>
+<div class="stat-box"><span class="stat-label">REWARD</span><span class="stat-value">Earn the Ultimate Victory</span></div>
+</div>
+<div class="dossier-tab-content">
+<div class="dossier-tab-pane active" data-pane="overview">
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">DESCRIPTION</h2>
+<div class="dossier-section-body">
+<p class="desc">Road To End Game is an engaging two-round
+                                                                event that tests participants' general awareness, quick
+                                                                recall, and presence of mind through entertainment-based
+                                                                trivia and a fast-paced spinner challenge. Event
+                                                                Description. This is a non-technical team event with 2
+                                                                participants per team, designed to test observation,
+                                                                memory, quick thinking, and teamwork. The event consists
+                                                                of two rounds. The first round is a multimedia quiz
+                                                                featuring songs, BGMs, advertisements, and movie
+                                                                characters, where teams submit their answers through a
+                                                                Google Form. Qualified teams advance to the second
+                                                                round, a Spin Challenge, where correct answers help
+                                                                teams move toward the finish line. The first team to
+                                                                reach the finish line is declared the winner.</p>
+<h3 style="text-align:center;">ROUND 1</h3>
+<h6 style="text-align:center;">TUNE &amp; TELL
+                                                            </h6>
+<p class="desc">The competition begins with a fast-paced
+                                                                multimedia quiz. Each team, consisting of two
+                                                                participants, will compete simultaneously in a common
+                                                                hall. A PowerPoint presentation containing 10–20
+                                                                questions will be displayed, featuring song lyrics,
+                                                                background music (BGM), famous advertisements, and
+                                                                iconic movie characters.</p>
+<h3 style="text-align:center;">ROUND 2</h3>
+<h6 style="text-align:center;">RACE TO VICTORY</h6>
+<p class="desc">In this fast-paced and exciting round,
+                                                                participants spin a wheel numbered 1 to 6. Each spin
+                                                                presents a challenge, question, or hurdle that tests
+                                                                their knowledge and quick thinking. The first
+                                                                participant to press the buzzer and answer correctly
+                                                                helps their teammate move forward by the number of steps
+                                                                shown on the spinner. If the answer is incorrect, all
+                                                                other teams move forward by one step. Every correct
+                                                                answer brings the team closer to the finish line, making
+                                                                speed and accuracy equally important. The race continues
+                                                                until one team reaches the finish line and is declared
+                                                                the winner.</p>
+<h3 style="text-align:center; margin-top:20px;"><b>VENUE &amp; SCHEDULE</b>
+</h3>
+<p class="desc" style="text-align:center;"><strong>DAY 1</strong> • Hall: <strong>G 406, G 407, G 408</strong></p>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">GENERAL RULES</h2>
+<div class="dossier-section-body">
+<ol class="ruleslist"><li class="rule-item">All participants must bring their valid College ID.</li><li class="rule-item">All participants must bring a Bonafide Certificate from their respective colleges, except PSG Tech students.</li><li class="rule-item"><strong>All participants must bring a Xerox copy of the front page of their passbook.</strong></li><li class="rule-item">Participants must report to the venue at least 15 minutes before the scheduled start time.</li><li class="rule-item">Strict formal / decent college dress code must be adhered to at all times inside the campus.</li><li class="rule-item">Spot entries will be subject to availability and organizer discretion.</li><li class="rule-item">Use of any unauthorized materials, internet browsing, or malpractice will lead to immediate disqualification.</li><li class="rule-item">The decision of the event coordinators and judges will be final and binding.</li></ol>
+</div>
+</div><div class="dossier-section-block"><h2 class="dossier-section-heading">EVENT RULES</h2><div class="dossier-section-body"><ol class="ruleslist"><li class="rule-item">Usage of mobile phones is strictly
+                                                                    prohibited.</li><li class="rule-item">Participants should strictly
+                                                                    adhere to the time limit.</li></ol></div></div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">TEAM SIZE</h2>
+<div class="dossier-section-body">
+<ul class="datetimelist">
+<li class="dt-item">2 - 3 Members</li>
+</ul>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">DATE AND TIME</h2>
+<div class="dossier-section-body">
+<ul class="datetimelist">
+<li class="dt-item"><span>DATE:</span> 10<sup>th</sup> OCT 2026 (DAY 1)</li>
+<li class="dt-item"><span>TIME:</span> 9:00 AM – 5:00 PM</li>
+</ul>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">CONTACT</h2>
+<div class="dossier-section-body">
+<ul class="contactlist">
+<li class="contact-item">
+<a class="phn" href="tel:9361103595"><ion-icon name="call-outline"></ion-icon></a>
+<a class="wp" href="https://wa.me/+919361103595"><ion-icon name="logo-whatsapp"></ion-icon></a>
+<span>Rathi Meena J G (24D231) - </span><a href="tel: 9361103595">9361103595</a>
+</li>
+<li class="contact-item">
+<a class="phn" href="tel:9360663492"><ion-icon name="call-outline"></ion-icon></a>
+<a class="wp" href="https://wa.me/+919360663492"><ion-icon name="logo-whatsapp"></ion-icon></a>
+<span>Harshika K K (24E615) - </span><a href="tel:9360663492">9360663492</a>
+</li>
+</ul>
+</div>
+</div>
+<center class="reg-btn">
+<button class="submitBtn" id="btn_6" type="button"><b>Register</b></button>
+<button class="mobile-close-btn modal-close" type="button"><b>Close</b></button>
+</center>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Event 7 -->
+<div class="event-row scroll-reveal palette-cap" id="event-row-7">
+<div class="hero-bg-glow"></div>
+<div class="event-row-inner container">
+<div class="event-row-front">
+<div class="row align-items-center g-4 g-lg-5">
+<div class="col-lg-7 event-text-col">
+<div class="kicker-label">
+<svg class="hero-icon star-icon" viewbox="0 0 24 24">
+<polygon fill="none" points="12,2 15,9 22,9 16.5,13.5 18.5,21 12,16.5 5.5,21 7.5,13.5 2,9 9,9" stroke="currentColor" stroke-width="1.5"></polygon>
+</svg>
+                                            NON-TECHNICAL EVENT
+                                        </div>
+<h2 class="ename card-front z-2">MYSTERY VOYAGE - Unveil the truth
+                                        </h2>
+<div class="tagline-italic">Think like a hero. Solve like a detective. Win like
+                                            a legend.</div>
+<div class="meta-row">
+<span class="meta-item">TEAM OF 2-3</span>
+<span class="meta-dot">•</span>
+<span class="meta-item">2 ROUNDS</span>
+<span class="meta-dot">•</span>
+<span class="meta-item">PUZZLE ADVENTURE</span>
+</div>
+<div class="text">
+<div class="title" style="display:none;">
+<h1 class="event-title">MYSTERY VOYAGE – Unveil the truth</h1>
+</div>
+<div class="content">
+<p style="font-size: 15px;">From puzzles to performances, clues to
+                                                    conclusions—only the best will triumph; think fast, act smart, and
+                                                    decode the mystery to win it all!</p>
+</div>
+<div class="interior">
+<button class="btn" id="div-7">
+<span>View More</span>
+<ion-icon class="btn-arrow" name="arrow-forward-outline"></ion-icon>
+</button>
+</div>
+</div>
+</div>
+<div class="col-lg-5 event-img-col d-flex justify-content-center align-items-center">
+<div class="card my-5" style="border: 0;">
+<div class="pic">
+<img alt="MYSTERY VOYAGE – Unveil the truth" class="eimg" src="assets/Icons_Srishti24_img/ICONS FOR WEBSITE SRiSHTi/Non Technical/NONTECH2_IMG1.png"/>
+<div class="texture-overlay"></div>
+</div>
+<div class="square_1"></div>
+<div class="square_2"></div>
+<div class="energy-sparks"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="event-row-back dossier-panel modal-window palette-cap" id="id7">
+<div>
+<div class="dossier-scanline"></div>
+<div class="hud-bracket hud-tl"></div>
+<div class="hud-bracket hud-tr"></div>
+<div class="hud-bracket hud-bl"></div>
+<div class="hud-bracket hud-br"></div>
+<div class="dossier-topbar">
+<div class="modal-close" title="Close">
+<div class="close-container" id="modal_close_7">
+<div class="leftright"></div>
+<div class="rightleft"></div>
+<label class="close">close</label>
+</div>
+</div>
+</div>
+<div class="dossier-body">
+<div class="hero-char-col">
+<div class="hero-char-img">
+<img alt="MYSTERY VOYAGE – Unveil the truth" class="placeholder-hero-img" src="assets/Icons_Srishti24_img/ICONS FOR WEBSITE SRiSHTi/Non Technical/NONTECH2_IMG2.jpg"/>
+</div>
+</div>
+<div class="dossier-info-col">
+<div class="dossier-kicker text-center">FUN • ADVENTUROUS • MYSTERIOUS</div>
+<h1 class="text-center justify-content-center" id="accordion-title">MYSTERY
+                                                VOYAGE – Unveil the truth
+                                            </h1>
+<span class="dossier-title-bar"></span>
+<div class="dossier-stat-bar">
+<div class="stat-box"><span class="stat-label">OBJECTIVE</span><span class="stat-value">Unveil the Truth</span></div>
+<div class="stat-box"><span class="stat-label">CHALLENGE</span><span class="stat-value">Solve Every Puzzle</span></div>
+<div class="stat-box"><span class="stat-label">REWARD</span><span class="stat-value">Become the Master Detective</span></div>
+</div>
+<div class="dossier-tab-content">
+<div class="dossier-tab-pane active" data-pane="overview">
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">DESCRIPTION</h2>
+<div class="dossier-section-body">
+<p class="desc">This is a two-round contest. In Round 1,
+                                                                each team of 2–3 members is randomly given an image
+                                                                puzzle. They must assemble the scattered pieces to
+                                                                recreate the original image within 6 to 7 minutes.
+                                                                Additionally, they need to act out certain movies within
+                                                                5–6 minutes to qualify for Round 2.
+                                                                In Round 2, teams enter a detective-style challenge with
+                                                                20 to 25 boxes, each having an envelope in front. One
+                                                                member spins a numbered wheel to move forward, while the
+                                                                other stands at the start. A storyline like "Find the
+                                                                Suspect" is given. As teams move, they collect envelopes
+                                                                that may contain real clues, fake clues, empty
+                                                                envelopes, or advantages like skipping or moving
+                                                                backward. The first team to correctly decode the mystery
+                                                                using the collected clues is declared the winner.</p>
+<h3 style="text-align:center;">ROUND 1</h3>
+<h6 style="text-align:center;">Beyond puzzles lies a
+                                                                universe of secrets.</h6>
+<p class="desc">Round 1 features two exciting levels that
+                                                                test teamwork, observation, and communication. Teams
+                                                                first solve a themed image puzzle within a time limit to
+                                                                earn points, then compete in a Marvel-themed charades
+                                                                challenge by acting and guessing movie titles. Scores
+                                                                from both levels determine qualification for the next
+                                                                round.</p>
+<h3 style="text-align:center;">ROUND 2</h3>
+<h6 style="text-align:center;">Spin your fate. Solve the
+                                                                mystery. Claim the glory.</h6>
+<p class="desc">The qualified teams will enter a room set up
+                                                                like a detective-style challenge. We will display a
+                                                                storyline on the screen, such as "Find the Suspect" or
+                                                                "Find the Victim," which gives the teams a mission to
+                                                                solve. There will be around 20 to 25 boxes placed in the
+                                                                room, and in front of each box, there will be an
+                                                                envelope. Each team will have 2–3 members: one member
+                                                                will stand at the starting box, while the other member
+                                                                will spin a wheel that consists of a few numbers. The
+                                                                number on the wheel will decide how many steps the
+                                                                standing member must move forward on the board.</p>
+<h3 style="text-align:center; margin-top:20px;"><b>VENUE &amp; SCHEDULE</b>
+</h3>
+<p class="desc" style="text-align:center;"><strong>DAY 2</strong> • Hall: <strong>G 404, G 405</strong></p>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">GENERAL RULES</h2>
+<div class="dossier-section-body">
+<ol class="ruleslist"><li class="rule-item">All participants must bring their valid College ID.</li><li class="rule-item">All participants must bring a Bonafide Certificate from their respective colleges, except PSG Tech students.</li><li class="rule-item"><strong>All participants must bring a Xerox copy of the front page of their passbook.</strong></li><li class="rule-item">Participants must report to the venue at least 15 minutes before the scheduled start time.</li><li class="rule-item">Strict formal / decent college dress code must be adhered to at all times inside the campus.</li><li class="rule-item">Spot entries will be subject to availability and organizer discretion.</li><li class="rule-item">Use of any unauthorized materials, internet browsing, or malpractice will lead to immediate disqualification.</li><li class="rule-item">The decision of the event coordinators and judges will be final and binding.</li></ol>
+</div>
+</div><div class="dossier-section-block"><h2 class="dossier-section-heading">EVENT RULES</h2><div class="dossier-section-body"><ol class="ruleslist"><li class="rule-item">Usage of mobile phones is strictly
+                                                                    prohibited.</li><li class="rule-item">Participants should strictly
+                                                                    adhere to the time limit.</li></ol></div></div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">TEAM SIZE</h2>
+<div class="dossier-section-body">
+<ul class="datetimelist">
+<li class="dt-item">2 - 3 Members</li>
+</ul>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">DATE AND TIME</h2>
+<div class="dossier-section-body">
+<ul class="datetimelist">
+<li class="dt-item"><span>DATE:</span> 11<sup>th</sup> OCT 2026 (DAY 2)</li>
+<li class="dt-item"><span>TIME:</span> 9:00 AM – 4:00 PM</li>
+</ul>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">CONTACT</h2>
+<div class="dossier-section-body">
+<ul class="contactlist">
+<li class="contact-item">
+<a class="phn" href="tel:9677799102"><ion-icon name="call-outline"></ion-icon></a>
+<a class="wp" href="https://wa.me/+919677799102"><ion-icon name="logo-whatsapp"></ion-icon></a>
+<span>K V Preeti (24D217) - </span><a href="tel: 9677799102">9677799102</a>
+</li>
+<li class="contact-item">
+<a class="phn" href="tel:6369899827"><ion-icon name="call-outline"></ion-icon></a>
+<a class="wp" href="https://wa.me/+916369899827"><ion-icon name="logo-whatsapp"></ion-icon></a>
+<span>Mathumathi Sanjana (24L230) - </span><a href="tel:6369899827">6369899827</a>
+</li>
+</ul>
+</div>
+</div>
+<center class="reg-btn">
+<button class="submitBtn" id="btn_7" type="button"><b>Register</b></button>
+<button class="mobile-close-btn modal-close" type="button"><b>Close</b></button>
+</center>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Event 8 -->
+<div class="event-row scroll-reveal palette-hulk" id="event-row-8">
+<div class="hero-bg-glow"></div>
+<div class="event-row-inner container">
+<div class="event-row-front">
+<div class="row align-items-center g-4 g-lg-5">
+<div class="col-lg-7 event-text-col">
+<div class="kicker-label">
+<svg class="hero-icon gamma-icon" viewbox="0 0 24 24">
+<polygon fill="none" points="12,2 20,7 20,17 12,22 4,17 4,7" stroke="currentColor" stroke-width="1.5"></polygon>
+<circle cx="12" cy="12" fill="currentColor" r="3"></circle>
+</svg>
+                                            NON-TECHNICAL EVENT
+                                        </div>
+<h2 class="ename card-front z-2">INFINITY CHASE</h2>
+<div class="tagline-italic">One Mission. Two Battles. Endless Thrill</div>
+<div class="meta-row">
+<span class="meta-item">TEAM OF 2</span>
+<span class="meta-dot">•</span>
+<span class="meta-item">2 ROUNDS</span>
+<span class="meta-dot">•</span>
+<span class="meta-item">MARVEL HUNT</span>
+</div>
+<div class="text">
+<div class="title" style="display:none;">
+<h1 class="event-title">INFINITY CHASE</h1>
+</div>
+<div class="content">
+<p>Infinity Chase is a Marvel-themed team event that combines movie
+                                                    trivia with a thrilling live-action hunt. Guess fast, think smart,
+                                                    and race to victory.</p>
+</div>
+<div class="interior">
+<button class="btn" id="div-8">
+<span>View More</span>
+<ion-icon class="btn-arrow" name="arrow-forward-outline"></ion-icon>
+</button>
+</div>
+</div>
+</div>
+<div class="col-lg-5 event-img-col d-flex justify-content-center align-items-center">
+<div class="card my-5" style="border: 0;">
+<div class="pic">
+<img alt="INFINITY CHASE" class="eimg" src="assets/Icons_Srishti24_img/ICONS FOR WEBSITE SRiSHTi/Non Technical/NONTECH4_IMG.png"/>
+<div class="texture-overlay"></div>
+</div>
+<div class="square_1"></div>
+<div class="square_2"></div>
+<div class="energy-sparks"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="event-row-back dossier-panel modal-window palette-hulk" id="id8">
+<div>
+<div class="dossier-scanline"></div>
+<div class="hud-bracket hud-tl"></div>
+<div class="hud-bracket hud-tr"></div>
+<div class="hud-bracket hud-bl"></div>
+<div class="hud-bracket hud-br"></div>
+<div class="dossier-topbar">
+<div class="modal-close" title="Close">
+<div class="close-container" id="modal_close_8">
+<div class="leftright"></div>
+<div class="rightleft"></div>
+<label class="close">close</label>
+</div>
+</div>
+</div>
+<div class="dossier-body">
+<div class="hero-char-col">
+<div class="hero-char-img">
+<img alt="INFINITY CHASE" class="placeholder-hero-img" src="assets/Icons_Srishti24_img/ICONS FOR WEBSITE SRiSHTi/Non Technical/NONTECH4_IMG.png"/>
+</div>
+</div>
+<div class="dossier-info-col">
+<div class="dossier-kicker text-center">ACTION • THRILLING • ADVENTUROUS
+                                            </div>
+<h1 class="text-center justify-content-center" id="accordion-title">
+                                                INFINITY CHASE</h1>
+<span class="dossier-title-bar"></span>
+<div class="dossier-stat-bar">
+<div class="stat-box"><span class="stat-label">OBJECTIVE</span><span class="stat-value">Collect the Infinity Stones</span></div>
+<div class="stat-box"><span class="stat-label">CHALLENGE</span><span class="stat-value">Outsmart Every Opponent</span></div>
+<div class="stat-box"><span class="stat-label">REWARD</span><span class="stat-value">Rule the Multiverse</span></div>
+</div>
+<div class="dossier-tab-content">
+<div class="dossier-tab-pane active" data-pane="overview">
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">DESCRIPTION</h2>
+<div class="dossier-section-body">
+<p class="desc">Calling all Marvel fans, movie buffs, and
+                                                                quick thinkers! Infinity Chase is a two-round team event
+                                                                that puts your film knowledge, reflexes, and strategic
+                                                                instincts to the ultimate test. Round One throws you
+                                                                into a rapid-fire trivia battle — decoding blurred movie
+                                                                posters, identifying legendary villains, and completing
+                                                                iconic punch dialogues. The sharpest teams then step
+                                                                into Round Two: a thrilling live-action hero-vs-villain
+                                                                manhunt across the venue, where secret identities,
+                                                                hidden Infinity Stones, and split-second decisions
+                                                                determine who comes out on top. Part quiz, part chase,
+                                                                all adrenaline — do you have what it takes to outsmart
+                                                                the multiverse?</p>
+<h3 style="text-align:center;">ROUND 1</h3>
+<h6 style="text-align:center;">Movie Mafia</h6>
+<p class="desc">Movie Mafia is a fast-paced Marvel movie
+                                                                trivia round designed to test your observation, memory,
+                                                                and quick thinking. Teams of two will compete across
+                                                                three exciting challenges—Blurred Frame, Unmask the
+                                                                Villain, and Finish the Line. Each correct answer earns
+                                                                points, with faster responses scoring higher in selected
+                                                                segments. At the end of the round, the top-scoring teams
+                                                                advance to the final round, where the real chase begins.
+                                                            </p>
+<h3 style="text-align:center;">ROUND 2</h3>
+<h6 style="text-align:center;">Multiverse Manhunt</h6>
+<p class="desc">The chase gets real. Every qualified team is
+                                                                secretly assigned a Hero or Villain identity along with
+                                                                a unique ID number — trust no one. Across the venue,
+                                                                Infinity Stones and legendary artifacts (including
+                                                                Thor's Hammer!) lie hidden, each worth valuable points.
+                                                                Heroes must hunt down and expose the Villains. Villains
+                                                                must do the same to the Heroes. Every correct
+                                                                identification brings you closer to victory — every
+                                                                wrong move could cost you the game.
+
+                                                            </p>
+<h3 style="text-align:center; margin-top:20px;"><b>VENUE &amp; SCHEDULE</b>
+</h3>
+<p class="desc" style="text-align:center;"><strong>DAY 2</strong> • Hall: <strong>G 506, G 507</strong></p>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">GENERAL RULES</h2>
+<div class="dossier-section-body">
+<ol class="ruleslist"><li class="rule-item">All participants must bring their valid College ID.</li><li class="rule-item">All participants must bring a Bonafide Certificate from their respective colleges, except PSG Tech students.</li><li class="rule-item"><strong>All participants must bring a Xerox copy of the front page of their passbook.</strong></li><li class="rule-item">Participants must report to the venue at least 15 minutes before the scheduled start time.</li><li class="rule-item">Strict formal / decent college dress code must be adhered to at all times inside the campus.</li><li class="rule-item">Spot entries will be subject to availability and organizer discretion.</li><li class="rule-item">Use of any unauthorized materials, internet browsing, or malpractice will lead to immediate disqualification.</li><li class="rule-item">The decision of the event coordinators and judges will be final and binding.</li></ol>
+</div>
+</div><div class="dossier-section-block"><h2 class="dossier-section-heading">EVENT RULES</h2><div class="dossier-section-body"><ol class="ruleslist"><li class="rule-item">Usage of mobile phones is strictly
+                                                                    prohibited.</li><li class="rule-item">Participants must strictly adhere
+                                                                    to the allotted time limit.</li><li class="rule-item">Participants should follow all
+                                                                    instructions given by the volunteers and event
+                                                                    coordinators.</li><li class="rule-item">Only the top-scoring teams from
+                                                                    Round 1 will qualify for Round 2.</li><li class="rule-item">The overall winner will be
+                                                                    determined based on a weighted scoring system: 30%
+                                                                    from Round 1 and 70% from Round 2.</li></ol></div></div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">TEAM SIZE</h2>
+<div class="dossier-section-body">
+<ul class="datetimelist">
+<li class="dt-item">2 Members</li>
+</ul>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">DATE AND TIME</h2>
+<div class="dossier-section-body">
+<ul class="datetimelist">
+<li class="dt-item"><span>DATE:</span> 11<sup>th</sup> OCT 2026 (DAY 2)</li>
+<li class="dt-item"><span>TIME:</span> 9:00 AM – 4:00 PM</li>
+</ul>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">CONTACT</h2>
+<div class="dossier-section-body">
+<ul class="contactlist">
+<li class="contact-item">
+<a class="phn" href="tel:9384055069"><ion-icon name="call-outline"></ion-icon></a>
+<a class="wp" href="https://wa.me/+919384055069"><ion-icon name="logo-whatsapp"></ion-icon></a>
+<span>Srivardhini V (24U257) - </span><a href="tel: 9384055069">9384055069</a>
+</li>
+<li class="contact-item">
+<a class="phn" href="tel:7373753531"><ion-icon name="call-outline"></ion-icon></a>
+<a class="wp" href="https://wa.me/+917373753531"><ion-icon name="logo-whatsapp"></ion-icon></a>
+<span>Harshavarthini SJ (24U218) - </span><a href="tel: 7373753531">7373753531</a>
+</li>
+</ul>
+</div>
+</div>
+<center class="reg-btn">
+<button class="submitBtn" id="btn_8" type="button"><b>Register</b></button>
+<button class="mobile-close-btn modal-close" type="button"><b>Close</b></button>
+</center>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Comic Panel Impact Burst Divider 2 -->
+<div class="comic-divider nontech-to-gaming">
+<svg class="divider-svg" preserveaspectratio="none" viewbox="0 0 1440 120">
+<polygon fill="rgba(30,58,138,0.3)" points="0,0 1440,60 1440,120 0,120"></polygon>
+<polygon fill="#0b0818" points="0,30 1440,80 1440,120 0,120"></polygon>
+<path d="M 0 20 Q 720 100 1440 10 L 1440 120 L 0 120 Z" fill="rgba(124,58,237,0.2)"></path>
+</svg>
+</div>
+<!-- Gaming Events -->
+<section class="gaming-events">
+<section class="event-hero">
+<img alt="gaming" class="event-art" src="assets/Events_img/gammingbg1.png"/>
+<div class="section-header text-center">
+<span class="comic-badge gaming-badge">BATTLEGROUND</span>
+<div class="hero-text">
+<h1 class="hero-title1">
+<span class="hero-word"><span>G</span><span>A</span><span>M</span><span>I</span><span>N</span><span>G</span></span>
+<span class="hero-word"><span>E</span><span>V</span><span>E</span><span>N</span><span>T</span><span>S</span></span>
+</h1>
+<p>Play. Conquer. Dominate.</p>
+</div>
+</div>
+</section>
+<div class="editorial-row-container container-fluid px-lg-5" id="card-container">
+<!-- Event 9 -->
+<div class="event-row scroll-reveal palette-thor" id="event-row-9">
+<div class="hero-bg-glow"></div>
+<div class="event-row-inner container">
+<div class="event-row-front">
+<div class="row align-items-center g-4 g-lg-5">
+<div class="col-lg-7 event-text-col">
+<div class="kicker-label">
+<svg class="hero-icon lightning-icon" viewbox="0 0 24 24">
+<polygon fill="none" points="13 2 4 14 11 14 9 22 20 10 13 10 13 2" stroke="currentColor" stroke-width="1.5"></polygon>
+</svg>
+                                            GAMING EVENT
+                                        </div>
+<h2 class="ename card-front z-2">MARVEL ROYALE</h2>
+<div class="tagline-italic">Play Smart. Invest Wisely. Save the Market.</div>
+<div class="meta-row">
+<span class="meta-item">DECODE CLUES</span>
+<span class="meta-dot">•</span>
+<span class="meta-item">INVEST WISELY</span>
+<span class="meta-dot">•</span>
+<span class="meta-item">DEFEAT DOOMS</span>
+</div>
+<div class="text">
+<div class="title" style="display:none;">
+<h3 class="gevent-title">MARVEL ROYALE</h3>
+</div>
+<div class="content">
+<p>A Marvel-themed strategy and gaming event that combines exciting
+                                                    mini-games with a stock market simulation.
+                                                    Test your skills, decision-making, and financial strategy to become
+                                                    the ultimate Marvel Royale Champion</p>
+</div>
+<div class="interior">
+<button class="btn" id="div-9">
+<span>View More</span>
+<ion-icon class="btn-arrow" name="arrow-forward-outline"></ion-icon>
+</button>
+</div>
+</div>
+</div>
+<div class="col-lg-5 event-img-col d-flex justify-content-center align-items-center">
+<div class="card my-5" style="border: 0;">
+<div class="pic">
+<img alt="MARVEL ROYALE" class="eimg" src="assets/Icons_Srishti24_img/ICONS FOR WEBSITE SRiSHTi/Gaming/marvel_royale.jpg" style="object-fit: cover; object-position: center;"/>
+<div class="texture-overlay"></div>
+</div>
+<div class="square_1"></div>
+<div class="square_2"></div>
+<div class="energy-sparks"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="event-row-back dossier-panel modal-window palette-thor" id="id9">
+<div>
+<div class="dossier-scanline"></div>
+<div class="hud-bracket hud-tl"></div>
+<div class="hud-bracket hud-tr"></div>
+<div class="hud-bracket hud-bl"></div>
+<div class="hud-bracket hud-br"></div>
+<div class="dossier-topbar">
+<div class="modal-close" title="Close">
+<div class="close-container" id="modal_close_9">
+<div class="leftright"></div>
+<div class="rightleft"></div>
+<label class="close">close</label>
+</div>
+</div>
+</div>
+<div class="dossier-body">
+<div class="hero-char-col">
+<div class="hero-char-img">
+<img alt="MARVEL ROYALE" class="placeholder-hero-img" src="assets/Icons_Srishti24_img/ICONS FOR WEBSITE SRiSHTi/Gaming/marvel_royale.jpg"/>
+</div>
+</div>
+<div class="dossier-info-col">
+<div class="dossier-kicker text-center">CLASSIFIED // MISSION FILE #09</div>
+<h1 class="text-center justify-content-center" id="accordion-title">
+                                                MARVEL ROYALE</h1>
+<span class="dossier-title-bar"></span>
+<div class="dossier-stat-bar">
+<div class="stat-box"><span class="stat-label">TEAM SIZE</span><span class="stat-value">INDIVIDUAL</span></div>
+<div class="stat-box"><span class="stat-label">FORMAT</span><span class="stat-value">BATTLEFIELD CHOOSES THE WORTHY</span></div>
+</div>
+<div class="dossier-tab-content">
+<div class="dossier-tab-pane active" data-pane="overview">
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">DESCRIPTION</h2>
+<div class="dossier-section-body">
+<p class="desc">Marvel Royale: Operation Market Infinity is
+                                                                a two-stage Marvel-inspired strategy
+                                                                event that blends fun gaming with financial
+                                                                decision-making.
+                                                                Participants first compete in engaging mini-games to
+                                                                earn Fortune Points,
+                                                                which become their investment capital for the final
+                                                                round.
+                                                                Qualified participants then undertake six Marvel-themed
+                                                                missions to unlock
+                                                                Market Intelligence Cards containing stock market
+                                                                insights.
+                                                                Using these clues, they invest in fictional companies,
+                                                                respond to market events,
+                                                                and make strategic Buy, Sell, or Hold decisions.
+                                                                The participant with the highest final portfolio value
+                                                                is crowned
+                                                                the Marvel Royale Champion.</p>
+<h3 style="text-align:center;">ROUND 1</h3>
+<h6 style="text-align:center;">Fortune Quest - Earn Fortune.
+                                                                Build Your Capital.</h6>
+<p class="desc">Participants begin with 50 Fortune Points
+                                                                and compete in multiple mini-games including Jenga
+                                                                Challenge,
+                                                                Lucky Number Draw, Hell and Heaven, UNO Rush, Spin Wheel
+                                                                Bonus, and Mystery Card Challenge.
+                                                                Every game rewards or deducts Fortune Points based on
+                                                                performance, strategy, and risk management.
+                                                                Participants with the highest Fortune Points qualify for
+                                                                Round 2,
+                                                                carrying their earned points as investment capital.</p>
+<h3 style="text-align:center;">ROUND 2</h3>
+<h6 style="text-align:center;">Operation Market Infinity -
+                                                                Decode. Invest. Defeat Doctor Doom.
+                                                            </h6>
+<p class="desc">Qualified participants enter S.H.I.E.L.D.'s
+                                                                Financial Intelligence Mission, where Doctor Doom has
+                                                                hidden
+                                                                vital stock market intelligence across six Marvel-themed
+                                                                missions. Completing each mission unlocks a Market
+                                                                Intelligence Card
+                                                                containing company reports, analyst recommendations,
+                                                                sector forecasts, and market insights.
+                                                                Using the Fortune Points earned in Round 1, participants
+                                                                invest in fictional companies, react to live market
+                                                                events,
+                                                                and strategically Buy, Sell, or Hold stocks. The
+                                                                participant achieving the highest portfolio value after
+                                                                the final market update is declared
+                                                                the Marvel Royale Champion.</p>
+<h3 style="text-align:center; margin-top:20px;"><b>VENUE &amp; SCHEDULE</b>
+</h3>
+<p class="desc" style="text-align:center;"><strong>DAY 1</strong> • Hall: <strong>J 411, J 413</strong></p>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">GENERAL RULES</h2>
+<div class="dossier-section-body">
+<ol class="ruleslist"><li class="rule-item">All participants must bring their valid College ID.</li><li class="rule-item">All participants must bring a Bonafide Certificate from their respective colleges, except PSG Tech students.</li><li class="rule-item"><strong>All participants must bring a Xerox copy of the front page of their passbook.</strong></li><li class="rule-item">Participants must report to the venue at least 15 minutes before the scheduled start time.</li><li class="rule-item">Strict formal / decent college dress code must be adhered to at all times inside the campus.</li><li class="rule-item">Spot entries will be subject to availability and organizer discretion.</li><li class="rule-item">Use of any unauthorized materials, internet browsing, or malpractice will lead to immediate disqualification.</li><li class="rule-item">The decision of the event coordinators and judges will be final and binding.</li></ol>
+</div>
+</div><div class="dossier-section-block"><h2 class="dossier-section-heading">EVENT RULES</h2><div class="dossier-section-body"><ol class="ruleslist"><li class="rule-item">Individual participation only.</li><li class="rule-item">Start with **50 Fortune Points.</li><li class="rule-item">Top scorers qualify for Round 2.</li><li class="rule-item">Round 1 points become investment
+                                                                    capital.</li><li class="rule-item">Complete missions to earn Market
+                                                                    Intelligence Cards.</li><li class="rule-item">No phones or external
+                                                                    assistance.</li><li class="rule-item">Judges' decision is final.</li><li class="rule-item">Round 1 – Participants compete in
+                                                                    a series of fun mini-games
+                                                                    to earn Fortune Points through strategy, skill, and
+                                                                    decision-making.The highest scorers
+                                                                    qualify for the final round.</li><li class="rule-item">Round 2 – Qualified participants
+                                                                    complete six Marvel-themed missions
+                                                                    to unlock market clues and use their Fortune Points
+                                                                    to invest in a stock market simulation.
+                                                                    The participant with the highest final portfolio
+                                                                    value wins.</li></ol></div></div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">TEAM SIZE</h2>
+<div class="dossier-section-body">
+<p>1 Member</p>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">DATE AND TIME</h2>
+<div class="dossier-section-body">
+<ul class="datetimelist">
+<li class="dt-item"><span>DATE:</span> 10<sup>th</sup> OCT 2026 (DAY 1)</li>
+<li class="dt-item"><span>TIME:</span> 9:00 AM – 5:00 PM</li>
+</ul>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">CONTACT</h2>
+<div class="dossier-section-body">
+<ul class="contactlist">
+<li class="contact-item"><a class="phn" href="tel:9342635058"><ion-icon name="call-outline"></ion-icon></a><a class="wp" href="https://wa.me/+919342635058"><ion-icon name="logo-whatsapp"></ion-icon></a><span>Tharun R M (24L271) - </span><a href="tel:9342635058">9342635058</a></li>
+<li class="contact-item"><a class="phn" href="tel:6374175092"><ion-icon name="call-outline"></ion-icon></a><a class="wp" href="https://wa.me/+916374175092"><ion-icon name="logo-whatsapp"></ion-icon></a><span>Nikkil Prasath (24D224) - </span><a href="tel:6374175092">6374175092</a>
+</li>
+</ul>
+</div>
+</div>
+<center class="reg-btn">
+<button class="submitBtn" id="btn_9" type="button"><b>Register</b></button>
+<button class="mobile-close-btn modal-close" type="button"><b>Close</b></button>
+</center>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Event 10 -->
+<div class="event-row scroll-reveal palette-widow" id="event-row-10">
+<div class="hero-bg-glow"></div>
+<div class="event-row-inner container">
+<div class="event-row-front">
+<div class="row align-items-center g-4 g-lg-5">
+<div class="col-lg-7 event-text-col">
+<div class="kicker-label">
+<svg class="hero-icon stealth-icon" viewbox="0 0 24 24">
+<polygon fill="none" points="4 2 20 2 12 12 20 22 4 22 12 12" stroke="currentColor" stroke-width="1.5"></polygon>
+</svg>
+                                            GAMING EVENT
+                                        </div>
+<h2 class="ename card-front z-2">BATTLE NEXUS</h2>
+<div class="tagline-italic">Drop Together. Fight Together. Win Together.</div>
+<div class="meta-row">
+<span class="meta-item">SURVIVE LONGER</span>
+<span class="meta-dot">•</span>
+<span class="meta-item">AIM BETTER</span>
+<span class="meta-dot">•</span>
+<span class="meta-item">WIN TOGETHER</span>
+</div>
+<div class="text">
+<div class="title" style="display:none;">
+<h1 class="gevent-title">BATTLE NEXUS</h1>
+</div>
+<div class="content">
+<p>Experience intense BGMI Duo battles where teamwork,strategy,
+                                                    and survival determine the champions.Fight, survive, and
+                                                    dominate the battlefield to claim victory.</p>
+</div>
+<div class="interior">
+<button class="btn" id="div-10">
+<span>View More</span>
+<ion-icon class="btn-arrow" name="arrow-forward-outline"></ion-icon>
+</button>
+</div>
+</div>
+</div>
+<div class="col-lg-5 event-img-col d-flex justify-content-center align-items-center">
+<div class="card my-5" style="border: 0;">
+<div class="pic">
+<img alt="BATTLE NEXUS" class="eimg" src="assets/Icons_Srishti24_img/ICONS FOR WEBSITE SRiSHTi/Gaming/battle.jpeg"/>
+<div class="texture-overlay"></div>
+</div>
+<div class="square_1"></div>
+<div class="square_2"></div>
+<div class="energy-sparks"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="event-row-back dossier-panel modal-window palette-widow" id="id10">
+<div>
+<div class="dossier-scanline"></div>
+<div class="hud-bracket hud-tl"></div>
+<div class="hud-bracket hud-tr"></div>
+<div class="hud-bracket hud-bl"></div>
+<div class="hud-bracket hud-br"></div>
+<div class="dossier-topbar">
+<div class="modal-close" title="Close">
+<div class="close-container" id="modal_close_10">
+<div class="leftright"></div>
+<div class="rightleft"></div>
+<label class="close">close</label>
+</div>
+</div>
+</div>
+<div class="dossier-body">
+<div class="hero-char-col">
+<div class="hero-char-img">
+<img alt="BATTLE NEXUS" class="placeholder-hero-img" src="assets/Icons_Srishti24_img/ICONS FOR WEBSITE SRiSHTi/Gaming/battle1.png"/>
+</div>
+</div>
+<div class="dossier-info-col">
+<div class="dossier-kicker text-center">CLASSIFIED // MISSION FILE #10</div>
+<h1 class="text-center justify-content-center" id="accordion-title">BATTLE
+                                                NEXUS</h1>
+<span class="dossier-title-bar"></span>
+<div class="dossier-stat-bar">
+<div class="stat-box"><span class="stat-label">TEAM SIZE</span><span class="stat-value">2 MEMBERS</span></div>
+<div class="stat-box"><span class="stat-label">FORMAT</span><span class="stat-value">DOMINATE THE BATTLEFIELD</span></div>
+</div>
+<div class="dossier-tab-content">
+<div class="dossier-tab-pane active" data-pane="overview">
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">DESCRIPTION</h2>
+<div class="dossier-section-body">
+<p class="desc">The BGMI Duo Tournament is a two-stage
+                                                                esports competition designed to test teamwork,
+                                                                communication, and strategic gameplay. Teams compete
+                                                                in WOW Mode qualifiers, followed by Classic Finals,
+                                                                earning
+                                                                points through eliminations and placements to determine
+                                                                the
+                                                                ultimate champions.</p>
+<h3 style="text-align:center;">ROUND 1</h3>
+<h6 style="text-align:center;">Duo WOW Mode - Fight Hard.
+                                                                Qualify Smart.</h6>
+<p class="desc">All registered duo teams compete in a BGMI
+                                                                WOW Mode
+                                                                custom match. Winners qualify directly, while the
+                                                                remaining
+                                                                qualification slots are filled based on the highest kill
+                                                                count.</p>
+<h3 style="text-align:center;">ROUND 2</h3>
+<h6 style="text-align:center;">Classic Grand Finals -
+                                                                Survive. Score. Conquer.</h6>
+<p class="desc">The top 50 qualified teams compete in three
+                                                                Classic matches across
+                                                                Erangel and Miramar. Teams earn points based on
+                                                                placements and kills, and the
+                                                                team with the highest cumulative score is crowned the
+                                                                champion.</p>
+<h3 style="text-align:center; margin-top:20px;"><b>VENUE &amp; SCHEDULE</b>
+</h3>
+<p class="desc" style="text-align:center;"><strong>DAY 2</strong> • Hall: <strong>J 411, J 413</strong></p>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">GENERAL RULES</h2>
+<div class="dossier-section-body">
+<ol class="ruleslist"><li class="rule-item">All participants must bring their valid College ID.</li><li class="rule-item">All participants must bring a Bonafide Certificate from their respective colleges, except PSG Tech students.</li><li class="rule-item"><strong>All participants must bring a Xerox copy of the front page of their passbook.</strong></li><li class="rule-item">Participants must report to the venue at least 15 minutes before the scheduled start time.</li><li class="rule-item">Strict formal / decent college dress code must be adhered to at all times inside the campus.</li><li class="rule-item">Spot entries will be subject to availability and organizer discretion.</li><li class="rule-item">Use of any unauthorized materials, internet browsing, or malpractice will lead to immediate disqualification.</li><li class="rule-item">The decision of the event coordinators and judges will be final and binding.</li></ol>
+</div>
+</div><div class="dossier-section-block"><h2 class="dossier-section-heading">EVENT RULES</h2><div class="dossier-section-body"><ol class="ruleslist"><li class="rule-item">Each team must have 2 registered
+                                                                    players.</li><li class="rule-item">Mobile devices only.</li><li class="rule-item">Use personal BGMI accounts.</li><li class="rule-item">Join the room 10 minutes early.</li><li class="rule-item">No hacks, cheats, or unfair play.</li><li class="rule-item">Technical issues are the player's
+                                                                    responsibility.</li><li class="rule-item">Organizers' decision is final.</li><li class="rule-item">Round 1: WOW Mode Qualifier (1
+                                                                    Match) – Winners
+                                                                    and highest-kill teams qualify.</li><li class="rule-item">Round 2: Classic Finals (3
+                                                                    Matches) – Points
+                                                                    awarded based on placement and kills. Highest total
+                                                                    score wins.</li><li class="rule-item">Tie-breaker: In case of a tie in
+                                                                    points, the team with higher total finishes/kills
+                                                                    across matches will be ranked higher. If still tied,
+                                                                    highest placement in the final match determines the
+                                                                    rank.</li><li class="rule-item">Organizers reserve the right to
+                                                                    modify the schedule, match format, or rules, if
+                                                                    necessary, due to unforeseen circumstances.</li></ol></div></div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">TEAM SIZE</h2>
+<div class="dossier-section-body">
+<p>2 Members</p>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">DATE AND TIME</h2>
+<div class="dossier-section-body">
+<ul class="datetimelist">
+<li class="dt-item"><span>DATE:</span> 11<sup>th</sup> OCT 2026 (DAY 2)</li>
+<li class="dt-item"><span>TIME:</span> 9:00 AM – 4:00 PM</li>
+</ul>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">CONTACT</h2>
+<div class="dossier-section-body">
+<ul class="contactlist">
+<li class="contact-item"><a class="phn" href="tel:9342257538"><ion-icon name="call-outline"></ion-icon></a><a class="wp" href="https://wa.me/+919342257538"><ion-icon name="logo-whatsapp"></ion-icon></a><span>Vasudevan V (24L160) - </span><a href="tel:9965131146">9965131146</a></li>
+<li class="contact-item"><a class="phn" href="tel:9361589621"><ion-icon name="call-outline"></ion-icon></a><a class="wp" href="https://wa.me/+919361589621"><ion-icon name="logo-whatsapp"></ion-icon></a><span>Manoj Santhosh Raj P R (25L402) - </span><a href="tel:8098092288">8098092288</a></li>
+</ul>
+</div>
+</div>
+<center class="reg-btn">
+<button class="submitBtn" id="btn_10" type="button"><b>Register</b></button>
+<button class="mobile-close-btn modal-close" type="button"><b>Close</b></button>
+</center>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Event 11 -->
+<div class="event-row scroll-reveal palette-ironman" id="event-row-11">
+<div class="hero-bg-glow"></div>
+<div class="event-row-inner container">
+<div class="event-row-front">
+<div class="row align-items-center g-4 g-lg-5">
+<div class="col-lg-7 event-text-col">
+<div class="kicker-label">
+<svg class="hero-icon arc-icon" viewbox="0 0 24 24">
+<circle cx="12" cy="12" fill="none" r="9" stroke="currentColor" stroke-width="1.5"></circle>
+<circle cx="12" cy="12" fill="none" r="5" stroke="currentColor" stroke-width="1.5"></circle>
+<circle cx="12" cy="12" fill="currentColor" r="2"></circle>
+</svg>
+                                            GAMING EVENT
+                                        </div>
+<h2 class="ename card-front z-2">AUCTION ARENA</h2>
+<div class="tagline-italic">Decode. Decide. Dominate.</div>
+<div class="meta-row">
+<span class="meta-item">CRICKET AUCTION</span>
+<span class="meta-dot">•</span>
+<span class="meta-item">TRIVIA &amp; STRATEGY</span>
+<span class="meta-dot">•</span>
+<span class="meta-item">BIDDING WAR</span>
+</div>
+<div class="text">
+<div class="title" style="display:none;">
+<h1 class="gevent-title">AUCTION ARENA - Decode,Decide,Dominate</h1>
+</div>
+<div class="content">
+<p>Test your cricket knowledge, decision-making, and auction
+                                                    strategy through exciting challenges inspired by IPL.Decode clues,
+                                                    make DRS calls, and build the ultimate championship squad.</p>
+</div>
+<div class="interior">
+<button class="btn" id="div-11">
+<span>View More</span>
+<ion-icon class="btn-arrow" name="arrow-forward-outline"></ion-icon>
+</button>
+</div>
+</div>
+</div>
+<div class="col-lg-5 event-img-col d-flex justify-content-center align-items-center">
+<div class="card my-5" style="border: 0;">
+<div class="pic">
+<img alt="AUCTION ARENA" class="eimg" src="assets/Icons_Srishti24_img/ICONS FOR WEBSITE SRiSHTi/Gaming/arena.jpg"/>
+<div class="texture-overlay"></div>
+</div>
+<div class="square_1"></div>
+<div class="square_2"></div>
+<div class="energy-sparks"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="event-row-back dossier-panel modal-window palette-ironman" id="id11">
+<div>
+<div class="dossier-scanline"></div>
+<div class="hud-bracket hud-tl"></div>
+<div class="hud-bracket hud-tr"></div>
+<div class="hud-bracket hud-bl"></div>
+<div class="hud-bracket hud-br"></div>
+<div class="dossier-topbar">
+<div class="modal-close" title="Close">
+<div class="close-container" id="modal_close_11">
+<div class="leftright"></div>
+<div class="rightleft"></div>
+<label class="close">close</label>
+</div>
+</div>
+</div>
+<div class="dossier-body">
+<div class="hero-char-col">
+<div class="hero-char-img">
+<img alt="AUCTION ARENA" class="placeholder-hero-img" src="assets/Icons_Srishti24_img/ICONS FOR WEBSITE SRiSHTi/Gaming/arena.jpg"/>
+</div>
+</div>
+<div class="dossier-info-col">
+<div class="dossier-kicker text-center">CLASSIFIED // MISSION FILE #11</div>
+<h1 class="text-center justify-content-center" id="accordion-title">
+                                                AUCTION ARENA</h1>
+<span class="dossier-title-bar"></span>
+<div class="dossier-stat-bar">
+<div class="stat-box"><span class="stat-label">TEAM SIZE</span><span class="stat-value">2-4 MEMBERS</span></div>
+<div class="stat-box"><span class="stat-label">FORMAT</span><span class="stat-value">IPL AUCTION</span></div>
+</div>
+<div class="dossier-tab-content">
+<div class="dossier-tab-pane active" data-pane="overview">
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">DESCRIPTION</h2>
+<div class="dossier-section-body">
+<p class="desc">The Auction Arena is a three-round cricket
+                                                                strategy event where teams compete through quizzes,
+                                                                DRS decision-making, and a live IPL-style player
+                                                                auction.
+                                                                The event tests cricket knowledge, analytical thinking,
+                                                                teamwork, and bidding strategy to crown the ultimate
+                                                                cricket franchise.</p>
+<h3 style="text-align:center;">ROUND 1</h3>
+<h6 style="text-align:center;">The Cricket Cipher - Think
+                                                                Fast. Decode Faster.</h6>
+<p class="desc">Teams answer cricket-based quiz questions to
+                                                                reveal hidden letters
+                                                                and decode a secret cricket term. The top-performing
+                                                                teams advance
+                                                                to the next round.</p>
+<h3 style="text-align:center;">ROUND 2</h3>
+<h6 style="text-align:center;">The DRS Duel - Review.
+                                                                Decide. Defend.</h6>
+<p class="desc">Shortlisted teams compete head-to-head by
+                                                                analyzing DRS
+                                                                scenarios and deciding whether the correct verdict is
+                                                                OUT or NOT OUT,
+                                                                supported by cricket laws.</p>
+<h3 style="text-align:center;">ROUND 3</h3>
+<h6 style="text-align:center;">The Final Fury - Bid Smart.
+                                                                Build Champions.</h6>
+<p class="desc">"Finalist teams participate in a live
+                                                                IPL-style auction using a
+                                                                virtual budget to assemble the strongest squad.
+                                                                Strategic bidding,budget management,
+                                                                and team balance determine the winners."</p>
+<h3 style="text-align:center; margin-top:20px;"><b>VENUE &amp; SCHEDULE</b>
+</h3>
+<p class="desc" style="text-align:center;"><strong>DAY 1 &amp; DAY 2</strong> • Hall: <strong>J 310, J 313</strong></p>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">GENERAL RULES</h2>
+<div class="dossier-section-body">
+<ol class="ruleslist"><li class="rule-item">All participants must bring their valid College ID.</li><li class="rule-item">All participants must bring a Bonafide Certificate from their respective colleges, except PSG Tech students.</li><li class="rule-item"><strong>All participants must bring a Xerox copy of the front page of their passbook.</strong></li><li class="rule-item">Participants must report to the venue at least 15 minutes before the scheduled start time.</li><li class="rule-item">Strict formal / decent college dress code must be adhered to at all times inside the campus.</li><li class="rule-item">Spot entries will be subject to availability and organizer discretion.</li><li class="rule-item">Use of any unauthorized materials, internet browsing, or malpractice will lead to immediate disqualification.</li><li class="rule-item">The decision of the event coordinators and judges will be final and binding.</li></ol>
+</div>
+</div><div class="dossier-section-block"><h2 class="dossier-section-heading">EVENT RULES</h2><div class="dossier-section-body"><ol class="ruleslist"><li class="rule-item">Team size: 2–4 members.</li><li class="rule-item">Follow the rules of each round.</li><li class="rule-item">No mobile phones or unfair
+                                                                    assistance.</li><li class="rule-item">Decisions of judges are final.</li><li class="rule-item">Round 1: Cricket quiz and
+                                                                    hidden-word challenge.</li><li class="rule-item">Round 2: Head-to-head DRS decision
+                                                                    challenge.</li><li class="rule-item">Round 3: Live IPL-style player
+                                                                    auction.</li></ol></div></div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">TEAM SIZE</h2>
+<div class="dossier-section-body">
+<p>2 - 4 Members</p>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">DATE AND TIME</h2>
+<div class="dossier-section-body">
+<ul class="datetimelist">
+<li class="dt-item"><span>DATE:</span> 10<sup>th</sup> &amp; 11<sup>th</sup> OCT 2026 (DAY 1 &amp; DAY 2)</li>
+<li class="dt-item"><span>TIME:</span> DAY 1: 9:00 AM – 5:00 PM | DAY 2: 9:00 AM – 4:00 PM</li>
+</ul>
+</div>
+</div>
+<div class="dossier-section-block">
+<h2 class="dossier-section-heading">CONTACT</h2>
+<div class="dossier-section-body">
+<ul class="contactlist">
+<li class="contact-item"><a class="phn" href="tel:8220235570"><ion-icon name="call-outline"></ion-icon></a><a class="wp" href="https://wa.me/+918220235570"><ion-icon name="logo-whatsapp"></ion-icon></a><span>Arulselvan A (24I305) - </span><a href="tel:8220235570">8220235570</a></li>
+<li class="contact-item"><a class="phn" href="tel:9943035124"><ion-icon name="call-outline"></ion-icon></a><a class="wp" href="https://wa.me/+919943035124"><ion-icon name="logo-whatsapp"></ion-icon></a><span>Girinath S (25L431) - </span><a href="tel:9943035124">9943035124</a></li>
+</ul>
+</div>
+</div>
+<center class="reg-btn">
+<button class="submitBtn" id="btn_11" type="button"><b>Register</b></button>
+<button class="mobile-close-btn modal-close" type="button"><b>Close</b></button>
+</center>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script src="js/event1.js"></script>
+<!-- Legacy appendChild disabled for in-place 3D card flip -->
+<!--
+        <script>
+            (function () {
+                var modals = document.querySelectorAll('.modal-window');
+                modals.forEach(function (m) {
+                    document.body.appendChild(m);
+                });
+            })();
+        </script>
+        -->
+<script>
+                    // Dossier tab switching
+                    document.addEventListener('click', function (e) {
+                        var btn = e.target.closest('.dossier-tab-btn');
+                        if (!btn) return;
+                        var modal = btn.closest('.modal-window');
+                        if (!modal) return;
+                        var tab = btn.dataset.tab;
+                        modal.querySelectorAll('.dossier-tab-btn').forEach(function (b) { b.classList.remove('active'); });
+                        modal.querySelectorAll('.dossier-tab-pane').forEach(function (p) { p.classList.remove('active'); });
+                        btn.classList.add('active');
+                        var pane = modal.querySelector('.dossier-tab-pane[data-pane="' + tab + '"]');
+                        if (pane) pane.classList.add('active');
+                    });
+                </script>
+<script>
+                    jQuery(document).ready(function ($) {
+                        "use strict"
+                        $(".loading").delay(2000).fadeOut("slow");
+                    });
+                </script>
+<!-- Cinematic atmosphere engine — ONLY linked from event.html -->
+<script defer="" src="js/cinematic-effects.js"></script>
+<!-- Mobile Navigation Overlay (visible ≤992px) -->
+<div aria-hidden="true" class="ave-menu-overlay" id="aveMenu">
+<div aria-label="Navigation menu" class="ave-menu-card" role="dialog">
+<button aria-label="Close menu" class="ave-menu-close" id="aveMenuClose">×</button>
+<nav class="ave-menu-list">
+<a href="register.html">
+<span class="icon">
+<svg viewbox="0 0 24 24">
+<circle cx="12" cy="7" r="4"></circle>
+<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+</svg>
+</span>Register
+                            </a>
+<a href="home.html">
+<span class="icon">
+<svg viewbox="0 0 24 24">
+<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+<polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+</span>Home
+                            </a>
+<a class="active" href="event.html">
+<span class="icon">
+<svg viewbox="0 0 24 24">
+<rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect>
+<line x1="16" x2="16" y1="2" y2="6"></line>
+<line x1="8" x2="8" y1="2" y2="6"></line>
+<line x1="3" x2="21" y1="10" y2="10"></line>
+</svg>
+</span>Events
+                            </a>
+<a href="workshop.html#workshop">
+<span class="icon">
+<svg viewbox="0 0 24 24">
+<rect height="14" rx="2" ry="2" width="20" x="2" y="3"></rect>
+<line x1="8" x2="16" y1="21" y2="21"></line>
+<line x1="12" x2="12" y1="17" y2="21"></line>
+</svg>
+</span>Workshop
+                            </a>
+<a href="workshop.html#paperpresentation">
+<span class="icon">
+<svg viewbox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+<polyline points="14 2 14 8 20 8"></polyline>
+<line x1="16" x2="8" y1="13" y2="13"></line>
+<line x1="16" x2="8" y1="17" y2="17"></line>
+<polyline points="10 9 9 9 8 9"></polyline>
+</svg>
+</span>Paper Presentation
+                            </a>
+<a href="workshop.html#flagship">
+<span class="icon">
+<svg viewbox="0 0 24 24">
+<polyline points="13 17 18 12 13 7"></polyline>
+<polyline points="6 17 11 12 6 7"></polyline>
+</svg>
+</span>Flagship
+                            </a>
+<a href="home.html#contact">
+<span class="icon">
+<svg viewbox="0 0 24 24">
+<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+<polyline points="22,6 12,13 2,6"></polyline>
+</svg>
+</span>Contact
+                            </a>
+</nav>
+</div>
+</div>
+<script src="js/desktop-nav.js"></script>
+<!-- Mobile nav interaction (hamburger toggle + scroll-to-top) -->
+<script>
+                    (function () {
+                        var toggle = document.getElementById('aveMenuToggle');
+                        var overlay = document.getElementById('aveMenu');
+                        var closeBtn = document.getElementById('aveMenuClose');
+                        var scrollTop = document.getElementById('aveScrollTop');
+
+                        function openMenu() {
+                            if (overlay) {
+                                overlay.classList.add('is-open');
+                                overlay.setAttribute('aria-hidden', 'false');
+                                document.body.classList.add('ave-menu-open');
+                            }
+                        }
+                        function closeMenu() {
+                            if (overlay) {
+                                overlay.classList.remove('is-open');
+                                overlay.setAttribute('aria-hidden', 'true');
+                                document.body.classList.remove('ave-menu-open');
+                            }
+                        }
+
+                        if (toggle) toggle.addEventListener('click', function () {
+                            if (overlay && overlay.classList.contains('is-open')) closeMenu();
+                            else openMenu();
+                        });
+                        if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+                        if (overlay) overlay.addEventListener('click', function (e) {
+                            if (e.target === overlay) closeMenu();
+                        });
+                        if (scrollTop) scrollTop.addEventListener('click', function () {
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        });
+
+                        // Close menu when a link inside is clicked
+                        if (overlay) {
+                            overlay.querySelectorAll('.ave-menu-list a').forEach(function (link) {
+                                link.addEventListener('click', closeMenu);
+                            });
+                        }
+
+                        // Inject mobile-only Close buttons into all reg-btn centers that don't already have one
+                        document.querySelectorAll('.reg-btn').forEach(function (regBtn) {
+                            if (!regBtn.querySelector('.mobile-close-btn')) {
+                                var closeButton = document.createElement('button');
+                                closeButton.type = 'button';
+                                closeButton.className = 'mobile-close-btn modal-close';
+                                closeButton.innerHTML = '<b>Close</b>';
+                                regBtn.appendChild(closeButton);
+                            }
+                        });
+                    })();
+                </script>
+</section></section></main></body>
+</html>

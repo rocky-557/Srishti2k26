@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRiSHTi 2k26 | Admin Management</title>
+    <meta name="description" content="SRiSHTi 2k26 Admin Panel — Full Administrative & Event Record Management">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="./css/avengers-admin.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        #view { display: none; }
+    </style>
+</head>
+<body class="p-4 p-md-5">
+
+    <!-- Cinematic Layers -->
+    <div class="cin-overlay"></div>
+    <div class="cin-glow-iron"></div>
+    <div class="cin-glow-thor"></div>
+    <div class="cin-glow-witch"></div>
+    <div class="cin-glow-card"></div>
+    <div class="cin-bloom-layer"></div>
+    <div class="cin-vignette"></div>
+    <div class="cin-rays-wrap">
+        <div class="cin-ray cin-ray-1"></div>
+        <div class="cin-ray cin-ray-2"></div>
+        <div class="cin-ray cin-ray-3"></div>
+    </div>
+    <canvas id="particleCanvas"></canvas>
+    <div class="avengers-grid-bg"></div>
+
+    <div class="container-fluid" style="max-width:1400px; position:relative; z-index:10;">
+
+        <!-- Header Banner -->
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-3">
+                <img src="./srishti_logo.png" alt="SRiSHTi Logo"
+                    style="width:50px;height:50px;object-fit:contain;mix-blend-mode:screen;
+                           filter:drop-shadow(0 0 12px rgba(201,162,39,0.9)) drop-shadow(0 0 28px rgba(201,162,39,0.5));">
+                <div>
+                    <div class="tagline-badge mb-1">⚙️ LEGACY MANAGEMENT</div>
+                    <h2 class="mb-0 section-title fs-3">SRiSHTi 2k26 Admin Panel</h2>
+                    <p style="color:var(--text-muted);font-size:0.85rem;margin:0;">
+                        Administrative &amp; Event Record Management
+                    </p>
+                </div>
+            </div>
+            <a href="dashboard.html" class="btn btn-outline-primary">
+                <i class="bi bi-speedometer2 me-1"></i>Dashboard View
+            </a>
+        </div>
+
+        <!-- Navigation Bar -->
+        <div class="nav-bar-container mb-4">
+            <div class="nav-bar d-flex flex-wrap flex-row justify-content-center">
+                <a href="#add"><i class="bi bi-person-gear"></i> Admin</a>
+                <a href="#member"><i class="bi bi-card-checklist"></i> Registration</a>
+                <a href="#event"><i class="bi bi-calendar-event"></i> Event</a>
+                <a href="#payment"><i class="bi bi-credit-card"></i> Payment</a>
+                <a href="#euser"><i class="bi bi-people"></i> E-User</a>
+                <a href="#workshop"><i class="bi bi-tools"></i> Workshop</a>
+                <a href="#pwdreq"><i class="bi bi-key"></i> PwdRequest</a>
+                <a href="#pwdres"><i class="bi bi-arrow-counterclockwise"></i> PwdReset</a>
+                <a href="#paper"><i class="bi bi-file-earmark-text"></i> Paperpresentation</a>
+                <a href="#flagship"><i class="bi bi-trophy"></i> Flagship</a>
+            </div>
+        </div>
+
+        <!-- ── Section: Admin ── -->
+        <section class="admin" id="add">
+            <div class="tab-btn d-flex justify-content-center align-items-center mt-4 mb-4">
+                <div id="form"><span><i class="bi bi-plus-circle me-1"></i> Insert</span></div>
+                <div id="table"><span><i class="bi bi-table me-1"></i> View</span></div>
+            </div>
+
+            <div id="insert">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-lg-6 col-md-8">
+                        <div class="card-custom p-4">
+                            <div class="section-title fs-5 mb-3">
+                                <i class="bi bi-person-plus-fill me-2" style="color:var(--gold)"></i>Add New Admin
+                            </div>
+                            <div class="section-title-bar mb-4"></div>
+                            <form id="supForm">
+                                <div id="msg"></div>
+                                <div class="form-group mb-3">
+                                    <label for="user" class="form-label">Name</label>
+                                    <input type="text" name="user" id="user" class="form-control"
+                                        placeholder="Your Name" required>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="password" class="form-label">Password</label>
+                                    <input type="text" id="password" name="password" class="form-control" required>
+                                </div>
+                                <div class="form-group mb-4">
+                                    <label for="designation" class="form-label">Designation</label>
+                                    <input type="text" id="designation" name="designation" class="form-control" required>
+                                </div>
+                                <div class="form-group mb-2">
+                                    <button type="submit" class="submitBtn btn btn-primary w-100">
+                                        <i class="bi bi-person-plus-fill me-1"></i> ADD ADMIN
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-lg-10 col-md-12">
+                        <div class="card-custom p-4">
+                            <div class="section-title fs-5 mb-3">
+                                <i class="bi bi-shield-lock-fill me-2" style="color:var(--gold)"></i>Admin Records
+                            </div>
+                            <div class="section-title-bar mb-4"></div>
+                            <div class="table-responsive rounded-3">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>User</th>
+                                            <th>Password</th>
+                                            <th>Designation</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Gannadheesh Raj</td>
+                                            <td>••••••••</td>
+                                            <td><span class="badge text-bg-primary">admin</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>RegDesk1</td>
+                                            <td>••••••••</td>
+                                            <td><span class="badge text-bg-secondary">registration</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>AdminUser</td>
+                                            <td>••••••••</td>
+                                            <td><span class="badge text-bg-primary">admin</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── Section: Member Registration ── -->
+        <section class="admin" id="member">
+            <div class="card-custom p-4">
+                <div class="container" style="max-width:650px;">
+                    <div class="text-center mb-3">
+                        <div class="tagline-badge mb-2">🔍 LIVE SEARCH</div>
+                        <h3 class="section-title fs-4">Registration Live Search</h3>
+                        <div class="section-title-bar mx-auto mb-3"></div>
+                    </div>
+                    <input type="text" class="form-control form-control-lg mb-3" id="live_search"
+                        autocomplete="off" placeholder="Type name, email, or college to filter...">
+                    <div id="dow-btn" class="d-flex justify-content-center mx-auto align-items-center mb-3">
+                        <button class="btn btn-success" onclick="ExportToExcel('xlsx')">
+                            <i class="bi bi-file-earmark-excel me-1"></i>Download Excel
+                        </button>
+                    </div>
+                </div>
+                <div id="searchresult"></div>
+                <div class="table-responsive rounded-3">
+                    <table class="table table-hover" id="show">
+                        <thead>
+                            <tr>
+                                <th>Id</th><th>Name</th><th>Email</th><th>College</th>
+                                <th>Mobile</th><th>Events</th><th>Workshop</th>
+                                <th>PaperPresentation</th><th>Flagship</th>
+                                <th>General fee</th><th>Accomodation</th>
+                            </tr>
+                        </thead>
+                        <tbody id="show-table-body">
+                            <!-- Populated dynamically from MongoDB -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── Section: Event ── -->
+        <section class="admin" id="event">
+            <div class="card-custom p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0 section-title fs-4">
+                        <i class="bi bi-calendar-event me-2" style="color:var(--gold)"></i>Technical &amp; Non-Technical Events
+                    </h4>
+                    <button class="btn btn-success" onclick="ExportToExcele('xlsx')">
+                        <i class="bi bi-file-earmark-excel me-1"></i>Download
+                    </button>
+                </div>
+                <div class="section-title-bar mb-4"></div>
+                <div class="table-responsive rounded-3">
+                    <table id="events" class="table table-hover">
+                        <thead>
+                            <tr><th>Id</th><th>Name</th><th>Email</th><th>Registered Events</th></tr>
+                        </thead>
+                        <tbody id="events-table-body">
+                            <!-- Populated dynamically from MongoDB -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── Section: Payment ── -->
+        <section class="admin" id="payment">
+            <div class="card-custom p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0 section-title fs-4">
+                        <i class="bi bi-credit-card me-2" style="color:var(--gold)"></i>Payment Transaction Records
+                    </h4>
+                    <button class="btn btn-success" onclick="ExportToExcelpay('xlsx')">
+                        <i class="bi bi-file-earmark-excel me-1"></i>Download
+                    </button>
+                </div>
+                <div class="section-title-bar mb-4"></div>
+                <div class="table-responsive rounded-3">
+                    <table id="pay" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Id</th><th>Name</th><th>Email</th><th>Mobile</th><th>College</th>
+                                <th>Transaction ID</th><th>Amount</th><th>Status / Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="payment-table-body">
+                            <!-- Populated dynamically from MongoDB -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── Section: E-User ── -->
+        <section class="admin" id="euser">
+            <div class="card-custom p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0 section-title fs-4">
+                        <i class="bi bi-people me-2" style="color:var(--gold)"></i>Participant Profiles
+                    </h4>
+                    <button class="btn btn-success" onclick="ExportToExcel('xlsx')">
+                        <i class="bi bi-file-earmark-excel me-1"></i>Download
+                    </button>
+                </div>
+                <div class="section-title-bar mb-4"></div>
+                <div class="table-responsive rounded-3">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Id</th><th>Name</th><th>Email</th><th>Mobile</th>
+                                <th>Department</th><th>College</th><th>General Fee</th>
+                            </tr>
+                        </thead>
+                        <tbody id="euser-table-body">
+                            <!-- Populated dynamically from MongoDB -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── Section: Workshop ── -->
+        <section class="admin" id="workshop">
+            <div class="card-custom p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0 section-title fs-4">
+                        <i class="bi bi-tools me-2" style="color:var(--gold)"></i>Workshop Registrations
+                    </h4>
+                    <button class="btn btn-success" onclick="ExportToExcelwork('xlsx')">
+                        <i class="bi bi-file-earmark-excel me-1"></i>Download
+                    </button>
+                </div>
+                <div class="section-title-bar mb-4"></div>
+                <div class="table-responsive rounded-3">
+                    <table id="work" class="table table-hover">
+                        <thead>
+                            <tr><th>Id</th><th>Name</th><th>Email</th><th>Workshop</th><th>Payment Status</th></tr>
+                        </thead>
+                        <tbody id="workshop-table-body">
+                            <!-- Populated dynamically from MongoDB -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── Section: PwdRequest ── -->
+        <section class="admin" id="pwdreq">
+            <div class="card-custom p-4">
+                <h4 class="mb-3 section-title fs-4">
+                    <i class="bi bi-key me-2" style="color:var(--gold)"></i>Password Reset Requests
+                </h4>
+                <div class="section-title-bar mb-4"></div>
+                <div class="table-responsive rounded-3">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr><th>Id</th><th>Email</th><th>Request Time</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td colspan="3" class="text-center py-3 text-muted">No pending reset requests.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── Section: PwdReset ── -->
+        <section class="admin" id="pwdres">
+            <div class="card-custom p-4">
+                <h4 class="mb-3 section-title fs-4">
+                    <i class="bi bi-arrow-counterclockwise me-2" style="color:var(--gold)"></i>Password Reset Tokens
+                </h4>
+                <div class="section-title-bar mb-4"></div>
+                <div class="table-responsive rounded-3">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Id</th><th>Email</th><th>Reset Selector</th><th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td colspan="4" class="text-center py-3 text-muted">No active reset tokens.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── Section: Paper Presentation ── -->
+        <section class="admin" id="paper">
+            <div class="card-custom p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0 section-title fs-4">
+                        <i class="bi bi-file-earmark-text me-2" style="color:var(--gold)"></i>Paper Presentations
+                    </h4>
+                    <button class="btn btn-success" onclick="ExportToExcelpp('xlsx')">
+                        <i class="bi bi-file-earmark-excel me-1"></i>Download
+                    </button>
+                </div>
+                <div class="section-title-bar mb-4"></div>
+                <div class="table-responsive rounded-3">
+                    <table id="pp" class="table table-hover">
+                        <thead>
+                            <tr><th>Id</th><th>Name</th><th>Email</th><th>Track / Presentation</th></tr>
+                        </thead>
+                        <tbody id="paper-table-body">
+                            <!-- Populated dynamically from MongoDB -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── Section: Flagship ── -->
+        <section class="admin" id="flagship">
+            <div class="card-custom p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0 section-title fs-4">
+                        <i class="bi bi-trophy me-2" style="color:var(--gold)"></i>Flagship Events
+                    </h4>
+                    <button class="btn btn-success" onclick="ExportToExcelflag('xlsx')">
+                        <i class="bi bi-file-earmark-excel me-1"></i>Download
+                    </button>
+                </div>
+                <div class="section-title-bar mb-4"></div>
+                <div class="table-responsive rounded-3">
+                    <table id="flag" class="table table-hover">
+                        <thead>
+                            <tr><th>Id</th><th>Name</th><th>Email</th><th>Flagship Arena</th></tr>
+                        </thead>
+                        <tbody id="flagship-table-body">
+                            <!-- Populated dynamically from MongoDB -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </div><!-- /container -->
+
+    <!-- Particle Canvas -->
+    <script>
+    (function () {
+        const canvas = document.getElementById('particleCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const PALETTE = ['rgba(201,162,39,','rgba(240,192,64,','rgba(226,54,54,','rgba(192,200,216,','rgba(26,109,189,'];
+        const COUNT = 50;
+        let W, H, particles = [];
+        function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+        function spawnParticle(fb) {
+            const r = 0.8 + Math.random() * 1.6;
+            return { x: Math.random() * W, y: fb ? H + r : Math.random() * H, r,
+                alpha: 0.1 + Math.random() * 0.45, speed: 0.12 + Math.random() * 0.28,
+                drift: (Math.random() - 0.5) * 0.14,
+                color: PALETTE[Math.floor(Math.random() * PALETTE.length)],
+                pulse: Math.random() * Math.PI * 2 };
+        }
+        function init() { resize(); particles = Array.from({ length: COUNT }, () => spawnParticle(false)); }
+        let lt = 0;
+        function render(ts) {
+            const dt = Math.min(ts - lt, 50); lt = ts;
+            ctx.clearRect(0, 0, W, H);
+            for (let i = 0; i < particles.length; i++) {
+                const p = particles[i];
+                p.y -= p.speed * (dt / 16.67); p.x += p.drift * (dt / 16.67); p.pulse += 0.025 * (dt / 16.67);
+                const a = Math.max(0, p.alpha * (0.8 + 0.2 * Math.sin(p.pulse)));
+                if (p.y < -p.r * 4 || p.x < -20 || p.x > W + 20) { particles[i] = spawnParticle(true); continue; }
+                const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 3);
+                g.addColorStop(0, p.color + (a).toFixed(3) + ')');
+                g.addColorStop(0.4, p.color + (a * 0.5).toFixed(3) + ')');
+                g.addColorStop(1, p.color + '0)');
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 3, 0, Math.PI * 2);
+                ctx.fillStyle = g; ctx.fill();
+            }
+            requestAnimationFrame(render);
+        }
+        window.addEventListener('resize', resize, { passive: true });
+        init(); requestAnimationFrame(render);
+    })();
+    </script>
+
+    <script>
+        // Insert / View tab toggle
+        var div1 = document.getElementById("insert");
+        var div2 = document.getElementById("view");
+        var btn1 = document.getElementById("form");
+        var btn2 = document.getElementById("table");
+        btn1.onclick = function () { div1.style.display = "block"; div2.style.display = "none"; }
+        btn2.onclick = function () { div1.style.display = "none"; div2.style.display = "block"; }
+
+        // Highlight active nav link based on hash
+        function highlightNav() {
+            var hash = window.location.hash || '#add';
+            document.querySelectorAll('.nav-bar > a').forEach(function (a) {
+                a.style.background = '';
+                a.style.color = '';
+                a.style.borderColor = 'transparent';
+                if (a.getAttribute('href') === hash) {
+                    a.style.background = 'linear-gradient(135deg, var(--gold), var(--red))';
+                    a.style.color = '#050810';
+                    a.style.clipPath = 'polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)';
+                }
+            });
+        }
+        window.addEventListener('hashchange', highlightNav);
+        highlightNav();
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // Load live admin list into #view table
+            async function loadAdminTable() {
+                try {
+                    const res = await fetch('/api/admin/list');
+                    const admins = await res.json();
+                    const tbody = $('#view tbody');
+                    tbody.empty();
+                    if (Array.isArray(admins)) {
+                        admins.forEach(function (a) {
+                            const isMaster = a.designation === 'admin';
+                            tbody.append('<tr><td class="fw-semibold text-white">' + a.user + '</td><td>••••••••</td><td><span class="badge ' + (isMaster ? 'text-bg-primary' : 'text-bg-secondary') + '">' + a.designation.toUpperCase() + '</span></td></tr>');
+                        });
+                    }
+                } catch (e) {
+                    console.error('Error loading admin table:', e);
+                }
+            }
+
+            // Load live registrations into all tables
+            async function loadMemberTable(searchQuery = '') {
+                try {
+                    const res = await fetch('/api/admin/members/search', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ search: searchQuery })
+                    });
+                    const members = await res.json();
+                    
+                    const showTbody = $('#show tbody');
+                    const eventsTbody = $('#events-table-body');
+                    const payTbody = $('#payment-table-body');
+                    const euserTbody = $('#euser-table-body');
+                    const workTbody = $('#workshop-table-body');
+                    const paperTbody = $('#paper-table-body');
+                    const flagTbody = $('#flagship-table-body');
+
+                    showTbody.empty();
+                    eventsTbody.empty();
+                    payTbody.empty();
+                    euserTbody.empty();
+                    workTbody.empty();
+                    paperTbody.empty();
+                    flagTbody.empty();
+
+                    if (Array.isArray(members)) {
+                        members.forEach(function (m) {
+                            const isPaid = (m.genfee && m.genfee.toLowerCase() === 'paid');
+                            const badge = isPaid
+                                ? '<span class="badge text-bg-success">paid</span>'
+                                : '<span class="badge text-bg-secondary">unpaid</span>';
+
+                            const evStr = Array.isArray(m.events) ? m.events.join(', ') : (m.events || '--');
+                            const wsStr = Array.isArray(m.workshops) ? m.workshops.join(', ') : (m.workshops || '--');
+                            const ppStr = Array.isArray(m.papers) ? m.papers.join(', ') : (m.paperpres || '--');
+                            const flStr = Array.isArray(m.flagship) ? m.flagship.join(', ') : (m.flagship || '--');
+
+                            // 1. Full show table
+                            showTbody.append(`
+                                <tr>
+                                    <td>${m.memberId || m.id || '--'}</td>
+                                    <td class="fw-semibold text-white">${m.name || '--'}</td>
+                                    <td>${m.email || '--'}</td>
+                                    <td>${m.mobile || '--'}</td>
+                                    <td>${m.collegeName || m.college || '--'}</td>
+                                    <td>${evStr}</td>
+                                    <td>${wsStr}</td>
+                                    <td>${ppStr}</td>
+                                    <td>${flStr}</td>
+                                    <td>${badge}</td>
+                                    <td>${m.accommodation || 'No'}</td>
+                                </tr>
+                            `);
+
+                            // 2. Events table
+                            if (m.events && m.events.length > 0) {
+                                eventsTbody.append(`
+                                    <tr>
+                                        <td>${m.memberId || m.id || '--'}</td>
+                                        <td class="fw-semibold text-white">${m.name || '--'}</td>
+                                        <td>${m.email || '--'}</td>
+                                        <td>${evStr}</td>
+                                    </tr>
+                                `);
+                            }
+
+                            // 3. Payment table (General fee & workshops)
+                            if (isPaid) {
+                                payTbody.append(`
+                                    <tr>
+                                        <td>${m.memberId || m.id || '--'}</td>
+                                        <td class="fw-semibold text-white">${m.name || '--'}</td>
+                                        <td>${m.email || '--'}</td>
+                                        <td>${m.mobile || '--'}</td>
+                                        <td>${m.collegeName || m.college || '--'}</td>
+                                        <td>GEN_FEE_${m.memberId || m.id}</td>
+                                        <td>₹350</td>
+                                        <td><span class="badge text-bg-success">paid</span></td>
+                                    </tr>
+                                `);
+                            }
+
+                            // 4. Euser profile table
+                            euserTbody.append(`
+                                <tr>
+                                    <td>${m.memberId || m.id || '--'}</td>
+                                    <td class="fw-semibold text-white">${m.name || '--'}</td>
+                                    <td>${m.email || '--'}</td>
+                                    <td>${m.mobile || '--'}</td>
+                                    <td>${m.department || '--'}</td>
+                                    <td>${m.collegeName || m.college || '--'}</td>
+                                    <td>${badge}</td>
+                                </tr>
+                            `);
+
+                            // 5. Workshop table
+                            if (m.workshops && m.workshops.length > 0) {
+                                const wsList = Array.isArray(m.workshops) ? m.workshops : [m.workshops];
+                                wsList.forEach(ws => {
+                                    workTbody.append(`
+                                        <tr>
+                                            <td>${m.memberId || m.id || '--'}</td>
+                                            <td class="fw-semibold text-white">${m.name || '--'}</td>
+                                            <td>${m.email || '--'}</td>
+                                            <td>${ws}</td>
+                                            <td><span class="badge text-bg-success">paid</span></td>
+                                        </tr>
+                                    `);
+                                });
+                            }
+
+                            // 6. Paper presentation table
+                            if (m.papers && m.papers.length > 0) {
+                                const ppList = Array.isArray(m.papers) ? m.papers : [m.papers];
+                                ppList.forEach(pp => {
+                                    paperTbody.append(`
+                                        <tr>
+                                            <td>${m.memberId || m.id || '--'}</td>
+                                            <td class="fw-semibold text-white">${m.name || '--'}</td>
+                                            <td>${m.email || '--'}</td>
+                                            <td>${pp}</td>
+                                        </tr>
+                                    `);
+                                });
+                            }
+
+                            // 7. Flagship table
+                            if (m.flagship && m.flagship.length > 0) {
+                                const flList = Array.isArray(m.flagship) ? m.flagship : [m.flagship];
+                                flList.forEach(fl => {
+                                    flagTbody.append(`
+                                        <tr>
+                                            <td>${m.memberId || m.id || '--'}</td>
+                                            <td class="fw-semibold text-white">${m.name || '--'}</td>
+                                            <td>${m.email || '--'}</td>
+                                            <td>${fl}</td>
+                                        </tr>
+                                    `);
+                                });
+                            }
+                        });
+                    }
+                } catch (e) {
+                    console.error('Error loading members table:', e);
+                }
+            }
+
+            loadAdminTable();
+            loadMemberTable();
+
+            // Add Admin form
+            $("#supForm").on('submit', async function (e) {
+                e.preventDefault();
+                var user = $('#user').val();
+                var password = $('#password').val();
+                var designation = $('#designation').val();
+
+                try {
+                    const res = await fetch('/api/admin/add', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ user, password, designation })
+                    });
+                    const data = await res.json();
+                    if (data.status === 'success') {
+                        $('#msg').html('<div class="alert alert-success"><i class="bi bi-check-circle me-1"></i>' + data.message + '</div>');
+                        $('#supForm')[0].reset();
+                        loadAdminTable();
+                    } else {
+                        $('#msg').html('<div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-1"></i>' + data.message + '</div>');
+                    }
+                } catch (err) {
+                    $('#msg').html('<div class="alert alert-danger">Server connection error.</div>');
+                }
+                setTimeout(function () { $('#msg').empty(); }, 4000);
+            });
+
+            // Registration live search
+            let timer;
+            $("#live_search").on('keyup', function () {
+                clearTimeout(timer);
+                var value = $(this).val();
+                timer = setTimeout(() => loadMemberTable(value), 300);
+            });
+        });
+    </script>
+
+    <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+    <script>
+        function ExportToExcel(type, fn, dl) {
+            var elt = document.getElementById('show');
+            var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+            return dl ? XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+                XLSX.writeFile(wb, fn || ('SRiSHTi_' + new Date().toLocaleDateString() + '.' + (type || 'xlsx')));
+        }
+        function ExportToExcele(type, fn, dl) {
+            var elt = document.getElementById('events');
+            var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+            return dl ? XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+                XLSX.writeFile(wb, fn || ('SRiSHTi_Events_' + new Date().toLocaleDateString() + '.' + (type || 'xlsx')));
+        }
+        function ExportToExcelpay(type, fn, dl) {
+            var elt = document.getElementById('pay');
+            var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+            return dl ? XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+                XLSX.writeFile(wb, fn || ('SRiSHTi_Payment_' + new Date().toLocaleDateString() + '.' + (type || 'xlsx')));
+        }
+        function ExportToExcelwork(type, fn, dl) {
+            var elt = document.getElementById('work');
+            var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+            return dl ? XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+                XLSX.writeFile(wb, fn || ('SRiSHTi_Workshops_' + new Date().toLocaleDateString() + '.' + (type || 'xlsx')));
+        }
+        function ExportToExcelpp(type, fn, dl) {
+            var elt = document.getElementById('pp');
+            var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+            return dl ? XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+                XLSX.writeFile(wb, fn || ('SRiSHTi_PaperPresentation_' + new Date().toLocaleDateString() + '.' + (type || 'xlsx')));
+        }
+        function ExportToExcelflag(type, fn, dl) {
+            var elt = document.getElementById('flag');
+            var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+            return dl ? XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+                XLSX.writeFile(wb, fn || ('SRiSHTi_Flagship_' + new Date().toLocaleDateString() + '.' + (type || 'xlsx')));
+        }
+    </script>
+</body>
+</html>

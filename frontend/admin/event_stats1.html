@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRiSHTi 2k26 STATS [TERMINAL]</title>
+    <meta name="description" content="SRiSHTi 2k26 — Terminal Statistics Interface">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/avengers-admin.css">
+    <style>
+        body {
+            background: url('https://wallpapercave.com/wp/wp6705937.jpg') center top / cover no-repeat fixed;
+            color: var(--gold-light);
+            font-family: 'VT323', 'Share Tech Mono', monospace;
+            font-size: 20px;
+            overflow-x: hidden;
+            line-height: 1.4;
+            padding: 1.5rem;
+            margin: 0;
+        }
+
+        .terminal {
+            padding: 1.75rem;
+            border: 1px solid rgba(201, 162, 39, 0.4);
+            border-radius: 14px;
+            box-shadow:
+                0 0 40px rgba(201, 162, 39, 0.18),
+                0 0 80px rgba(226, 54, 54, 0.08),
+                inset 0 0 25px rgba(201, 162, 39, 0.04);
+            background: rgba(5, 8, 16, 0.90);
+            backdrop-filter: blur(18px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* CRT scanline effect */
+        .terminal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.18) 50%),
+                linear-gradient(90deg, rgba(201, 162, 39, 0.02), rgba(226, 54, 54, 0.01), rgba(26, 109, 189, 0.02));
+            z-index: 2;
+            background-size: 100% 3px, 3px 100%;
+            pointer-events: none;
+            border-radius: 12px;
+        }
+
+        /* Glowing top bar */
+        .terminal::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold), var(--red), var(--blue-light));
+            border-top-left-radius: 14px;
+            border-top-right-radius: 14px;
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(201, 162, 39, 0.2);
+            position: relative;
+            z-index: 3;
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .dot-red {
+            background: var(--red);
+            box-shadow: 0 0 6px var(--red-glow);
+        }
+
+        .dot-gold {
+            background: var(--gold);
+            box-shadow: 0 0 6px var(--gold-glow);
+        }
+
+        .dot-green {
+            background: var(--green);
+            box-shadow: 0 0 6px var(--green-glow);
+        }
+
+        .terminal-title {
+            font-family: 'Bank Gothic', 'BankGothic Md BT', 'Bebas Neue', sans-serif;
+            font-size: 0.95rem;
+            letter-spacing: 3px;
+            color: var(--text-muted);
+        }
+
+        .terminal-back {
+            font-size: 0.72rem;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            text-decoration: none;
+            border: 1px solid rgba(201, 162, 39, 0.2);
+            padding: 0.2rem 0.7rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .terminal-back:hover {
+            color: var(--gold-light);
+            border-color: var(--gold);
+            background: rgba(201, 162, 39, 0.08);
+        }
+
+        .lines-container {
+            position: relative;
+            z-index: 3;
+        }
+
+        .line {
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin: 0;
+            opacity: 0;
+            padding: 1px 0;
+        }
+
+        .prompt::before {
+            content: 'srishti2k26@admin:~$ ';
+            color: var(--gold);
+            text-shadow: 0 0 8px rgba(201, 162, 39, 0.6);
+        }
+
+        .output {
+            padding-left: 2.5em;
+            color: var(--silver);
+        }
+
+        .output-green {
+            padding-left: 2.5em;
+            color: var(--green);
+            text-shadow: 0 0 8px rgba(52, 211, 153, 0.4);
+        }
+
+        .output-highlight {
+            color: var(--gold-light);
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(240, 192, 64, 0.5);
+        }
+
+        .separator {
+            color: rgba(201, 162, 39, 0.4);
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.2em;
+            background: var(--gold);
+            animation: blink 1s step-end infinite;
+            vertical-align: bottom;
+            box-shadow: 0 0 8px var(--gold);
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* Ambient orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            pointer-events: none;
+            animation: orbFloat 20s infinite alternate ease-in-out;
+            z-index: 0;
+        }
+
+        .orb-1 {
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, rgba(226, 54, 54, 0.3), transparent 70%);
+            top: -5%;
+            left: -8%;
+            animation-duration: 20s;
+        }
+
+        .orb-2 {
+            width: 240px;
+            height: 240px;
+            background: radial-gradient(circle, rgba(26, 109, 189, 0.25), transparent 70%);
+            bottom: -5%;
+            right: -8%;
+            animation-duration: 26s;
+            animation-delay: -10s;
+        }
+
+        @keyframes orbFloat {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(6%, 7%) scale(1.12);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Cinematic layers -->
+    <div class="cin-overlay"></div>
+    <div class="cin-glow-iron"></div>
+    <div class="cin-glow-witch"></div>
+    <div class="cin-bloom-layer"></div>
+    <div class="cin-vignette"></div>
+    <canvas id="particleCanvas"></canvas>
+    <div class="avengers-grid-bg"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="terminal-wrapper" style="position:relative;z-index:10;">
+        <div class="terminal">
+            <div class="terminal-header">
+                <div class="terminal-dots">
+                    <span class="dot dot-red"></span>
+                    <span class="dot dot-gold"></span>
+                    <span class="dot dot-green"></span>
+                </div>
+                <span class="terminal-title">SRISHTI 2K26 — STATS TERMINAL</span>
+                <a href="event_stats.html" class="terminal-back">[GRAPHICAL VIEW]</a>
+            </div>
+            <div class="lines-container" id="terminal-content"></div>
+        </div>
+    </div>
+
+    <!-- Particle Canvas -->
+    <script>
+        (function () {
+            const canvas = document.getElementById('particleCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const PALETTE = ['rgba(201,162,39,', 'rgba(240,192,64,', 'rgba(226,54,54,', 'rgba(52,211,153,'];
+            const COUNT = 40;
+            let W, H, particles = [];
+            function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+            function spawnParticle(fb) {
+                const r = 0.8 + Math.random() * 1.4;
+                return {
+                    x: Math.random() * W, y: fb ? H + r : Math.random() * H, r,
+                    alpha: 0.08 + Math.random() * 0.35, speed: 0.1 + Math.random() * 0.22,
+                    drift: (Math.random() - 0.5) * 0.12,
+                    color: PALETTE[Math.floor(Math.random() * PALETTE.length)],
+                    pulse: Math.random() * Math.PI * 2
+                };
+            }
+            function init() { resize(); particles = Array.from({ length: COUNT }, () => spawnParticle(false)); }
+            let lt = 0;
+            function render(ts) {
+                const dt = Math.min(ts - lt, 50); lt = ts; ctx.clearRect(0, 0, W, H);
+                for (let i = 0; i < particles.length; i++) {
+                    const p = particles[i];
+                    p.y -= p.speed * (dt / 16.67); p.x += p.drift * (dt / 16.67); p.pulse += 0.025 * (dt / 16.67);
+                    const a = Math.max(0, p.alpha * (0.8 + 0.2 * Math.sin(p.pulse)));
+                    if (p.y < -p.r * 4 || p.x < -20 || p.x > W + 20) { particles[i] = spawnParticle(true); continue; }
+                    const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 3);
+                    g.addColorStop(0, p.color + a.toFixed(3) + ')');
+                    g.addColorStop(0.4, p.color + (a * 0.5).toFixed(3) + ')');
+                    g.addColorStop(1, p.color + '0)');
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 3, 0, Math.PI * 2); ctx.fillStyle = g; ctx.fill();
+                }
+                requestAnimationFrame(render);
+            }
+            window.addEventListener('resize', resize, { passive: true });
+            init(); requestAnimationFrame(render);
+        })();
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function () {
+            const terminalContent = document.getElementById('terminal-content');
+
+            function printLine(text, type = 'output') {
+                const p = document.createElement('p');
+                p.className = 'line ' + type;
+                p.innerHTML = text;
+                terminalContent.appendChild(p);
+                window.scrollTo(0, document.body.scrollHeight);
+            }
+
+            printLine('Booting SRiSHTi 2k26 Statistics Interface v3.0...', 'prompt');
+            await new Promise(r => setTimeout(r, 150));
+            printLine('Connection established with MongoDB. Authenticating...', 'output');
+            await new Promise(r => setTimeout(r, 150));
+            printLine('Access Granted. Welcome, Commander.', 'output-green');
+            printLine('==========================================================', 'separator');
+
+            try {
+                const res = await fetch('/api/admin/stats');
+                const data = await res.json();
+
+                printLine(`Last System Sync: ${data.date || new Date().toLocaleString()}`, 'output');
+                printLine('Executing query: GET_OVERALL_METRICS', 'prompt');
+                printLine(`[+] Total Sign-ups .............. <span class="output-highlight">${data.totalSignups ?? 0}</span>`, 'output');
+                printLine(`[+] General Fee Paid ............ <span class="output-highlight">${data.totalPaid ?? 0}</span>`, 'output');
+                printLine(`[+] Workshop Registrations (Paid) <span class="output-highlight">${data.totalWorkshopPaid ?? 0}</span>`, 'output');
+                printLine('==========================================================', 'separator');
+
+                printLine('Executing query: GET_EVENT_BREAKDOWN', 'prompt');
+
+                // Technical Events
+                if (data.technical && data.technical.events) {
+                    printLine('// TECHNICAL EVENTS', 'output-green');
+                    data.technical.events.forEach(name => {
+                        const count = data.technical.counts[name] ?? 0;
+                        const dots = '.'.repeat(Math.max(3, 35 - name.length));
+                        printLine(`   ${name} ${dots} <span class="output-highlight">${count}</span>`, 'output');
+                    });
+                }
+
+                // Non-Technical Events
+                if (data.nonTechnical && data.nonTechnical.events) {
+                    printLine('', 'output');
+                    printLine('// NON-TECHNICAL EVENTS', 'output-green');
+                    data.nonTechnical.events.forEach(name => {
+                        const count = data.nonTechnical.counts[name] ?? 0;
+                        const dots = '.'.repeat(Math.max(3, 35 - name.length));
+                        printLine(`   ${name} ${dots} <span class="output-highlight">${count}</span>`, 'output');
+                    });
+                }
+
+                // Paper Presentations
+                if (data.papers && data.papers.events) {
+                    printLine('', 'output');
+                    printLine('// PAPER PRESENTATION', 'output-green');
+                    data.papers.events.forEach(name => {
+                        const count = data.papers.counts[name] ?? 0;
+                        const dots = '.'.repeat(Math.max(3, 35 - name.length));
+                        printLine(`   ${name} ${dots} <span class="output-highlight">${count}</span>`, 'output');
+                    });
+                }
+
+                // Flagship Events
+                if (data.flagship && data.flagship.events) {
+                    printLine('', 'output');
+                    printLine('// FLAGSHIP EVENTS', 'output-green');
+                    data.flagship.events.forEach(name => {
+                        const count = data.flagship.counts[name] ?? 0;
+                        const dots = '.'.repeat(Math.max(3, 35 - name.length));
+                        printLine(`   ${name} ${dots} <span class="output-highlight">${count}</span>`, 'output');
+                    });
+                }
+
+                // Workshops
+                if (data.workshops && data.workshops.events) {
+                    printLine('==========================================================', 'separator');
+                    printLine('Executing query: GET_WORKSHOP_BREAKDOWN_PAID', 'prompt');
+                    printLine('// WORKSHOPS (PAID)', 'output-green');
+                    data.workshops.events.forEach(name => {
+                        const count = data.workshops.counts[name] ?? 0;
+                        const dots = '.'.repeat(Math.max(3, 35 - name.length));
+                        printLine(`   ${name} ${dots} <span class="output-highlight">${count}</span>`, 'output');
+                    });
+                }
+
+                printLine('==========================================================', 'separator');
+                printLine('SYSTEM STATUS: All queries executed successfully. STANDING BY.', 'prompt');
+            } catch (err) {
+                printLine('SYSTEM ERROR: Could not fetch real-time metrics.', 'output-red');
+            }
+        });
+    </script>
+</body>
+
+</html>

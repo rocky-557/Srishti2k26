@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Member | SRiSHTi 2k26 Admin</title>
+    <meta name="description" content="Edit Member details - SRiSHTi 2k26 Admin Panel">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/avengers-admin.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+
+    <!-- Cinematic Layers -->
+    <div class="cin-overlay"></div>
+    <div class="cin-glow-iron"></div>
+    <div class="cin-glow-thor"></div>
+    <div class="cin-glow-witch"></div>
+    <div class="cin-glow-card"></div>
+    <div class="cin-bloom-layer"></div>
+    <div class="cin-vignette"></div>
+    <div class="cin-rays-wrap">
+        <div class="cin-ray cin-ray-1"></div>
+        <div class="cin-ray cin-ray-2"></div>
+        <div class="cin-ray cin-ray-3"></div>
+    </div>
+    <canvas id="particleCanvas"></canvas>
+    <div class="avengers-grid-bg"></div>
+
+    <div class="container my-5" style="position:relative; z-index:10;">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card-custom p-2">
+                    <div class="card-header bg-transparent pt-4 pb-2 px-4 border-bottom-0">
+                        <div class="d-flex align-items-center gap-3">
+                            <img src="./srishti_logo.png" alt="SRiSHTi Logo"
+                                style="width:44px; height:44px; object-fit:contain; mix-blend-mode:screen; filter:drop-shadow(0 0 10px rgba(201,162,39,0.8));">
+                            <div>
+                                <div class="tagline-badge mb-1">✏️ EDIT RECORD</div>
+                                <h4 class="mb-0 section-title fs-3"><i class="bi bi-pencil-square me-2"></i>Edit Member Details</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body px-4 pb-4">
+
+                        <div id="message-container"></div>
+
+                        <form id="edit-member-form" action="dashboard.html" method="GET">
+                            <input type="hidden" name="id" id="member_id" value="">
+                            
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Name</label>
+                                    <input type="text" class="form-control" name="name" id="member_name" placeholder="Member Name" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" name="email" id="member_email" placeholder="Email Address" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Mobile</label>
+                                    <input type="text" class="form-control" name="mobile" id="member_mobile" placeholder="Mobile Number" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">College</label>
+                                    <input type="text" class="form-control" name="cgname" id="member_college" placeholder="College Name">
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label">Events (Read Only)</label>
+                                    <textarea class="form-control" name="events" id="member_events" rows="2" readonly></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Workshops (Read Only)</label>
+                                    <textarea class="form-control" name="workshops" id="member_workshops" rows="2" readonly></textarea>
+                                </div>
+                                 <div class="col-12">
+                                    <label class="form-label">Paper Presentations (Read Only)</label>
+                                    <textarea class="form-control" name="paperpres" id="member_paperpres" rows="2" readonly></textarea>
+                                </div>
+                                 <div class="col-12">
+                                    <label class="form-label">Flagship Events (Read Only)</label>
+                                    <textarea class="form-control" name="flagship" id="member_flagship" rows="2" readonly></textarea>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">General Fee Status</label>
+                                    <select class="form-select" name="genfee" id="member_genfee">
+                                        <option value="unpaid">Unpaid</option>
+                                        <option value="paid">Paid</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Accommodation</label>
+                                     <select class="form-select" name="accomodation" id="member_accomodation">
+                                        <option value="No">No</option>
+                                        <option value="Yes">Yes</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <hr style="border-color: var(--border-color);" class="my-4">
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="dashboard.html" class="btn btn-outline-primary"><i class="bi bi-arrow-left-circle me-1"></i> Back to Dashboard</a>
+                                <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle me-1"></i> Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Particle Canvas -->
+    <script>
+    (function () {
+        const canvas = document.getElementById('particleCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const PALETTE = ['rgba(201,162,39,','rgba(240,192,64,','rgba(226,54,54,','rgba(192,200,216,','rgba(26,109,189,'];
+        const COUNT = 45;
+        let W, H, particles = [];
+        function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+        function spawnParticle(fb) {
+            const r = 0.8 + Math.random() * 1.6;
+            return { x: Math.random() * W, y: fb ? H + r : Math.random() * H, r,
+                alpha: 0.1 + Math.random() * 0.45, speed: 0.12 + Math.random() * 0.28,
+                drift: (Math.random() - 0.5) * 0.14,
+                color: PALETTE[Math.floor(Math.random() * PALETTE.length)],
+                pulse: Math.random() * Math.PI * 2 };
+        }
+        function init() { resize(); particles = Array.from({ length: COUNT }, () => spawnParticle(false)); }
+        let lt = 0;
+        function render(ts) {
+            const dt = Math.min(ts - lt, 50); lt = ts; ctx.clearRect(0, 0, W, H);
+            for (let i = 0; i < particles.length; i++) {
+                const p = particles[i];
+                p.y -= p.speed * (dt / 16.67); p.x += p.drift * (dt / 16.67); p.pulse += 0.025 * (dt / 16.67);
+                const a = Math.max(0, p.alpha * (0.8 + 0.2 * Math.sin(p.pulse)));
+                if (p.y < -p.r * 4 || p.x < -20 || p.x > W + 20) { particles[i] = spawnParticle(true); continue; }
+                const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 3);
+                g.addColorStop(0, p.color + a.toFixed(3) + ')');
+                g.addColorStop(0.4, p.color + (a * 0.5).toFixed(3) + ')');
+                g.addColorStop(1, p.color + '0)');
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 3, 0, Math.PI * 2); ctx.fillStyle = g; ctx.fill();
+            }
+            requestAnimationFrame(render);
+        }
+        window.addEventListener('resize', resize, { passive: true });
+        init(); requestAnimationFrame(render);
+    })();
+    </script>
+
+    <script>
+        $(document).ready(async function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const idParam = urlParams.get('id');
+            if (idParam) {
+                $('#member_id').val(idParam);
+                try {
+                    const res = await fetch('/api/admin/members/' + idParam);
+                    const data = await res.json();
+                    if (data.status === 'success' && data.member) {
+                        const m = data.member;
+                        $('#member_name').val(m.name || '');
+                        $('#member_email').val(m.email || '');
+                        $('#member_mobile').val(m.mobile || '');
+                        $('#member_college').val(m.collegeName || m.college || '');
+                        $('#member_genfee').val(m.genfee === 'paid' ? 'paid' : 'unpaid');
+                        $('#member_accomodation').val(m.accommodation === 'Yes' ? 'Yes' : 'No');
+                        
+                        $('#member_events').val(Array.isArray(m.events) ? m.events.join(', ') : (m.events || 'None'));
+                        $('#member_workshops').val(Array.isArray(m.workshops) ? m.workshops.join(', ') : (m.workshops || 'None'));
+                        $('#member_paperpres').val(Array.isArray(m.papers) ? m.papers.join(', ') : (m.paperpres || 'None'));
+                        $('#member_flagship').val(Array.isArray(m.flagship) ? m.flagship.join(', ') : (m.flagship || 'None'));
+                    }
+                } catch (e) {
+                    console.error('Error fetching member:', e);
+                }
+            }
+
+            $('#edit-member-form').on('submit', async function(e) {
+                e.preventDefault();
+                const payload = {
+                    id: $('#member_id').val(),
+                    name: $('#member_name').val(),
+                    email: $('#member_email').val(),
+                    mobile: $('#member_mobile').val(),
+                    cgname: $('#member_college').val(),
+                    genfee: $('#member_genfee').val(),
+                    accomodation: $('#member_accomodation').val()
+                };
+
+                try {
+                    const res = await fetch('/api/admin/members/update', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    const data = await res.json();
+                    if (data.status === 'success') {
+                        $('#message-container').html('<div class="alert alert-success"><i class="bi bi-check-circle-fill me-2"></i>' + data.message + ' Redirecting...</div>');
+                        setTimeout(function() {
+                            window.location.href = 'dashboard.html';
+                        }, 1200);
+                    } else {
+                        $('#message-container').html('<div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-2"></i>' + (data.message || 'Update failed') + '</div>');
+                    }
+                } catch (err) {
+                    $('#message-container').html('<div class="alert alert-danger">Server connection error.</div>');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

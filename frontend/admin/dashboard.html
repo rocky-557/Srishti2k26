@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRiSHTi 2k26 | Admin Dashboard</title>
+    <meta name="description" content="SRiSHTi 2k26 Admin Dashboard — Registrations, Reports, Admin Management">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="./css/avengers-admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <!-- ── Cinematic Layers ── -->
+    <div class="cin-overlay"></div>
+    <div class="cin-glow-iron"></div>
+    <div class="cin-glow-thor"></div>
+    <div class="cin-glow-witch"></div>
+    <div class="cin-glow-card"></div>
+    <div class="cin-bloom-layer"></div>
+    <div class="cin-vignette"></div>
+    <div class="cin-rays-wrap">
+        <div class="cin-ray cin-ray-1"></div>
+        <div class="cin-ray cin-ray-2"></div>
+        <div class="cin-ray cin-ray-3"></div>
+    </div>
+    <canvas id="particleCanvas"></canvas>
+    <div class="avengers-grid-bg"></div>
+
+    <div class="app-container">
+
+        <!-- ── Sidebar ── -->
+        <aside id="sidebar">
+            <div class="logo-container">
+                <img src="./srishti_logo.png" alt="SRiSHTi Logo" class="logo-img">
+                <span class="logo-text">SRiSHTi 2k26</span>
+            </div>
+
+            <div class="nav-section-label">Navigation</div>
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#" data-target="dashboard">
+                        <i class="bi bi-grid-fill"></i>Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-target="registrations">
+                        <i class="bi bi-people-fill"></i>Registrations
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-target="event-reports">
+                        <i class="bi bi-card-list"></i>Event Reports
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-target="manage-admins">
+                        <i class="bi bi-person-lock-fill"></i>Manage Admins
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="event_stats.html" target="_blank">
+                        <i class="bi bi-bar-chart-line-fill"></i>Full Stats
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="git-pull-btn">
+                        <i class="bi bi-cloud-arrow-down-fill"></i>Git Pull (Update)
+                    </a>
+                </li>
+            </ul>
+
+            <a href="ad-login.html" class="logout-btn">
+                <i class="bi bi-box-arrow-right"></i> Logout
+            </a>
+        </aside>
+
+        <!-- ── Mobile Toggle ── -->
+        <button class="mobile-toggle" id="sidebar-toggle">
+            <i class="bi bi-list"></i>
+        </button>
+
+        <!-- ── Main Content ── -->
+        <main id="main-content">
+
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <div class="header-welcome">
+                    <div class="tagline-badge">⚡ COMMAND CENTER</div>
+                    <h1>Welcome back, <span class="text-gradient">Admin</span>!</h1>
+                    <p>Live summary of SRiSHTi 2k26 event registrations and activity.</p>
+                </div>
+
+                <div class="row g-4 mb-4">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="stat-card">
+                            <div class="icon bg-gold-light"><i class="bi bi-people-fill"></i></div>
+                            <div>
+                                <div class="stat-title">Total Registrations</div>
+                                <div class="stat-value">124</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="stat-card">
+                            <div class="icon bg-green-light"><i class="bi bi-check-circle-fill"></i></div>
+                            <div>
+                                <div class="stat-title">Total Paid</div>
+                                <div class="stat-value">98</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="stat-card">
+                            <div class="icon bg-blue-light"><i class="bi bi-person-gear-fill"></i></div>
+                            <div>
+                                <div class="stat-title">Total Admins</div>
+                                <div class="stat-value">5</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-custom">
+                    <div class="card-body p-4">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <div class="tagline-badge mb-2">📊 OVERVIEW</div>
+                                <h5 class="section-title fs-4">Registration Overview</h5>
+                                <div class="section-title-bar mb-2"></div>
+                                <p style="color:var(--text-muted); font-size:0.9rem;">
+                                    Visual breakdown of paid vs. unpaid participant registrations.
+                                </p>
+                            </div>
+                            <div class="col-md-4" style="min-height:250px;">
+                                <canvas id="registrationChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Registrations Section -->
+            <section id="registrations" class="content-section">
+                <div class="header-welcome mb-4">
+                    <div class="tagline-badge">👥 MEMBERS</div>
+                    <h1 class="section-title fs-2">Member Registrations</h1>
+                    <div class="section-title-bar"></div>
+                </div>
+                <div class="card-custom">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                            <h5 class="section-title mb-0 fs-5">
+                                <i class="bi bi-people-fill me-2" style="color:var(--gold)"></i>All Members
+                            </h5>
+                            <div class="d-flex align-items-center gap-2 flex-wrap">
+                                <input type="text" class="form-control" id="member_search"
+                                    placeholder="Search members..." style="max-width:220px;">
+                                <button class="btn btn-info" data-bs-toggle="modal"
+                                    data-bs-target="#downloadEventModal">
+                                    <i class="bi bi-download me-1"></i>Report
+                                </button>
+                                <button class="btn btn-success" id="download-excel-btn">
+                                    <i class="bi bi-file-earmark-excel-fill me-1"></i>Excel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body px-4 pb-4">
+                        <div class="table-responsive rounded-3">
+                            <table class="table table-hover align-middle" id="members-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th><th>Name</th><th>Email</th>
+                                        <th>Mobile</th><th>College</th>
+                                        <th>Fee Status</th><th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="members-table-body">
+                                    <tr>
+                                        <td colspan="7" class="text-center py-4 text-muted">
+                                            <div class="spinner-border spinner-border-sm me-2 text-warning"></div>Loading member records...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Event Reports Section -->
+            <section id="event-reports" class="content-section">
+                <div class="header-welcome mb-4">
+                    <div class="tagline-badge">📋 REPORTS</div>
+                    <h1 class="section-title fs-2">Event Reports</h1>
+                    <div class="section-title-bar"></div>
+                </div>
+                <div class="card-custom">
+                    <div class="card-header">
+                        <h5 class="section-title mb-0 fs-5">
+                            <i class="bi bi-card-list me-2" style="color:var(--gold)"></i>View Participant Lists
+                        </h5>
+                    </div>
+                    <div class="card-body px-4 pb-4">
+                        <div class="row g-3 align-items-end">
+                            <div class="col-md-5">
+                                <label for="reportTypeSelect" class="form-label">Report Type / Category</label>
+                                <select class="form-select" id="reportTypeSelect">
+                                    <option selected disabled>Choose an option...</option>
+                                    <option value="Paid">Payment Reports</option>
+                                    <option value="Technical">Technical</option>
+                                    <option value="Non-Technical">Non-Technical</option>
+                                    <option value="Flagship">Flagship</option>
+                                    <option value="Bots">Bots</option>
+                                    <option value="Gaming">Gaming</option>
+                                    <option value="Paper">Paper</option>
+                                    <option value="Workshop">Workshop</option>
+                                </select>
+                            </div>
+                            <div class="col-md-5" id="reportEventNameContainer">
+                                <label for="reportEventNameSelect" class="form-label">Event Name</label>
+                                <select class="form-select" id="reportEventNameSelect" disabled>
+                                    <option>Please select a category first</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-primary w-100" id="view-report-btn" disabled>
+                                    <i class="bi bi-eye me-1"></i>View List
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-custom mt-4" id="event-report-results-container" style="display:none;">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 id="report-title" class="mb-0 section-title">Report Results</h5>
+                    </div>
+                    <div class="card-body px-4 pb-4">
+                        <div class="table-responsive rounded-3">
+                            <table class="table table-hover">
+                                <thead id="report-table-header"></thead>
+                                <tbody id="report-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Manage Admins Section -->
+            <section id="manage-admins" class="content-section">
+                <div class="header-welcome mb-4">
+                    <div class="tagline-badge">🛡️ ADMINS</div>
+                    <h1 class="section-title fs-2">Admin Management</h1>
+                    <div class="section-title-bar"></div>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-5">
+                        <div class="card-custom h-100">
+                            <div class="card-header">
+                                <h5 class="section-title mb-0 fs-5">
+                                    <i class="bi bi-person-plus-fill me-2" style="color:var(--gold)"></i>Add New Admin
+                                </h5>
+                            </div>
+                            <div class="card-body px-4 pb-4">
+                                <div id="add-admin-message" class="mb-3"></div>
+                                <form id="add-admin-form">
+                                    <div class="mb-3">
+                                        <label class="form-label">Username</label>
+                                        <input type="text" name="user" class="form-control"
+                                            placeholder="Enter username" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Password</label>
+                                        <input type="password" name="password" class="form-control"
+                                            placeholder="Enter password" required>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">Designation</label>
+                                        <select name="designation" class="form-select" required>
+                                            <option value="registration" selected>Registration</option>
+                                            <option value="admin">Admin</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="bi bi-plus-circle-fill me-1"></i>Create Admin Account
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="card-custom h-100">
+                            <div class="card-header">
+                                <h5 class="section-title mb-0 fs-5">
+                                    <i class="bi bi-shield-lock-fill me-2" style="color:var(--gold)"></i>Active Admins
+                                </h5>
+                            </div>
+                            <div class="card-body px-4 pb-4">
+                                <div id="remove-admin-message" class="mb-3"></div>
+                                <div class="table-responsive rounded-3">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Username</th><th>Designation</th><th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="admin-list-body">
+                                            <!-- Dynamically loaded from MongoDB -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Download Event Modal -->
+    <div class="modal fade" id="downloadEventModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-file-earmark-excel me-2" style="color:var(--gold)"></i>Export Event Participant Roster
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label for="eventTypeSelect" class="form-label">Report Type / Category</label>
+                        <select class="form-select" id="eventTypeSelect">
+                            <option selected disabled>Choose an option...</option>
+                            <option value="Paid">Payment Reports</option>
+                            <option disabled>–––– TRACKS ––––</option>
+                            <option value="Technical">Technical</option>
+                            <option value="Non-Technical">Non-Technical</option>
+                            <option value="Paper">Paper</option>
+                            <option value="Flagship">Flagship</option>
+                            <option value="Workshop">Workshop</option>
+                        </select>
+                    </div>
+                    <div class="mb-3" id="eventNameContainer">
+                        <label for="eventNameSelect" class="form-label">Event Name</label>
+                        <select class="form-select" id="eventNameSelect" disabled>
+                            <option>Please select a category first</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary"
+                        data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="download-event-list-btn" disabled>
+                        <i class="bi bi-file-earmark-excel me-1"></i>Download Excel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden export tables -->
+    <div class="d-none">
+        <table id="event-export-table">
+            <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Mobile</th><th>College</th><th>Fee Status</th><th>Accommodation</th></tr></thead>
+            <tbody id="event-export-body"></tbody>
+        </table>
+        <table id="payment-export-table">
+            <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Mobile</th><th>College</th><th>Transaction ID</th><th>Amount</th><th>Payment Date</th></tr></thead>
+            <tbody id="payment-export-body"></tbody>
+        </table>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+
+    <!-- Particle Canvas -->
+    <script>
+    (function () {
+        'use strict';
+        const canvas = document.getElementById('particleCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const PALETTE = [
+            'rgba(201,162,39,', 'rgba(240,192,64,', 'rgba(226,54,54,',
+            'rgba(192,200,216,', 'rgba(26,109,189,',
+        ];
+        const COUNT = 55;
+        let W, H, particles = [];
+        function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+        function spawnParticle(forceBottom) {
+            const r = 0.8 + Math.random() * 1.6;
+            return { x: Math.random() * W, y: forceBottom ? H + r : Math.random() * H, r,
+                alpha: 0.1 + Math.random() * 0.45, speed: 0.12 + Math.random() * 0.28,
+                drift: (Math.random() - 0.5) * 0.14,
+                color: PALETTE[Math.floor(Math.random() * PALETTE.length)],
+                pulse: Math.random() * Math.PI * 2 };
+        }
+        function init() { resize(); particles = Array.from({ length: COUNT }, () => spawnParticle(false)); }
+        let lastTime = 0;
+        function render(ts) {
+            const dt = Math.min(ts - lastTime, 50); lastTime = ts;
+            ctx.clearRect(0, 0, W, H);
+            for (let i = 0; i < particles.length; i++) {
+                const p = particles[i];
+                p.y -= p.speed * (dt / 16.67); p.x += p.drift * (dt / 16.67);
+                p.pulse += 0.025 * (dt / 16.67);
+                const a = Math.max(0, p.alpha * (0.8 + 0.2 * Math.sin(p.pulse)));
+                if (p.y < -p.r * 4 || p.x < -20 || p.x > W + 20) { particles[i] = spawnParticle(true); continue; }
+                const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 3);
+                grad.addColorStop(0, p.color + (a * 1.0).toFixed(3) + ')');
+                grad.addColorStop(0.4, p.color + (a * 0.5).toFixed(3) + ')');
+                grad.addColorStop(1, p.color + '0)');
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 3, 0, Math.PI * 2);
+                ctx.fillStyle = grad; ctx.fill();
+            }
+            requestAnimationFrame(render);
+        }
+        window.addEventListener('resize', resize, { passive: true });
+        init(); requestAnimationFrame(render);
+    })();
+    </script>
+
+    <script>
+    $(document).ready(function () {
+        const eventLists = {
+            'Technical': [
+                'TECH NEXUS',
+                'BRAINBYTE 2026',
+                'THRILLER TECHSCAPE',
+                'TECHTOPIA'
+            ],
+            'Non-Technical': [
+                'CASE ZERO : THE FINAL VERDICT',
+                'MYSTERY VOYAGE – Unveil the truth',
+                'ROAD TO ENDGAME',
+                'INFINITY CHASE'
+            ],
+            'Flagship': [
+                'DEVSPRINT',
+                'REVERSE ENGINEERING CHALLENGE',
+                'VisionX'
+            ],
+            'Bots': [
+                'MAZEBOTICS – RESCUE PROTOCOL',
+                'ROBO DOMINION -Where Strategy Meets Strength',
+                'BOT BLITZ'
+            ],
+            'Gaming': [
+                'MARVEL ROYALE',
+                'BATTLE NEXUS',
+                'THE AUCTION ARENA'
+            ],
+            'Paper': [
+                'TwinTech 2026',
+                'VoltIQ 2026',
+                'Mediverse',
+                'NextGen',
+                'NextWave'
+            ],
+            'Workshop': [
+                'From Pixels to Intelligence: Hands-on Computer Vision with YOLO',
+                'Powering Future Mobility: Hands-on EV Electronics Design with KiCad',
+                'Automotive ECU Development: Hands-on Model-Based Design with Simulink',
+                'Power Electronics: From MATLAB Simulation to Hardware Implementation',
+                'Industrial IoT & Industry 4.0 – Industrial Communication Protocols, Edge Gateways & Cloud Data Visualization',
+                'The Future of Automotive Safety: Advanced Driver Assistance Systems (ADAS)',
+                'ROS 2 Jazzy: From Bot simulation to Autonomous Robotics with TurtleBot3',
+                'Building Your Own AI Assistant: From Concept to Implementation',
+                'UI/UX Design with Figma & AI: From Ideas to Interactive Prototypes',
+                'AI-Powered Digital Twins: Modeling, Simulation & Intelligent Systems'
+            ]
+        };
+
+        let regChart = null;
+
+        // Load Live Dashboard Statistics
+        async function loadLiveDashboardStats() {
+            try {
+                const res = await fetch('/api/admin/stats');
+                const data = await res.json();
+
+                const totalRegs = data.totalSignups ?? 0;
+                const totalPaid = data.totalPaid ?? 0;
+                const totalUnpaid = Math.max(0, totalRegs - totalPaid);
+
+                $('.stat-card:has(.bg-gold-light) .stat-value').text(totalRegs);
+                $('.stat-card:has(.bg-green-light) .stat-value').text(totalPaid);
+
+                // Update Chart
+                const ctx2 = document.getElementById('registrationChart');
+                if (ctx2) {
+                    if (regChart) regChart.destroy();
+                    regChart = new Chart(ctx2, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Paid', 'Unpaid'],
+                            datasets: [{
+                                label: 'Registrations',
+                                data: [totalPaid, totalUnpaid],
+                                backgroundColor: ['rgba(52,211,153,0.85)', 'rgba(239,68,68,0.75)'],
+                                borderColor: ['#05070f', '#05070f'],
+                                borderWidth: 3
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: {
+                                        color: '#cbd5e1',
+                                        font: { family: 'Outfit', size: 13 },
+                                        padding: 16
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            } catch (err) {
+                console.error('Error loading dashboard stats:', err);
+            }
+        }
+
+        // Load Live Members
+        async function loadLiveMembers(searchQuery = '') {
+            try {
+                const res = await fetch('/api/admin/members/search', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ search: searchQuery })
+                });
+                const members = await res.json();
+                const tbody = $('#members-table-body');
+                tbody.empty();
+
+                if (!Array.isArray(members) || members.length === 0) {
+                    tbody.html('<tr><td colspan="7" class="text-center py-4 text-muted">No member records found.</td></tr>');
+                    return;
+                }
+
+                members.forEach(m => {
+                    const isPaid = (m.genfee && m.genfee.toLowerCase() === 'paid');
+                    const badge = isPaid
+                        ? '<span class="badge text-bg-success">Paid</span>'
+                        : '<span class="badge text-bg-secondary">Unpaid</span>';
+
+                    tbody.append(`
+                        <tr>
+                            <td>${m.memberId || m.id || '--'}</td>
+                            <td class="fw-semibold text-white">${m.name || '--'}</td>
+                            <td>${m.email || '--'}</td>
+                            <td>${m.mobile || '--'}</td>
+                            <td>${m.collegeName || m.college || '--'}</td>
+                            <td>${badge}</td>
+                            <td>
+                                <a href="update_member.html?id=${m.memberId || m.id}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-pencil-square me-1"></i>Edit
+                                </a>
+                            </td>
+                        </tr>
+                    `);
+                });
+            } catch (err) {
+                console.error('Error loading members:', err);
+            }
+        }
+
+        // Load Live Admin List
+        async function loadLiveAdmins() {
+            try {
+                const res = await fetch('/api/admin/list');
+                const admins = await res.json();
+                const tbody = $('#admin-list-body');
+                tbody.empty();
+
+                if (Array.isArray(admins)) {
+                    $('.stat-card:has(.bg-blue-light) .stat-value').text(admins.length);
+                    admins.forEach(a => {
+                        tbody.append(`
+                            <tr id="admin-row-${a.user}">
+                                <td class="fw-semibold text-white">${a.user}</td>
+                                <td><span class="badge ${a.designation === 'admin' ? 'text-bg-primary' : 'text-bg-secondary'}">${a.designation.toUpperCase()}</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-danger remove-admin-btn" data-username="${a.user}">
+                                        <i class="bi bi-trash-fill me-1"></i>Remove
+                                    </button>
+                                </td>
+                            </tr>
+                        `);
+                    });
+                }
+            } catch (err) {
+                console.error('Error loading admins:', err);
+            }
+        }
+
+        // Initialize Live Data
+        loadLiveDashboardStats();
+        loadLiveMembers();
+        loadLiveAdmins();
+
+        // Sidebar Navigation
+        $('#sidebar .nav-link').on('click', function (e) {
+            if ($(this).attr('target') === '_blank') return;
+            e.preventDefault();
+            $('#sidebar .nav-link').removeClass('active');
+            $(this).addClass('active');
+            const targetId = $(this).data('target');
+            $('.content-section').removeClass('active');
+            $('#' + targetId).addClass('active');
+            if ($(window).width() < 992) $('#sidebar').removeClass('active');
+        });
+
+        // Mobile sidebar toggle
+        $('#sidebar-toggle').on('click', function () {
+            $('#sidebar').toggleClass('active');
+        });
+
+        // Live search input
+        let searchTimeout;
+        $('#member_search').on('keyup', function () {
+            clearTimeout(searchTimeout);
+            const val = $(this).val();
+            searchTimeout = setTimeout(() => loadLiveMembers(val), 300);
+        });
+
+        // Add Admin Form
+        $('#add-admin-form').on('submit', async function (e) {
+            e.preventDefault();
+            const user = $(this).find('input[name="user"]').val();
+            const password = $(this).find('input[name="password"]').val();
+            const designation = $(this).find('select[name="designation"]').val();
+
+            try {
+                const res = await fetch('/api/admin/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user, password, designation })
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    $('#add-admin-message').html('<div class="alert alert-success"><i class="bi bi-check-circle me-1"></i>' + data.message + '</div>');
+                    this.reset();
+                    loadLiveAdmins();
+                } else {
+                    $('#add-admin-message').html('<div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-1"></i>' + data.message + '</div>');
+                }
+            } catch (err) {
+                $('#add-admin-message').html('<div class="alert alert-danger">Server connection error.</div>');
+            }
+            setTimeout(() => $('#add-admin-message').empty(), 4000);
+        });
+
+        // Remove Admin
+        $('#admin-list-body').on('click', '.remove-admin-btn', async function () {
+            const userToDelete = $(this).data('username');
+            if (confirm('Remove admin "' + userToDelete + '"?')) {
+                try {
+                    const res = await fetch('/api/admin/remove', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ user_to_delete: userToDelete })
+                    });
+                    const data = await res.json();
+                    if (data.status === 'success') {
+                        $('#remove-admin-message').html('<div class="alert alert-success"><i class="bi bi-check-circle me-1"></i>' + data.message + '</div>').fadeIn();
+                        loadLiveAdmins();
+                    } else {
+                        $('#remove-admin-message').html('<div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-1"></i>' + data.message + '</div>').fadeIn();
+                    }
+                } catch (err) {
+                    $('#remove-admin-message').html('<div class="alert alert-danger">Server error.</div>').fadeIn();
+                }
+                setTimeout(() => $('#remove-admin-message').fadeOut(), 4000);
+            }
+        });
+
+        // Shared dropdown logic
+        function handleCategoryChange(categorySelect, nameSelect, nameContainer, actionButton) {
+            const selectedCategory = categorySelect.val();
+            nameSelect.html('<option selected disabled>Choose an event...</option>');
+            if (selectedCategory === 'Paid') {
+                nameContainer.hide();
+                nameSelect.prop('disabled', true);
+                actionButton.prop('disabled', false);
+            } else {
+                nameContainer.show();
+                if (selectedCategory && eventLists[selectedCategory]) {
+                    eventLists[selectedCategory].forEach(n =>
+                        nameSelect.append(`<option value="${n}">${n}</option>`));
+                    nameSelect.prop('disabled', false);
+                } else {
+                    nameSelect.prop('disabled', true);
+                }
+                actionButton.prop('disabled', true);
+            }
+        }
+
+        $('#eventTypeSelect').on('change', function () {
+            handleCategoryChange($(this), $('#eventNameSelect'), $('#eventNameContainer'), $('#download-event-list-btn'));
+        });
+        $('#eventNameSelect').on('change', function () {
+            $('#download-event-list-btn').prop('disabled', !$(this).val());
+        });
+        $('#reportTypeSelect').on('change', function () {
+            handleCategoryChange($(this), $('#reportEventNameSelect'), $('#reportEventNameContainer'), $('#view-report-btn'));
+        });
+        $('#reportEventNameSelect').on('change', function () {
+            $('#view-report-btn').prop('disabled', !$(this).val());
+        });
+
+        // View Live Report
+        $('#view-report-btn').on('click', async function () {
+            const eventType = $('#reportTypeSelect').val();
+            const eventName = (eventType === 'Paid') ? 'Paid' : $('#reportEventNameSelect').val();
+            const resultsContainer = $('#event-report-results-container');
+            const tableHeader = $('#report-table-header');
+            const tableBody = $('#report-table-body');
+
+            tableBody.html('<tr><td colspan="8" class="text-center py-4 text-muted"><div class="spinner-border spinner-border-sm me-2 text-warning"></div>Loading live data from MongoDB...</td></tr>');
+            resultsContainer.slideDown();
+
+            let headerHtml = '';
+            if (eventType === 'Paid') {
+                headerHtml = '<tr><th>ID</th><th>Name</th><th>Email</th><th>Mobile</th><th>College</th><th>Transaction ID</th><th>Amount</th><th>Date</th></tr>';
+            } else {
+                headerHtml = '<tr><th>ID</th><th>Name</th><th>Email</th><th>Mobile</th><th>College</th><th>Fee Status</th><th>Accommodation</th></tr>';
+            }
+            tableHeader.html(headerHtml);
+            $('#report-title').text('Live Records for: ' + (eventType === 'Paid' ? 'Paid Users' : eventName));
+
+            try {
+                const res = await fetch('/api/admin/events/download', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ event_type: eventType, event_name: eventName })
+                });
+                const html = await res.text();
+                tableBody.html(html || '<tr><td colspan="8" class="text-center py-4 text-muted">No registrations found.</td></tr>');
+            } catch (err) {
+                tableBody.html('<tr><td colspan="8" class="text-center py-4 text-danger">Failed to fetch report from server.</td></tr>');
+            }
+        });
+
+        // Download event list from Modal
+        $('#download-event-list-btn').on('click', async function () {
+            const eventType = $('#eventTypeSelect').val();
+            const eventName = (eventType === 'Paid') ? 'Paid' : $('#eventNameSelect').val();
+            const safeEventName = (eventName || 'Report').replace(/[^a-z0-9]/gi, '_');
+            const filename = `SRiSHTi2k26_${safeEventName}.xlsx`;
+
+            try {
+                const res = await fetch('/api/admin/events/download', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ event_type: eventType, event_name: eventName })
+                });
+                const html = await res.text();
+                const tableBody = (eventType === 'Paid') ? $('#payment-export-body') : $('#event-export-body');
+                tableBody.html(html);
+                const tableToExport = (eventType === 'Paid') ? $('#payment-export-table')[0] : $('#event-export-table')[0];
+                ExportToExcel(tableToExport, filename);
+                const modalEl = document.getElementById('downloadEventModal');
+                const modal = bootstrap.Modal.getInstance(modalEl);
+                if (modal) modal.hide();
+            } catch (err) {
+                alert('Failed to download event list.');
+            }
+        });
+
+        // Download Excel Full List
+        $('#download-excel-btn').on('click', function () {
+            ExportToExcel($('#members-table')[0], 'SRiSHTi2k26_All_Members.xlsx');
+        });
+
+        function ExportToExcel(table, filename) {
+            if (typeof XLSX !== 'undefined') {
+                var wb = XLSX.utils.table_to_book(table, { sheet: 'Sheet1' });
+                XLSX.writeFile(wb, filename || ('SRiSHTi2k26_Export_' + new Date().toISOString().split('T')[0] + '.xlsx'));
+            } else {
+                alert('Export feature ready.');
+            }
+        }
+
+        // Git Pull Update
+        $('#git-pull-btn').on('click', async function (e) {
+            e.preventDefault();
+            if (!confirm('Are you sure you want to pull the latest changes from Git?')) return;
+            
+            const btn = $(this);
+            const originalHtml = btn.html();
+            btn.html('<i class="bi bi-arrow-repeat spin"></i> Pulling...');
+            btn.addClass('disabled');
+
+            try {
+                const res = await fetch('/api/admin/git-pull', { method: 'POST' });
+                const data = await res.json();
+                
+                if (res.ok) {
+                    alert('Success: ' + data.message);
+                } else {
+                    alert('Error: ' + data.error + '\n\n' + (data.stderr || ''));
+                }
+            } catch (err) {
+                alert('Request failed. Server might be restarting or offline.');
+            } finally {
+                btn.html(originalHtml);
+                btn.removeClass('disabled');
+            }
+        });
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,625 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Bebas+Neue&display=swap');
+
+/* Bank Gothic fallback stack */
+@font-face {
+  font-family: 'Bank Gothic';
+  src: local('Bank Gothic'), local('BankGothic Md BT'), local('Bank Gothic Medium');
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+  /* Core palette */
+  --orange: #ff6200;
+  --orange-light: #ff8533;
+  --orange-glow: rgba(255, 98, 0, 0.45);
+  --orange-soft: rgba(255, 140, 40, 0.30);
+  --gold: #ffc060;
+  --gold-glow: rgba(255, 192, 96, 0.35);
+  --silver: #c0c8d8;
+
+  --bg-deep: #050810;
+  --bg-card: rgba(6, 8, 18, 0.72);
+  --border-color: rgba(255, 98, 0, 0.35);
+  --border-hover: rgba(255, 140, 40, 0.75);
+
+  --text-main: #edf0f8;
+  --text-muted: #9daec2;
+  --text-error: #f87171;
+  --text-success: #34d399;
+
+  --font-main: 'Outfit', sans-serif;
+  --font-display: 'Bank Gothic', 'BankGothic Md BT', 'Bebas Neue', sans-serif;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --blur-card: 24px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+/* ─────────────────────────────────────────────────────────
+   BODY — Your avengers.jpg, untouched, exactly as given.
+   Dark overlay is handled by .cin-overlay in cinematic.css.
+───────────────────────────────────────────────────────── */
+body {
+  font-family: var(--font-main);
+  color: var(--text-main);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+  /* Your original background */
+  background: url('assets/wp6705937.jpg') center top / cover no-repeat fixed;
+}
+
+/* ─────────────────────────────────────────────────────────
+   PAGE LAYOUT
+───────────────────────────────────────────────────────── */
+.page-wrapper {
+  position: relative;
+  z-index: 10;
+  /* above all fx layers */
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* ─────────────────────────────────────────────────────────
+   LEFT PANEL
+───────────────────────────────────────────────────────── */
+.left-panel {
+  position: relative;
+  flex: 6;
+  min-height: calc(100vh - 5rem);
+  margin: 2.5rem 0 2.5rem 0;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-radius: 0 40px 40px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 4rem;
+}
+
+/* Subtle hex grid texture */
+.grid-overlay {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 98, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 98, 0, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 0 38px 38px 0;
+}
+
+/* Ambient orbs — hero character glows (Iron Man, Thor, Scarlet Witch) */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+  animation: orbFloat 20s infinite alternate ease-in-out;
+  z-index: 0;
+  will-change: transform, opacity;
+}
+
+/* Iron Man — orange/amber */
+.orb-1 {
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, rgba(255, 140, 20, 0.30), transparent 70%);
+  top: 5%;
+  left: -5%;
+  animation-duration: 18s;
+}
+
+/* Thor — electric blue-white */
+.orb-2 {
+  width: 260px;
+  height: 260px;
+  background: radial-gradient(circle, rgba(130, 190, 255, 0.20), transparent 70%);
+  bottom: 10%;
+  right: 5%;
+  animation-duration: 24s;
+  animation-delay: -8s;
+}
+
+/* Scarlet Witch — deep crimson/rose */
+.orb-3 {
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(200, 40, 80, 0.22), transparent 70%);
+  bottom: 28%;
+  left: 8%;
+  animation-duration: 28s;
+  animation-delay: -14s;
+}
+
+@keyframes orbFloat {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  100% {
+    transform: translate(6%, 7%) scale(1.12);
+  }
+}
+
+/* ── Left panel content area ── */
+.left-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 2rem;
+  width: 100%;
+  max-width: 500px;
+}
+
+/* Ambient glow behind logo + title */
+.left-content::before {
+  content: '';
+  position: absolute;
+  inset: -60px;
+  background: radial-gradient(ellipse 70% 60% at 50% 40%,
+      rgba(255, 160, 40, 0.14) 0%,
+      rgba(255, 98, 0, 0.07) 50%,
+      transparent 80%);
+  pointer-events: none;
+  z-index: -1;
+  border-radius: 50%;
+  animation: leftGlowPulse 7s ease-in-out infinite alternate;
+  will-change: opacity;
+}
+
+@keyframes leftGlowPulse {
+  0% {
+    opacity: 0.7;
+  }
+
+  100% {
+    opacity: 1.0;
+  }
+}
+
+/* ─── Logo ─── */
+.logo-space {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 0.5rem;
+  /* Ensure no white card behind the logo */
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.logo-img {
+  width: auto;
+  /* ~28% larger than original (180px → 230px) */
+  height: 230px;
+  display: block;
+  /* 'screen' mode: white pixels in the PNG become fully transparent
+     against the dark Avengers background — the cleanest CSS white-bg removal */
+  mix-blend-mode: screen;
+  /* Layered orange neon glow matching the site theme */
+  filter:
+    drop-shadow(0 0 12px rgba(255, 130, 0, 0.90)) drop-shadow(0 0 32px rgba(255, 98, 0, 0.65)) drop-shadow(0 0 60px rgba(255, 160, 40, 0.35)) brightness(1.10);
+  /* Remove any border-radius that could create a visible box edge */
+  border-radius: 0;
+}
+
+/* ─── Hero text ─── */
+.hero-title {
+  font-family: var(--font-display);
+  font-size: 2.8rem;
+  color: var(--gold);
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  letter-spacing: 3px;
+  text-align: center;
+  text-shadow:
+    0 0 18px rgba(255, 192, 60, 0.60),
+    0 0 40px rgba(255, 98, 0, 0.30);
+}
+
+.hero-desc {
+  font-size: 1rem;
+  color: var(--text-main);
+  line-height: 1.7;
+  text-align: center;
+  max-width: 440px;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7);
+}
+
+/* Typewriter cursor */
+.tw-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: var(--orange);
+  margin-left: 1px;
+  vertical-align: middle;
+  animation: blink 0.75s step-end infinite;
+}
+
+@keyframes blink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   RIGHT PANEL
+───────────────────────────────────────────────────────── */
+.right-panel {
+  flex: 4;
+  min-height: 100vh;
+  overflow-y: auto;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 2.2rem;
+  position: relative;
+}
+
+/* Dark radial gradient behind the card — keeps form as focal point */
+.right-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 80% at 50% 50%,
+      rgba(4, 6, 14, 0.55) 0%,
+      transparent 75%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─────────────────────────────────────────────────────────
+   PREMIUM GLASSMORPHISM CARD
+───────────────────────────────────────────────────────── */
+.form-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+
+  /* Translucent dark glass */
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--blur-card)) saturate(1.4);
+  -webkit-backdrop-filter: blur(var(--blur-card)) saturate(1.4);
+
+  /* Pulsing orange border glow */
+  border: 1.5px solid var(--border-color);
+  border-radius: 24px;
+  padding: 2.5rem;
+
+  /* Inner highlight + outer glow */
+  box-shadow:
+    0 0 0 1px rgba(255, 98, 0, 0.08),
+    0 0 40px rgba(255, 98, 0, 0.22),
+    0 0 80px rgba(255, 140, 20, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    inset 0 0 30px rgba(255, 98, 0, 0.04);
+
+  animation:
+    slideUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) both,
+    borderPulse 4s ease-in-out infinite;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes borderPulse {
+
+  0%,
+  100% {
+    border-color: rgba(255, 98, 0, 0.35);
+    box-shadow:
+      0 0 0 1px rgba(255, 98, 0, 0.08),
+      0 0 40px rgba(255, 98, 0, 0.22),
+      0 0 80px rgba(255, 140, 20, 0.10),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      inset 0 0 30px rgba(255, 98, 0, 0.04);
+  }
+
+  50% {
+    border-color: rgba(255, 160, 40, 0.70);
+    box-shadow:
+      0 0 0 1px rgba(255, 140, 40, 0.15),
+      0 0 55px rgba(255, 140, 20, 0.38),
+      0 0 110px rgba(255, 192, 60, 0.16),
+      inset 0 1px 0 rgba(255, 255, 255, 0.09),
+      inset 0 0 40px rgba(255, 98, 0, 0.08);
+  }
+}
+
+/* ─── Header ─── */
+header {
+  margin-bottom: 2rem;
+}
+
+header h1 {
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  letter-spacing: 2px;
+  color: var(--gold);
+  text-align: center;
+  margin-bottom: 0.3rem;
+  text-shadow:
+    0 0 18px rgba(255, 192, 60, 0.55),
+    0 0 36px rgba(255, 98, 0, 0.28);
+}
+
+/* ─── Form fields ─── */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+label {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--silver);
+  letter-spacing: 0.8px;
+}
+
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  padding-right: 2.8rem;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 0.8rem;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.toggle-password:hover {
+  color: var(--orange);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"] {
+  width: 100%;
+  height: 50px;
+  padding: 0 16px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  color: var(--text-main);
+  font-family: var(--font-main);
+  font-size: 0.95rem;
+  outline: none;
+  transition: var(--transition);
+  box-sizing: border-box;
+}
+
+input::placeholder {
+  color: rgba(157, 174, 194, 0.6);
+  opacity: 1;
+}
+
+input:focus {
+  border-color: var(--orange);
+  background: rgba(255, 98, 0, 0.06);
+  box-shadow: 0 0 14px rgba(255, 98, 0, 0.30);
+}
+
+/* Error states */
+.form-group.error input {
+  border-color: var(--text-error);
+}
+
+.form-group.error input:focus {
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.18);
+}
+
+.error-message {
+  font-size: 0.75rem;
+  color: var(--text-error);
+  display: none;
+  margin-top: 0.2rem;
+}
+
+.form-group.error .error-message {
+  display: block;
+}
+
+/* ─── Forgot Password ─── */
+.forgot-password-wrap {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.6rem;
+}
+
+.forgot-password-btn {
+  background: none;
+  border: none;
+  color: var(--orange-light);
+  font-family: var(--font-main);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: var(--transition);
+  padding: 2px 4px;
+  border-radius: 4px;
+  outline: none;
+}
+
+.forgot-password-btn:hover {
+  color: var(--gold);
+  text-shadow: 0 0 12px var(--gold-glow);
+  text-decoration: underline;
+}
+
+.forgot-password-btn:focus-visible {
+  outline: 1px dashed var(--orange-light);
+}
+
+/* ─── Submit button ─── */
+.submit-btn {
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: 0.9rem;
+  background: linear-gradient(135deg, var(--orange) 0%, var(--orange-light) 100%);
+  border: none;
+  border-radius: 10px;
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 4px 20px rgba(255, 98, 0, 0.45);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Shimmer sweep on hover */
+.submit-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+  transition: left 0.5s ease;
+}
+
+.submit-btn:hover::after {
+  left: 160%;
+}
+
+.submit-btn:hover {
+  background: linear-gradient(135deg, var(--orange-light) 0%, var(--gold) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(255, 140, 20, 0.55);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+}
+
+.submit-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ─── Footer ─── */
+.form-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.form-footer a {
+  color: var(--orange-light);
+  text-decoration: none;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.form-footer a:hover {
+  color: var(--gold);
+  text-shadow: 0 0 10px var(--gold-glow);
+}
+
+/* ─────────────────────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────────────────────── */
+@media (max-width: 880px) {
+  .page-wrapper {
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+
+  /* Hide the intro/hero section completely on mobile —
+     only the login/forgot-password form is shown */
+  .left-panel {
+    display: none;
+  }
+
+  /* Let the form panel fill the full mobile width */
+  .right-panel {
+    order: 1;
+    flex: 1 1 100%;
+    width: 100%;
+    max-width: 100%;
+    padding: 2.2rem 1.5rem;
+    box-sizing: border-box;
+  }
+
+  .form-container {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 520px) {
+  /* .left-panel already hidden via the 880px breakpoint above */
+
+  .right-panel {
+    padding: 1.5rem 1rem;
+  }
+
+  .form-container {
+    padding: 1.6rem 1.2rem;
+  }
+
+  header h1 {
+    font-size: 2rem;
+  }
+}

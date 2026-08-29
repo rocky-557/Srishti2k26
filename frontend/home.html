@@ -1,0 +1,2279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>SRiSHTi 2K26 | Earth's Mightiest Tech Fest</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&family=Syncopate:wght@700&family=Anton&family=Poppins:wght@300;400;600;800&display=swap"
+        rel="stylesheet">
+
+    <!-- AOS CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+    <!-- Avengers Theme & Desktop Navigation CSS -->
+    <link rel="stylesheet" href="css/avengers-theme.css">
+    <link rel="stylesheet" href="css/desktop-nav.css">
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="js/app.js?v=9"></script>
+
+    <style>
+        @font-face {
+            font-family: 'Aquire';
+            src: url('assets/fonts/AquireBold.otf') format('opentype');
+            font-weight: 700;
+            font-style: normal;
+        }
+
+        :root {
+            --bg-deep: #020202;
+            --accent-red: #ff2b2b;
+            --gold: #ffbe30;
+            --cyan: #00f0ff;
+            --font-title: 'Aquire', sans-serif;
+            --font-hud: 'Orbitron', sans-serif;
+            --font-body: 'Rajdhani', sans-serif;
+            --font-head: 'Anton', sans-serif;
+            --font-pop: 'Poppins', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body,
+        html {
+            width: 100%;
+            background: var(--bg-deep);
+            color: #f5f5f5;
+            /* Lightened for contrast */
+            font-family: var(--font-pop);
+            overflow-x: hidden;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+            /* Global text shadow for readability */
+        }
+
+        /* =========================================
+           10-LAYER BACKGROUND ENGINE
+           ========================================= */
+        #layer-system {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -10;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .layer {
+            position: absolute;
+            top: -5%;
+            left: -5%;
+            width: 110%;
+            height: 110%;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.2s ease-out;
+        }
+
+        .l10-vignette {
+            z-index: 10;
+            background: radial-gradient(circle at center, transparent 30%, #000 100%);
+        }
+
+        .l9-grid {
+            z-index: 9;
+            background-image: linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0;
+        }
+
+        .l8-scanlines {
+            z-index: 8;
+            background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.3) 51%);
+            background-size: 100% 4px;
+            opacity: 0.5;
+        }
+
+        .l7-emergency {
+            z-index: 7;
+            background: radial-gradient(circle at 80% 20%, rgba(255, 43, 43, 0.15) 0%, transparent 40%), radial-gradient(circle at 20% 80%, rgba(255, 43, 43, 0.1) 0%, transparent 40%);
+            opacity: 0;
+            animation: emergencyPulse 4s infinite alternate;
+        }
+
+        @keyframes emergencyPulse {
+            0% {
+                opacity: 0.2;
+            }
+
+            100% {
+                opacity: 0.6;
+            }
+        }
+
+        .l6-beams {
+            z-index: 6;
+            background: conic-gradient(from 180deg at 50% 120%, transparent 120deg, rgba(255, 255, 255, 0.05) 150deg, rgba(255, 255, 255, 0.05) 210deg, transparent 240deg);
+            opacity: 0;
+            transform-origin: bottom center;
+            animation: sweepLight 15s infinite ease-in-out alternate;
+        }
+
+        @keyframes sweepLight {
+            0% {
+                transform: rotate(-30deg);
+            }
+
+            100% {
+                transform: rotate(30deg);
+            }
+        }
+
+        #particle-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+            opacity: 0;
+        }
+
+        /* =========================================
+           HOLOGRAPHIC QUANTUM ARC-REACTOR ENGINE (HERO BG)
+           ========================================= */
+        .hero {
+            position: relative !important;
+            background: #030611 !important;
+            background-image: none !important;
+            overflow: hidden !important;
+        }
+
+        .hero-reactor-backdrop {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            z-index: 1 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            overflow: hidden !important;
+            pointer-events: none !important;
+            background: radial-gradient(circle at 50% 42%, rgba(0, 240, 255, 0.28) 0%, rgba(255, 183, 0, 0.1) 25%, rgba(6, 14, 32, 0.95) 55%, #030611 100%) !important;
+        }
+
+        .arc-reactor-holo {
+            position: absolute !important;
+            top: 42% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            width: clamp(380px, 55vw, 650px) !important;
+            height: clamp(380px, 55vw, 650px) !important;
+            pointer-events: none !important;
+            opacity: 1 !important;
+            filter: drop-shadow(0 0 35px rgba(0, 240, 255, 0.9)) drop-shadow(0 0 70px rgba(0, 150, 255, 0.6)) !important;
+        }
+
+        .reactor-ring-outer {
+            transform-origin: 250px 250px;
+            animation: reactorSpinClockwise 50s linear infinite;
+        }
+
+        .reactor-ring-mid {
+            transform-origin: 250px 250px;
+            animation: reactorSpinCounter 28s linear infinite;
+        }
+
+        .reactor-ring-inner {
+            transform-origin: 250px 250px;
+            animation: reactorSpinClockwise 14s linear infinite;
+        }
+
+        .reactor-core-glow {
+            transform-origin: 250px 250px;
+            animation: reactorPulse 3.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes reactorSpinClockwise {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes reactorSpinCounter {
+            from {
+                transform: rotate(360deg);
+            }
+
+            to {
+                transform: rotate(0deg);
+            }
+        }
+
+        @keyframes reactorPulse {
+            0% {
+                opacity: 0.7;
+                transform: scale(0.96);
+                filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.8));
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.04);
+                filter: drop-shadow(0 0 50px rgba(0, 240, 255, 1)) drop-shadow(0 0 80px rgba(255, 183, 0, 0.6));
+            }
+
+            100% {
+                opacity: 0.7;
+                transform: scale(0.96);
+                filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.8));
+            }
+        }
+
+        /* =========================================
+           SMOOTH CINEMATIC SECTION TRANSITION SYSTEM
+           ========================================= */
+        .cinematic-bg,
+        .section-bg {
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-color: #0a0a12;
+            overflow: hidden;
+        }
+
+        /* 1. Professional Dark Gradient Overlay for perfect readability */
+        .cinematic-bg::before,
+        .section-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(10, 10, 18, 0.55) 0%, rgba(10, 10, 18, 0.70) 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* 2. Responsive Top & Bottom seam blending */
+        .cinematic-bg::after,
+        .section-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, #0a0a12 0%, transparent min(15vh, 180px), transparent calc(100% - min(15vh, 180px)), #0a0a12 100%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* Ensure section content sits safely above gradient overlays */
+        .cinematic-bg>*,
+        .section-bg>* {
+            position: relative;
+            z-index: 5;
+        }
+
+        /* ---- High-Quality Backgrounds Professionally Placed ---- */
+
+        #about {
+            background-image: url('assets/avengers theme/space.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            background-attachment: scroll;
+        }
+
+        #workshops {
+            background-image: url('assets/avengers theme/img44.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center top;
+            background-attachment: scroll;
+        }
+
+        #events {
+            background-image: url('assets/avengers theme/avengers_bg.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            background-attachment: scroll;
+        }
+
+        #faq {
+            background-image: url('assets/avengers theme/img66.jpeg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            background-attachment: scroll;
+        }
+
+        #contact-section {
+            background-image: url('assets/avengers theme/img22.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            background-attachment: scroll;
+        }
+
+        /* 6. Footer & Map */
+        .footer {
+            background-image: url('assets/avengers theme/img5.webp');
+            background-attachment: scroll;
+            border-top: none;
+            padding-bottom: 4vh;
+        }
+
+        /* Removed broken logo watermark animation */
+
+        .portal-sweep {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 50vw;
+            height: 100vh;
+            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.1), rgba(255, 255, 255, 0.4), rgba(0, 240, 255, 0.1), transparent);
+            filter: blur(20px);
+            z-index: 15;
+            transform: skewX(-20deg);
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        /* Loader removed as requested */
+
+        /* =========================================
+           NAVBAR
+           ========================================= */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+            transition: 0.4s;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .brand {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .brand img {
+            height: 40px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
+            transition: 0.3s;
+        }
+
+        .brand img:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.6));
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links li a {
+            color: #fff;
+            text-decoration: none;
+            font-family: var(--font-hud);
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        .nav-links li a:hover {
+            color: var(--cyan);
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+        }
+
+        /* =========================================
+           MAIN HERO
+           ========================================= */
+        .hero {
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding-top: 80px;
+            padding-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+            z-index: 20;
+            opacity: 1;
+            visibility: visible;
+            background: transparent;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 40%, transparent 40%, rgba(2, 2, 2, 0.8) 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(to bottom, transparent 0%, #020202 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .hero>* {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title-container {
+            position: relative;
+            margin-bottom: 20px;
+            text-align: center;
+            background: none;
+            padding: 10px 20px;
+        }
+
+        .hero-title {
+            font-family: 'Aquire', var(--font-title);
+            font-size: clamp(3.2rem, 7.5vw, 6rem);
+            font-weight: 700;
+            letter-spacing: clamp(8px, 1.8vw, 15px);
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+            background: none !important;
+            text-shadow: none !important;
+            filter: none !important;
+            text-transform: uppercase;
+            line-height: 1;
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: none !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        /* Title animation removed */
+
+        /* Subtitle removed */
+
+        /* Removed blinking cursor */
+
+        /* HUD Countdown */
+        .hud-wrapper {
+            position: relative;
+            padding: 30px 36px 22px 36px;
+            margin: 0 auto 20px auto;
+            width: min(94%, 640px);
+            border: 1px solid rgba(0, 240, 255, 0.25);
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.05), 0 10px 30px rgba(0, 0, 0, 0.8);
+            box-sizing: border-box;
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: none !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        /* Registrations Opened Banner under Timer Section - Dynamic fit */
+        .hud-status-banner {
+            margin: 8px auto 25px auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 8px 24px;
+            background: rgba(4, 18, 10, 0.75);
+            border: 1px solid rgba(94, 255, 122, 0.5);
+            border-radius: 50px;
+            box-shadow: 0 0 18px rgba(94, 255, 122, 0.25), inset 0 0 12px rgba(94, 255, 122, 0.15);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            font-family: var(--font-hud, 'Orbitron', sans-serif);
+            font-size: clamp(0.78rem, 2.5vw, 0.95rem);
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #5eff7a;
+            text-transform: uppercase;
+            box-sizing: border-box;
+            text-shadow: 0 0 8px rgba(94, 255, 122, 0.6);
+            animation: none !important;
+            transition: none !important;
+            width: fit-content;
+            max-width: 90vw;
+        }
+
+        .hud-status-dot {
+            width: 10px;
+            height: 10px;
+            background-color: #5eff7a;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #5eff7a, 0 0 20px #5eff7a;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        @keyframes statusDotPulse {
+            0% {
+                transform: scale(0.85);
+                opacity: 0.6;
+            }
+
+            50% {
+                transform: scale(1.35);
+                opacity: 1;
+                box-shadow: 0 0 15px #5eff7a, 0 0 25px #5eff7a;
+            }
+
+            100% {
+                transform: scale(0.85);
+                opacity: 0.6;
+            }
+        }
+
+        @keyframes statusBannerGlow {
+            0% {
+                border-color: rgba(94, 255, 122, 0.35);
+                box-shadow: 0 0 14px rgba(94, 255, 122, 0.2);
+            }
+
+            100% {
+                border-color: rgba(94, 255, 122, 0.85);
+                box-shadow: 0 0 26px rgba(94, 255, 122, 0.5);
+            }
+        }
+
+        .hud-wrapper::before,
+        .hud-wrapper::after {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border: 2px solid var(--cyan);
+        }
+
+        .hud-wrapper::before {
+            top: -2px;
+            left: -2px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .hud-wrapper::after {
+            bottom: -2px;
+            right: -2px;
+            border-left: none;
+            border-top: none;
+        }
+
+        .hud-header {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-deep, #020202);
+            padding: 2px 18px;
+            font-family: var(--font-hud, 'Orbitron', sans-serif);
+            color: var(--accent-red, #ff2b2b);
+            font-size: 0.85rem;
+            letter-spacing: 4px;
+            font-weight: 700;
+            white-space: nowrap !important;
+            border: 1px solid rgba(255, 43, 43, 0.3);
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(255, 43, 43, 0.3);
+            z-index: 10;
+        }
+
+        .hud-timer {
+            display: flex !important;
+            flex-direction: row !important;
+            justify-content: space-around !important;
+            align-items: center !important;
+            width: 100% !important;
+            gap: 24px;
+            margin: 0 !important;
+            padding: 0 8px !important;
+        }
+
+        .hud-box {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            flex: 1 1 0 !important;
+            min-width: 0 !important;
+            text-align: center !important;
+            position: relative;
+        }
+
+        .hud-val {
+            font-family: var(--font-hud, 'Orbitron', sans-serif);
+            font-size: clamp(2rem, 5.5vw, 3.6rem);
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            line-height: 1;
+            letter-spacing: 4px;
+            transition: none !important;
+            animation: none !important;
+            text-align: center;
+        }
+
+        .hud-lbl {
+            font-size: clamp(0.65rem, 2vw, 0.85rem);
+            color: #8a99ad;
+            letter-spacing: 3px;
+            margin-top: 10px;
+            font-family: var(--font-hud, 'Orbitron', sans-serif);
+            font-weight: 700;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .tick-pulse {
+            animation: none !important;
+            transform: none !important;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5) !important;
+            color: #fff !important;
+        }
+
+        @keyframes hudTick {
+            0% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Buttons */
+        .btn-container {
+            display: flex;
+            gap: 30px;
+        }
+
+        .btn-stark {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 40px;
+            font-family: var(--font-hud);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+            letter-spacing: 3px;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .btn-stark::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            width: calc(100% + 4px);
+            height: calc(100% + 4px);
+            background: conic-gradient(from 0deg, transparent 70%, var(--gold) 80%, var(--accent-red) 100%);
+            z-index: -1;
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .btn-stark-inner {
+            position: absolute;
+            top: 1px;
+            left: 1px;
+            width: calc(100% - 2px);
+            height: calc(100% - 2px);
+            background: linear-gradient(135deg, rgba(20, 20, 20, 0.9), rgba(5, 5, 5, 0.9));
+            z-index: -1;
+        }
+
+        .btn-stark:hover {
+            transform: scale(0.95);
+            color: var(--gold);
+            text-shadow: 0 0 10px rgba(255, 190, 48, 0.5);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.9);
+        }
+
+        .btn-stark:hover::before {
+            opacity: 1;
+            animation: borderTrace 2s linear infinite;
+        }
+
+        @keyframes borderTrace {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* =========================================
+           CONTENT SECTIONS (Cinematic Styled)
+           ========================================= */
+        .content-section {
+            position: relative;
+            z-index: 10;
+            padding: 50px 20px;
+            background: transparent;
+            border-top: none;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .section-tag {
+            display: none;
+        }
+
+        .section-title {
+            font-family: var(--font-head);
+            font-size: 4rem;
+            letter-spacing: 4px;
+            color: #fff;
+            text-transform: uppercase;
+            text-shadow: 0 10px 20px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Dossier (About) */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-text {
+            font-size: 1.2rem;
+            line-height: 1.9;
+            color: #ddd;
+            margin-bottom: 25px;
+        }
+
+        .about-text .highlight {
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .about-img {
+            width: 100%;
+            border-radius: 10px;
+            border: 2px solid rgba(0, 240, 255, 0.2);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+            filter: grayscale(50%);
+            transition: 0.5s;
+        }
+
+        .about-img:hover {
+            filter: grayscale(0%);
+            border-color: var(--accent-red);
+            box-shadow: 0 30px 60px rgba(255, 43, 43, 0.3);
+        }
+
+        /* ================================================================
+           WORKSHOP: VERTICAL EXPANDING PILLARS (Image 1 Style)
+        ================================================================ */
+        .ws-pillars {
+            display: flex;
+            height: 380px;
+            gap: 8px;
+        }
+
+        .ws-pillar {
+            position: relative;
+            flex: 1;
+            border-radius: 14px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: flex 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+            min-width: 60px;
+        }
+
+        .ws-pillar.active {
+            flex: 5;
+        }
+
+        .ws-pillar-bg {
+            position: absolute;
+            inset: 0;
+        }
+
+        .ws-pillar-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.62) saturate(0.8);
+            transition: filter 0.8s ease;
+            transform: scale(1.08);
+        }
+
+        .ws-pillar.active .ws-pillar-bg img {
+            filter: brightness(0.92) saturate(1.2);
+            transform: scale(1);
+        }
+
+        /* Vertical title — shown when collapsed */
+        .ws-pillar-vtitle {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            top: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-family: var(--font-head);
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            color: rgba(255, 255, 255, 0.6);
+            padding: 20px 0;
+            transition: opacity 0.4s ease;
+            z-index: 2;
+            text-transform: uppercase;
+        }
+
+        .ws-pillar.active .ws-pillar-vtitle {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Expanded content — shown when active */
+        .ws-pillar-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 30px 28px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.5) 60%, transparent 100%);
+            z-index: 3;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease 0.4s, transform 0.5s ease 0.4s;
+        }
+
+        .ws-pillar.active .ws-pillar-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .ws-pillar-content h3 {
+            font-family: var(--font-head);
+            font-size: 1.6rem;
+            color: #fff;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .ws-pillar-content p {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.75);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .ws-pillar-btn {
+            display: inline-block;
+            font-family: var(--font-hud);
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            color: var(--accent-red);
+            border: 1px solid rgba(255, 43, 43, 0.6);
+            padding: 8px 18px;
+            border-radius: 4px;
+            background: rgba(255, 43, 43, 0.1);
+            text-decoration: none;
+            transition: 0.25s;
+        }
+
+        .ws-pillar-btn:hover {
+            background: var(--accent-red);
+            color: #fff;
+        }
+
+        /* Active border glow */
+        .ws-pillar.active {
+            box-shadow: 0 0 0 1px rgba(255, 43, 43, 0.5), 0 20px 60px rgba(0, 0, 0, 0.6);
+        }
+
+        /* ================================================================
+           ARENAS: VERTICAL EXPANDING PILLARS (same as Workshops)
+        ================================================================ */
+        /* Arena pillars reuse all .ws-pillar* styles; these overrides
+           swap the accent from red to cyan for the arena context. */
+        .arena-pillars {
+            display: flex;
+            height: 380px;
+            gap: 8px;
+        }
+
+        .arena-pillar {
+            position: relative;
+            flex: 1;
+            border-radius: 14px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: flex 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+            min-width: 60px;
+        }
+
+        .arena-pillar.active {
+            flex: 5;
+            box-shadow: 0 0 0 1px rgba(0, 240, 255, 0.5), 0 20px 60px rgba(0, 0, 0, 0.6);
+        }
+
+        .arena-pillar-bg {
+            position: absolute;
+            inset: 0;
+        }
+
+        .arena-pillar-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.62) saturate(0.8);
+            transition: filter 0.8s ease;
+            transform: scale(1.08);
+        }
+
+        .arena-pillar.active .arena-pillar-bg img {
+            filter: brightness(0.92) saturate(1.2);
+            transform: scale(1);
+        }
+
+        .arena-pillar-vtitle {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            top: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-family: var(--font-head);
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            color: rgba(255, 255, 255, 0.6);
+            padding: 20px 0;
+            transition: opacity 0.4s ease;
+            z-index: 2;
+            text-transform: uppercase;
+        }
+
+        .arena-pillar.active .arena-pillar-vtitle {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .arena-pillar-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 30px 28px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.5) 60%, transparent 100%);
+            z-index: 3;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease 0.4s, transform 0.5s ease 0.4s;
+        }
+
+        .arena-pillar.active .arena-pillar-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .arena-pillar-content h3 {
+            font-family: var(--font-head);
+            font-size: 1.6rem;
+            color: #fff;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .arena-pillar-content p {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.75);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .arena-pillar-btn {
+            display: inline-block;
+            font-family: var(--font-hud);
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            color: var(--cyan);
+            border: 1px solid rgba(0, 240, 255, 0.6);
+            padding: 8px 18px;
+            border-radius: 4px;
+            background: rgba(0, 240, 255, 0.1);
+            text-decoration: none;
+            transition: 0.25s;
+        }
+
+        .arena-pillar-btn:hover {
+            background: var(--cyan);
+            color: #000;
+        }
+
+        /* Glass Cards (Workshops/Events) — slightly reduced card size */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 28px;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: 0.4s;
+            position: relative;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-10px);
+            background: rgba(0, 240, 255, 0.05);
+            border-color: var(--cyan);
+            box-shadow: 0 20px 40px rgba(0, 240, 255, 0.2);
+        }
+
+        .card-img-container {
+            width: 100%;
+            height: 175px;
+            overflow: hidden;
+            border-bottom: 2px solid rgba(255, 43, 43, 0.5);
+        }
+
+        .card-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.6s;
+            filter: grayscale(60%) contrast(120%);
+        }
+
+        .glass-card:hover .card-img-container img {
+            transform: scale(1.1);
+            filter: grayscale(0%) contrast(100%);
+        }
+
+        .card-content {
+            padding: 30px;
+        }
+
+        .card-content h3 {
+            font-family: var(--font-head);
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .card-content p {
+            color: #bbb;
+            margin-bottom: 25px;
+        }
+
+        .card-btn {
+            font-family: var(--font-hud);
+            color: var(--accent-red);
+            text-decoration: none;
+            font-weight: 700;
+            letter-spacing: 2px;
+            transition: 0.3s;
+        }
+
+        .glass-card:hover .card-btn {
+            color: var(--cyan);
+            text-shadow: 0 0 15px rgba(0, 240, 255, 0.8);
+        }
+
+        /* FAQ */
+        .faq-item {
+            margin-bottom: 20px;
+            cursor: pointer;
+            border-left: 4px solid var(--gold);
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            position: relative;
+            z-index: 1;
+        }
+
+        .faq-question {
+            padding: 25px;
+            font-family: var(--font-hud);
+            font-size: 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            color: #fff;
+        }
+
+        .faq-answer {
+            padding: 0 25px;
+            max-height: 0;
+            overflow: hidden;
+            transition: 0.5s;
+            color: #bbb;
+            line-height: 1.6;
+        }
+
+        .faq-item.active {
+            background: rgba(0, 240, 255, 0.12);
+            border-left-color: var(--cyan);
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 0 25px 25px;
+            max-height: 300px;
+        }
+
+        /* Contacts & Sponsors */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+        }
+
+        .contact-card {
+            padding: 30px;
+            text-align: center;
+            border-top: 2px solid transparent;
+            background: rgba(255, 255, 255, 0.02);
+            transition: 0.4s;
+            position: relative;
+            z-index: 1;
+        }
+
+        .contact-card:hover {
+            border-top-color: var(--accent-red);
+            background: rgba(255, 43, 43, 0.05);
+        }
+
+        .contact-card h4 {
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .contact-card a {
+            font-family: var(--font-hud);
+            color: var(--gold);
+            text-decoration: none;
+        }
+
+        .sponsors-flex {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-top: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .sponsors-flex img {
+            height: 90px;
+            filter: grayscale(100%) brightness(150%);
+            opacity: 0.6;
+            transition: 0.4s;
+        }
+
+        .sponsors-flex img:hover {
+            filter: grayscale(0%) brightness(100%);
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        /* Footer Map - Remove dark gradient overlay from top of map */
+        .footer::before,
+        .footer::after {
+            display: none !important;
+        }
+
+        .footer {
+            background-color: #030712;
+            border-top: none;
+            padding-bottom: 4vh;
+        }
+
+        .footer>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-map {
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-map iframe {
+            width: 100%;
+            height: 350px;
+            border: none;
+            filter: invert(90%) hue-rotate(180deg) contrast(1.3) opacity(0.95);
+        }
+
+        .footer-content {
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .footer-links a {
+            color: #666;
+            margin: 0 15px;
+            text-decoration: none;
+            font-family: var(--font-hud);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--cyan);
+        }
+
+        @media (max-width: 992px) {
+            .hero-title {
+                font-size: 3.2rem;
+                letter-spacing: 6px;
+            }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .desktop-only {
+                display: none;
+            }
+
+            /* Mobile Accordion Flow for Workshops & Arenas */
+            .ws-pillars,
+            .arena-pillars {
+                display: flex !important;
+                flex-direction: column !important;
+                height: auto !important;
+                gap: 12px !important;
+                width: 100% !important;
+            }
+
+            .ws-pillar,
+            .arena-pillar {
+                width: 100% !important;
+                height: 70px !important;
+                min-width: 100% !important;
+                flex: none !important;
+                transition: height 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease !important;
+                border-radius: 12px !important;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5) !important;
+            }
+
+            .ws-pillar.active,
+            .arena-pillar.active {
+                height: 250px !important;
+                flex: none !important;
+            }
+
+            /* Horizontal title when collapsed on mobile */
+            .ws-pillar-vtitle,
+            .arena-pillar-vtitle {
+                writing-mode: horizontal-tb !important;
+                text-orientation: initial !important;
+                font-size: 1.05rem !important;
+                letter-spacing: 2px !important;
+                position: absolute !important;
+                inset: 0 !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                padding: 0 20px !important;
+                text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9) !important;
+                z-index: 5 !important;
+                background: linear-gradient(90deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 100%) !important;
+                opacity: 1 !important;
+                transition: opacity 0.3s ease !important;
+            }
+
+            /* Add expand indicator icon on the right of title in collapsed state */
+            .ws-pillar-vtitle::after,
+            .arena-pillar-vtitle::after {
+                content: '❯' !important;
+                font-size: 0.9rem !important;
+                transition: transform 0.3s ease !important;
+                color: var(--accent-red) !important;
+            }
+
+            .arena-pillar-vtitle::after {
+                color: var(--cyan) !important;
+            }
+
+            .ws-pillar.active .ws-pillar-vtitle,
+            .arena-pillar.active .arena-pillar-vtitle {
+                opacity: 0 !important;
+                pointer-events: none !important;
+            }
+
+            /* Expanded content on mobile */
+            .ws-pillar-content,
+            .arena-pillar-content {
+                padding: 20px 20px !important;
+                background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.6) 80%, transparent 100%) !important;
+            }
+
+            .ws-pillar-content h3,
+            .arena-pillar-content h3 {
+                font-size: 1.35rem !important;
+                margin-bottom: 6px !important;
+            }
+
+            .ws-pillar-content p,
+            .arena-pillar-content p {
+                font-size: 0.88rem !important;
+                line-height: 1.4 !important;
+                margin-bottom: 12px !important;
+                display: -webkit-box !important;
+                -webkit-line-clamp: 2 !important;
+                -webkit-box-orient: vertical !important;
+                overflow: hidden !important;
+            }
+
+            .ws-pillar-btn,
+            .arena-pillar-btn {
+                padding: 6px 14px !important;
+                font-size: 0.7rem !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                min-height: 100svh !important;
+                min-height: 100vh !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: center !important;
+                align-items: center !important;
+                padding-top: calc(75px + env(safe-area-inset-top, 0px)) !important;
+                padding-bottom: 40px !important;
+                box-sizing: border-box !important;
+            }
+
+            .arc-reactor-holo {
+                width: min(88vw, 360px) !important;
+                height: min(88vw, 360px) !important;
+                top: 50% !important;
+                left: 50% !important;
+            }
+
+            .hero-title-container {
+                padding: 6px 12px !important;
+                margin-bottom: 12px !important;
+            }
+
+            .hero-title {
+                font-size: clamp(2rem, 7vw, 2.8rem) !important;
+                letter-spacing: clamp(3px, 1.2vw, 6px) !important;
+                white-space: nowrap !important;
+            }
+
+            .hud-wrapper {
+                padding: 22px 16px 16px 16px !important;
+                width: min(94vw, 480px) !important;
+                margin: 8px auto 14px auto !important;
+            }
+
+            .hud-header {
+                font-size: 0.72rem !important;
+                letter-spacing: 2.5px !important;
+                padding: 2px 12px !important;
+            }
+
+            .hud-timer {
+                gap: 12px !important;
+                padding: 0 4px !important;
+            }
+
+            .hud-val {
+                font-size: clamp(1.4rem, 6vw, 2.1rem) !important;
+                letter-spacing: 2px !important;
+            }
+
+            .hud-lbl {
+                font-size: clamp(0.55rem, 2.4vw, 0.68rem) !important;
+                letter-spacing: 1.5px !important;
+                margin-top: 6px !important;
+            }
+
+            .hud-status-banner {
+                font-size: clamp(0.66rem, 2.4vw, 0.8rem) !important;
+                letter-spacing: 1px !important;
+                padding: 6px 18px !important;
+                width: fit-content !important;
+                max-width: 92vw !important;
+                margin: 6px auto 10px auto !important;
+            }
+
+            .content-section {
+                padding-bottom: 80px !important;
+            }
+
+            .section-title {
+                font-size: 2.0rem !important;
+                letter-spacing: 3px !important;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr !important;
+                gap: 15px !important;
+            }
+
+            .contact-wrapper {
+                grid-template-columns: 1fr !important;
+                gap: 25px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding-top: calc(70px + env(safe-area-inset-top, 0px)) !important;
+                padding-bottom: 35px !important;
+            }
+
+            .arc-reactor-holo {
+                width: min(84vw, 320px) !important;
+                height: min(84vw, 320px) !important;
+                top: 50% !important;
+            }
+
+            .hero-title {
+                font-size: clamp(1.7rem, 6.2vw, 2.2rem) !important;
+                letter-spacing: 2px !important;
+            }
+
+            .hud-wrapper {
+                padding: 18px 8px 12px 8px !important;
+            }
+
+            .hud-timer {
+                gap: 3px !important;
+            }
+
+            .hud-val {
+                font-size: 1.5rem !important;
+            }
+
+            .hud-lbl {
+                font-size: 0.55rem !important;
+            }
+
+            .hud-status-banner {
+                font-size: 0.65rem !important;
+                letter-spacing: 0.5px !important;
+                padding: 6px 14px !important;
+                width: fit-content !important;
+                max-width: 92vw !important;
+            }
+
+            .section-title {
+                font-size: 1.5rem !important;
+                letter-spacing: 1.5px !important;
+            }
+
+            .footer-links a {
+                display: inline-block;
+                margin: 6px 10px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body data-avengers-theme>
+
+    <!-- Loader removed as requested -->
+
+    <!-- 10-Layer Engine -->
+    <div id="layer-system">
+        <canvas id="particle-canvas" class="layer" data-speed="0.1"></canvas>
+        <div class="layer l6-beams" data-speed="0.02"></div>
+        <div class="layer l7-emergency"></div>
+        <div class="layer l8-scanlines"></div>
+        <div class="layer l9-grid" data-speed="0.15"></div>
+        <div class="layer l10-vignette"></div>
+    </div>
+
+    <div class="portal-sweep" id="sweep"></div>
+
+    <!-- Desktop Navigation (visible ≥993px) -->
+    <nav class="avng-desktop-nav" id="navbar" data-active="home">
+        <div class="avng-desktop-nav__logos">
+            <a href="https://www.psgtech.edu/" target="_blank"><img src="assets/psg_logo.png" alt="PSG Logo" /></a>
+            <a href="https://www.ieee.org/" target="_blank"><img src="assets/ieee_logo.png" alt="IEEE Logo" /></a>
+            <a href="https://www.psgtech.edu/dept/ece/ieee/" target="_blank"><img src="assets/ieee_logo_sc.png"
+                    alt="IEEE SC Logo" /></a>
+            <a href="#"><img src="assets/icons/100 YRS.png" alt="100 YRS Logo" /></a>
+        </div>
+        <ul class="avng-desktop-nav__links">
+            <li><a href="home.html" data-nav-id="home" class="avng-nav-active">Home</a></li>
+            <li><a href="event.html" data-nav-id="events">Events</a></li>
+            <li><a href="workshop.html#workshop" data-nav-id="workshop">Workshop</a></li>
+            <li><a href="workshop.html#paperpresentation" data-nav-id="paperpresentation">Paper Presentation</a></li>
+            <li><a href="workshop.html#flagship" data-nav-id="flagship">Flagship</a></li>
+            <li><a href="home.html#contact" data-nav-id="contact">Contact</a></li>
+            <li><a href="https://3d-test-sepia.vercel.app/" data-nav-id="campusmap" target="_blank">Campus Map</a></li>
+        </ul>
+        <div class="avng-desktop-nav__register">
+            <a href="register.html">Register Now</a>
+        </div>
+    </nav>
+
+    <!-- Mobile Top Logo Bar (visible ≤992px) -->
+    <div class="avng-mobile-top-bar">
+        <a href="https://www.psgtech.edu/" target="_blank"><img src="assets/psg_logo.png" alt="PSG Logo" /></a>
+        <a href="https://www.ieee.org/" target="_blank"><img src="assets/ieee_logo.png" alt="IEEE Logo" /></a>
+        <a href="https://www.psgtech.edu/dept/ece/ieee/" target="_blank"><img src="assets/ieee_logo_sc.png"
+                alt="IEEE SC Logo" /></a>
+        <a href="#"><img src="assets/icons/100 YRS.png" alt="100 YRS Logo" /></a>
+    </div>
+
+    <!-- Mobile Navigation (visible ≤992px) -->
+    <header>
+        <nav class="ave-nav">
+            <button type="button" class="logo-icon" id="aveScrollTop" aria-label="Scroll to top" title="Scroll to top">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--avng-iron-gold)"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M12 18V8"></path>
+                    <path d="M8 12l4-4 4 4"></path>
+                </svg>
+            </button>
+            <p class="menu-text">MENU</p>
+            <button class="ave-hamburger" aria-label="Toggle menu" id="aveMenuToggle">
+                <span></span><span></span><span></span>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Main Hero -->
+    <section class="hero" id="home">
+        <!-- Holographic Quantum Arc-Reactor Engine Backdrop -->
+        <div class="hero-reactor-backdrop">
+            <svg class="arc-reactor-holo" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Ambient Backdrop Energy Radial Glow -->
+                <circle cx="250" cy="250" r="210" fill="url(#coreGlowGrad)" opacity="0.45" />
+
+                <!-- Outer Tachyon Ring (Segmented Marks) -->
+                <g class="reactor-ring-outer">
+                    <circle cx="250" cy="250" r="220" stroke="#00f0ff" stroke-width="1.5" stroke-dasharray="12 18"
+                        opacity="0.6" />
+                    <circle cx="250" cy="250" r="205" stroke="#ffd700" stroke-width="1" stroke-dasharray="4 24"
+                        opacity="0.4" />
+                    <!-- Cardinal HUD Brackets -->
+                    <path d="M250 18 L250 35 M250 482 L250 465 M18 250 L35 250 M482 250 L465 250" stroke="#00f0ff"
+                        stroke-width="2.5" />
+                    <path d="M85 85 L100 100 M415 85 L400 100 M85 415 L100 400 M415 415 L400 400" stroke="#ffb700"
+                        stroke-width="1.5" opacity="0.7" />
+                </g>
+
+                <!-- Middle Electromagnetic Rotor (10 Solenoids) -->
+                <g class="reactor-ring-mid">
+                    <circle cx="250" cy="250" r="170" stroke="#00f0ff" stroke-width="2" stroke-dasharray="80 18"
+                        opacity="0.75" />
+                    <circle cx="250" cy="250" r="150" stroke="#00e1ff" stroke-width="1" stroke-dasharray="8 8"
+                        opacity="0.5" />
+                    <!-- 10 Reactor Energy Coils -->
+                    <g opacity="0.85">
+                        <rect x="242" y="85" width="16" height="24" rx="3" fill="#00f0ff" opacity="0.8" />
+                        <rect x="335" y="115" width="16" height="24" rx="3" fill="#00f0ff"
+                            transform="rotate(36 343 127)" opacity="0.8" />
+                        <rect x="390" y="195" width="16" height="24" rx="3" fill="#00f0ff"
+                            transform="rotate(72 398 207)" opacity="0.8" />
+                        <rect x="375" y="295" width="16" height="24" rx="3" fill="#00f0ff"
+                            transform="rotate(108 383 307)" opacity="0.8" />
+                        <rect x="295" y="375" width="16" height="24" rx="3" fill="#00f0ff"
+                            transform="rotate(144 303 387)" opacity="0.8" />
+                        <rect x="242" y="390" width="16" height="24" rx="3" fill="#00f0ff" opacity="0.8" />
+                        <rect x="150" y="360" width="16" height="24" rx="3" fill="#00f0ff"
+                            transform="rotate(216 158 372)" opacity="0.8" />
+                        <rect x="95" y="290" width="16" height="24" rx="3" fill="#00f0ff"
+                            transform="rotate(252 103 302)" opacity="0.8" />
+                        <rect x="95" y="185" width="16" height="24" rx="3" fill="#00f0ff"
+                            transform="rotate(288 103 197)" opacity="0.8" />
+                        <rect x="150" y="115" width="16" height="24" rx="3" fill="#00f0ff"
+                            transform="rotate(324 158 127)" opacity="0.8" />
+                    </g>
+                </g>
+
+                <!-- Inner High-Velocity Tachyon Ring -->
+                <g class="reactor-ring-inner">
+                    <circle cx="250" cy="250" r="115" stroke="#ffd700" stroke-width="2" stroke-dasharray="30 20"
+                        opacity="0.85" />
+                    <circle cx="250" cy="250" r="95" stroke="#00f0ff" stroke-width="1.5" stroke-dasharray="15 10"
+                        opacity="0.9" />
+                </g>
+
+                <!-- Center Quantum Vibranium Energy Core -->
+                <g class="reactor-core-glow">
+                    <!-- Concentric Palladium Rings -->
+                    <circle cx="250" cy="250" r="70" fill="rgba(0, 240, 255, 0.15)" stroke="#00f0ff" stroke-width="2" />
+                    <circle cx="250" cy="250" r="48" fill="rgba(0, 240, 255, 0.35)" stroke="#ffffff"
+                        stroke-width="1.5" />
+                    <circle cx="250" cy="250" r="14" fill="#ffffff" filter="url(#reactorBlur)" />
+                    <circle cx="250" cy="250" r="8" fill="#ffffff" />
+                </g>
+
+                <!-- Gradients and Filter Defs -->
+                <defs>
+                    <radialGradient id="coreGlowGrad" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#00f0ff" stop-opacity="0.6" />
+                        <stop offset="50%" stop-color="#0066ff" stop-opacity="0.2" />
+                        <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+                    </radialGradient>
+                    <filter id="reactorBlur" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="6" />
+                    </filter>
+                </defs>
+            </svg>
+        </div>
+
+        <div class="hero-title-container">
+            <h1 class="hero-title" id="srishti-text">SRISHTI 2K26</h1>
+        </div>
+
+        <div class="hud-wrapper">
+            <div class="hud-header">MISSION TIMER</div>
+            <div class="hud-timer">
+                <div class="hud-box">
+                    <div class="hud-val" id="t-days">53</div>
+                    <div class="hud-lbl">DAYS</div>
+                </div>
+                <div class="hud-box">
+                    <div class="hud-val" id="t-hours">10</div>
+                    <div class="hud-lbl">HOURS</div>
+                </div>
+                <div class="hud-box">
+                    <div class="hud-val" id="t-mins">01</div>
+                    <div class="hud-lbl">MINS</div>
+                </div>
+                <div class="hud-box">
+                    <div class="hud-val" id="t-secs">23</div>
+                    <div class="hud-lbl">SECS</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hud-status-banner" id="hud-status-banner">
+            <span class="hud-status-dot"></span>
+            <span class="hud-status-text">The Registerations Opened...</span>
+        </div>
+
+
+
+
+    </section>
+
+    <!-- Content Wrapper starts here (scrollable, semi-transparent) -->
+
+    <!-- About -->
+    <section class="content-section cinematic-bg" id="about">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="section-title">THE INITIATIVE</h2>
+            </div>
+            <div class="about-grid">
+                <div data-aos="fade-right">
+                    <p class="about-text">
+                        <span class="highlight">IEEE SC 12951</span> at PSG College of Technology was initiated in <span
+                            class="highlight">1977</span>. It was established to engage engineering visionaries in
+                        research and pioneer high-impact ideas.
+                    </p>
+                    <p class="about-text">
+                        PSG Tech has consistently set benchmark standards in engineering excellence and is among the
+                        <span class="highlight">first premier institutions</span> in the nation to host an active IEEE
+                        Student Branch. The chapter actively organizes top-tier national technical symposiums year after
+                        year, driving the largest technical community at PSG Tech.
+                    </p>
+                </div>
+                <div data-aos="fade-left">
+                    <img src="assets/psg.webp" alt="PSG Tech" class="about-img">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Workshops -->
+    <section class="content-section cinematic-bg" id="workshops">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="section-title">HANDS-ON WORKSHOPS</h2>
+            </div>
+
+            <div class="ws-pillars" data-aos="fade-up" id="wsPillars">
+                <div class="ws-pillar active" onclick="openPillar(this)">
+                    <div class="ws-pillar-bg"><img src="assets/workshop/workshop-1.jpg"
+                            alt="From Pixels to Intelligence"></div>
+                    <span class="ws-pillar-vtitle">From Pixels to Intelligence</span>
+                    <div class="ws-pillar-content">
+                        <h3>From Pixels to Intelligence</h3>
+                        <p>Hands-on Computer Vision using OpenCV & YOLO</p>
+                        <a href="workshop.html#workshop" class="ws-pillar-btn">ENROLL NOW ❯</a>
+                    </div>
+                </div>
+                <div class="ws-pillar" onclick="openPillar(this)">
+                    <div class="ws-pillar-bg"><img src="assets/workshop/workshop-2.jpg" alt="Powering Future Mobility">
+                    </div>
+                    <span class="ws-pillar-vtitle">Powering Future Mobility</span>
+                    <div class="ws-pillar-content">
+                        <h3>Powering Future Mobility</h3>
+                        <p>Hands-on EV Electronics PCB Design using KiCad</p>
+                        <a href="workshop.html#workshop" class="ws-pillar-btn">ENROLL NOW ❯</a>
+                    </div>
+                </div>
+                <div class="ws-pillar" onclick="openPillar(this)">
+                    <div class="ws-pillar-bg"><img src="assets/workshop/workshop-3.png"
+                            alt="Automotive ECU Development"></div>
+                    <span class="ws-pillar-vtitle">Automotive ECU Development</span>
+                    <div class="ws-pillar-content">
+                        <h3>Automotive ECU Development</h3>
+                        <p>Hands-on Workshop on Automotive ECU Development using Simulink.</p>
+                        <a href="workshop.html#workshop" class="ws-pillar-btn">ENROLL NOW ❯</a>
+                    </div>
+                </div>
+                <div class="ws-pillar" onclick="openPillar(this)">
+                    <div class="ws-pillar-bg"><img src="assets/WORKSHOP26/team 4.jpg" alt="Power Electronics"></div>
+                    <span class="ws-pillar-vtitle">Power Electronics</span>
+                    <div class="ws-pillar-content">
+                        <h3>Power Electronics</h3>
+                        <p>From MATLAB Simulation to Hardware Implementation</p>
+                        <a href="workshop.html#workshop" class="ws-pillar-btn">ENROLL NOW ❯</a>
+                    </div>
+                </div>
+                <div class="ws-pillar" onclick="openPillar(this)">
+                    <div class="ws-pillar-bg"><img src="assets/workshop/workshop-5.jpeg"
+                            alt="Industrial IoT & Industry 4.0"></div>
+                    <span class="ws-pillar-vtitle">Industrial IoT & Industry 4.0</span>
+                    <div class="ws-pillar-content">
+                        <h3>Industrial IoT & 4.0</h3>
+                        <p>Industrial Protocols, Edge Gateways & Cloud Dashboards</p>
+                        <a href="workshop.html#workshop" class="ws-pillar-btn">ENROLL NOW ❯</a>
+                    </div>
+                </div>
+                <div class="ws-pillar" onclick="openPillar(this)">
+                    <div class="ws-pillar-bg"><img src="assets/workshop/workshop-7.png" alt="ROS 2 Jazzy"></div>
+                    <span class="ws-pillar-vtitle">ROS 2 Jazzy</span>
+                    <div class="ws-pillar-content">
+                        <h3>ROS 2 Jazzy</h3>
+                        <p>From Bot Simulation to Autonomous Robotics with TurtleBot3</p>
+                        <a href="workshop.html#workshop" class="ws-pillar-btn">ENROLL NOW ❯</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Event Arenas -->
+    <section class="content-section cinematic-bg" id="events">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="section-title">EXPLORE EVENT ARENAS</h2>
+            </div>
+
+            <div class="arena-pillars" data-aos="fade-up" id="arenaPillars">
+                <div class="arena-pillar active" onclick="openArenaPillar(this)">
+                    <div class="arena-pillar-bg"><img src="assets/workshop/Tech_1.png" alt="TECH NEXUS"></div>
+                    <span class="arena-pillar-vtitle">TECHNICAL</span>
+                    <div class="arena-pillar-content">
+                        <h3>TECH NEXUS</h3>
+                        <p>Connecting ideas. Creating impact</p>
+                        <a href="event.html#tech-events" class="arena-pillar-btn">ENTER ARENA ❯</a>
+                    </div>
+                </div>
+                <div class="arena-pillar" onclick="openArenaPillar(this)">
+                    <div class="arena-pillar-bg"><img src="assets/workshop/1.jpeg" alt="CASE ZERO : THE FINAL VERDICT">
+                    </div>
+                    <span class="arena-pillar-vtitle">NON-TECH</span>
+                    <div class="arena-pillar-content">
+                        <h3>CASE ZERO : THE FINAL VERDICT</h3>
+                        <p>Unite. Celebrate. Shine</p>
+                        <a href="event.html#nontech-events" class="arena-pillar-btn">ENTER ARENA ❯</a>
+                    </div>
+                </div>
+                <div class="arena-pillar" onclick="openArenaPillar(this)">
+                    <div class="arena-pillar-bg"><img src="assets/workshop/marvel.jpg" alt="MARVEL ROYALE"></div>
+                    <span class="arena-pillar-vtitle">GAMING</span>
+                    <div class="arena-pillar-content">
+                        <h3>MARVEL ROYALE</h3>
+                        <p>Play Smart. Invest Wisely. Save the Market.</p>
+                        <a href="event.html" class="arena-pillar-btn">ENTER ARENA ❯</a>
+                    </div>
+                </div>
+                <!-- Placeholders — update with actual event content -->
+                <div class="arena-pillar" onclick="openArenaPillar(this)">
+                    <div class="arena-pillar-bg"><img src="assets/workshop/FLAGSHIP2.jpg" alt="VisionX"></div>
+                    <span class="arena-pillar-vtitle">FLAGSHIP</span>
+                    <div class="arena-pillar-content">
+                        <h3>VisionX</h3>
+                        <p>Where Ideas Meet Impact</p>
+                        <a href="workshop.html#flagship" class="arena-pillar-btn">ENTER ARENA ❯</a>
+                    </div>
+                </div>
+                <div class="arena-pillar" onclick="openArenaPillar(this)">
+                    <div class="arena-pillar-bg"><img src="assets/workshop/pp1.jpg" alt="VoltIQ 2026"></div>
+                    <span class="arena-pillar-vtitle">PAPER PRESENTATION</span>
+                    <div class="arena-pillar-content">
+                        <h3>VoltIQ 2026</h3>
+                        <p>Charge Ahead: Innovations in EV and Smart Technology</p>
+                        <a href="workshop.html#paperpresentation" class="arena-pillar-btn">ENTER ARENA ❯</a>
+                    </div>
+                </div>
+                <div class="arena-pillar" onclick="openArenaPillar(this)">
+                    <div class="arena-pillar-bg"><img src="assets/workshop/bot_blitz.jpeg" alt="BOT BLITZ"></div>
+                    <span class="arena-pillar-vtitle">BOT EVENTS</span>
+                    <div class="arena-pillar-content">
+                        <h3>BOT BLITZ</h3>
+                        <p>One Bot. Two Challenges. One Champion</p>
+                        <a href="workshop.html#workshop" class="arena-pillar-btn">ENTER ARENA ❯</a>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="content-section cinematic-bg" id="faq">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="section-title">FREQUENTLY ASKED QUESTIONS</h2>
+            </div>
+            <div class="glass-panel" data-aos="fade-up">
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question"><span>Do I need prior technical knowledge for events and
+                            workshops?</span><span>+</span></div>
+                    <div class="faq-answer">Not at all. Bring your enthusiasm and drive — all foundational skills and
+                        guidance will be provided!</div>
+                </div>
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question"><span>Can we form inter-college teams?</span><span>+</span></div>
+                    <div class="faq-answer">Yes, absolutely! Teams can consist of members across different engineering
+                        colleges and departments.</div>
+                </div>
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question"><span>What are the general registration fees?</span><span>+</span>
+                    </div>
+                    <div class="faq-answer">General registration is ₹250 for PSG Tech students and ₹300 for external
+                        delegates.</div>
+                </div>
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question"><span>Do workshops require a separate registration
+                            pass?</span><span>+</span></div>
+                    <div class="faq-answer">Yes. Each workshop has dedicated enrollment, and you can register directly
+                        without general entry tickets.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contacts & Sponsors (Single Combined Section with img22.jpg) -->
+    <section class="content-section cinematic-bg" id="contact-section">
+        <div class="container">
+            <div class="section-header" id="contact" data-aos="fade-up">
+                <h2 class="section-title">CONTACTS</h2>
+            </div>
+            <div class="contact-grid" data-aos="fade-up">
+                <div class="contact-card">
+                    <h4>Abdul Faizudeen M - 23Z301</h4><a href="tel:7598676710">+91 75986 76710</a>
+                </div>
+                <div class="contact-card">
+                    <h4>Rathika R - 23D238</h4><a href="tel:8248934100">+91 82489 34100</a>
+                </div>
+                <div class="contact-card">
+                    <h4>Abinandhan B - 23E603</h4><a href="tel:9360584939">+91 93605 84939</a>
+                </div>
+                <div class="contact-card">
+                    <h4>Shakesh S - 23E639</h4><a href="tel:7845185634">+91 78451 85634</a>
+                </div>
+            </div>
+
+            <!-- Sponsors Section (Hidden for now) -->
+            <div class="home-sponsors-section" style="display: none;">
+                <div class="section-header" style="margin-top: 35px; margin-bottom: 20px;" data-aos="fade-up">
+                    <h2 class="section-title">SPONSORS</h2>
+                </div>
+                <div class="sponsors-flex" style="margin-top: 15px;" data-aos="fade-up">
+                    <img src="sponsors/1.jpeg" alt="Sponsor">
+                    <img src="sponsors/2.jpeg" alt="Sponsor">
+                    <img src="sponsors/3.jpeg" alt="Sponsor">
+                    <img src="sponsors/4.jpeg" alt="Sponsor">
+                    <img src="sponsors/6.jpeg" alt="Sponsor">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (Hulk) -->
+    <footer class="footer cinematic-bg">
+        <div class="footer-map">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7771.192506841461!2d77.00024787500976!3d11.024254389139978!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba8582f1435fa59%3A0x137d95bfd8909293!2sPSG%20College%20Of%20Technology!5e1!3m2!1sen!2sin!4v1751117995355!5m2!1sen!2sin"
+                allowfullscreen="" loading="lazy"></iframe>
+        </div>
+        <div class="footer-content">
+
+            <p style="color: #444; font-size: 0.9rem;">&copy; IEEE SC 12951 | PSG College of Technology. Earth's
+                Mightiest Tech Fest SRiSHTi 2K26.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 1200, once: true, offset: 50 });
+
+        function toggleFAQ(el) {
+            document.querySelectorAll('.faq-item').forEach(item => { if (item !== el) item.classList.remove('active'); });
+            el.classList.toggle('active');
+        }
+
+        /* Particles */
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height; let particles = [];
+        function initCanvas() {
+            width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; particles = [];
+            for (let i = 0; i < 150; i++) {
+                particles.push({ x: Math.random() * width, y: Math.random() * height, r: Math.random() * 2, dx: (Math.random() - 0.5) * 0.5, dy: (Math.random() - 0.5) * -1 - 0.5, c: Math.random() > 0.8 ? '#ff2b2b' : '#ffbe30', a: Math.random() });
+            }
+        }
+        function animateParticles() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => {
+                p.x += p.dx; p.y += p.dy;
+                if (p.y < 0) { p.y = height; p.x = Math.random() * width; }
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fillStyle = p.c; ctx.globalAlpha = p.a; ctx.fill();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        window.addEventListener('resize', initCanvas); initCanvas(); animateParticles();
+
+        /* Parallax */
+        const layers = document.querySelectorAll('.layer');
+        let targetX = 0, targetY = 0; let currentX = 0, currentY = 0;
+        window.addEventListener('mousemove', (e) => { targetX = (e.clientX - window.innerWidth / 2) * 0.05; targetY = (e.clientY - window.innerHeight / 2) * 0.05; });
+        function renderParallax() {
+            currentX += (targetX - currentX) * 0.1; currentY += (targetY - currentY) * 0.1;
+            layers.forEach(layer => {
+                const speed = layer.getAttribute('data-speed') || 0;
+                if (speed) { layer.style.transform = `translate3d(${currentX * parseFloat(speed)}px, ${currentY * parseFloat(speed)}px, 0) scale(1.1)`; }
+            });
+            requestAnimationFrame(renderParallax);
+        }
+        renderParallax();
+
+        /* HUD Countdown */
+        let lastSec = -1;
+        function updateHUD() {
+            const diff = new Date("August 11, 2026 15:35:00").getTime() - new Date().getTime();
+            if (diff <= 0) return;
+            const d = String(Math.floor(diff / (1000 * 60 * 60 * 24))).padStart(2, '0');
+            const h = String(Math.floor((diff / (1000 * 60 * 60)) % 24)).padStart(2, '0');
+            const m = String(Math.floor((diff / 1000 / 60) % 60)).padStart(2, '0');
+            const s = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
+            document.getElementById("t-days").textContent = d; document.getElementById("t-hours").textContent = h; document.getElementById("t-mins").textContent = m;
+            if (s !== lastSec) {
+                const sEl = document.getElementById("t-secs"); sEl.textContent = s;
+                sEl.classList.remove('tick-pulse'); void sEl.offsetWidth; sEl.classList.add('tick-pulse'); lastSec = s;
+            }
+        }
+        setInterval(updateHUD, 1000); updateHUD();
+
+        /* Typewriter */
+        /* const textTarget = "IEEE SC 12951 // EARTH'S MIGHTIEST TECH FEST"; const typeEl = document.getElementById('typewriter');
+         function runTypewriter() {
+             let i = 0; typeEl.innerHTML = "";
+             const interval = setInterval(() => {
+                 if (Math.random() > 0.8 && i < textTarget.length - 2) {
+                     const chars = "!@#$%^&*"; typeEl.innerHTML = textTarget.substring(0, i) + chars[Math.floor(Math.random() * chars.length)];
+                 } else { typeEl.innerHTML = textTarget.substring(0, i + 1); i++; }
+                 if (i >= textTarget.length) clearInterval(interval);
+             }, 50);
+         }*/
+
+        /* GSAP — No loader, reveal hero immediately on load */
+        window.addEventListener('load', () => {
+            const tl = gsap.timeline();
+            tl.to(".l7-emergency", { opacity: 1, duration: 1 })
+                .to(".l9-grid", { opacity: 0.4, duration: 1 }, "-=0.5")
+                .to("#particle-canvas", { opacity: 1, duration: 1 }, "-=0.5")
+                .to(".l6-beams", { opacity: 0.5, duration: 1 }, "-=1")
+                .to("#sweep", { x: "250vw", opacity: 1, duration: 1.5, ease: "power4.inOut" }, "-=0.5")
+
+                // Reveal Nav
+                .set("#navbar", { visibility: "visible" })
+                .to("#navbar", { opacity: 1, duration: 0.8 }, "-=1.0")
+
+                // Reveal Hero instantly
+                .set(".hero", { visibility: "visible" })
+                .to(".hero", { opacity: 1, duration: 0 });
+
+            setInterval(() => { gsap.fromTo("#sweep", { x: "-100vw", opacity: 0 }, { x: "250vw", opacity: 1, duration: 2, ease: "power2.inOut" }); }, 15000);
+        });
+    </script>
+
+    <!-- Mobile Navigation Overlay -->
+    <div class="ave-menu-overlay" id="aveMenu" aria-hidden="true">
+        <div class="ave-menu-card" role="dialog" aria-label="Navigation menu">
+            <button class="ave-menu-close" id="aveMenuClose" aria-label="Close menu">&times;</button>
+            <nav class="ave-menu-list">
+                <a href="register.html">
+                    <span class="icon">
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="7" r="4" />
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        </svg>
+                    </span>Register
+                </a>
+                <a href="home.html" class="active">
+                    <span class="icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                            <polyline points="9 22 9 12 15 12 15 22" />
+                        </svg>
+                    </span>Home
+                </a>
+                <a href="event.html">
+                    <span class="icon">
+                        <svg viewBox="0 0 24 24">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                            <line x1="16" y1="2" x2="16" y2="6" />
+                            <line x1="8" y1="2" x2="8" y2="6" />
+                            <line x1="3" y1="10" x2="21" y2="10" />
+                        </svg>
+                    </span>Events
+                </a>
+                <a href="workshop.html#workshop">
+                    <span class="icon">
+                        <svg viewBox="0 0 24 24">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                            <line x1="8" y1="21" x2="16" y2="21" />
+                            <line x1="12" y1="17" x2="12" y2="21" />
+                        </svg>
+                    </span>Workshop
+                </a>
+                <a href="workshop.html#paperpresentation">
+                    <span class="icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <line x1="16" y1="13" x2="8" y2="13" />
+                            <line x1="16" y1="17" x2="8" y2="17" />
+                            <polyline points="10 9 9 9 8 9" />
+                        </svg>
+                    </span>Paper Presentation
+                </a>
+                <a href="workshop.html#flagship">
+                    <span class="icon">
+                        <svg viewBox="0 0 24 24">
+                            <polyline points="13 17 18 12 13 7" />
+                            <polyline points="6 17 11 12 6 7" />
+                        </svg>
+                    </span>Flagship
+                </a>
+                <a href="#contact">
+                    <span class="icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                            <polyline points="22,6 12,13 2,6" />
+                        </svg>
+                    </span>Contact
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <script src="js/desktop-nav.js"></script>
+    <script src="js/avengers-interactions.js"></script>
+
+    <script>
+        /* ================================================================
+           WORKSHOP & ARENA: PILLARS ACCORDION TOGGLE
+        ================================================================ */
+        function openPillar(el) {
+            const wasActive = el.classList.contains('active');
+            document.querySelectorAll('.ws-pillar').forEach(p => p.classList.remove('active'));
+            if (!wasActive) {
+                el.classList.add('active');
+            }
+        }
+
+        function openArenaPillar(el) {
+            const wasActive = el.classList.contains('active');
+            document.querySelectorAll('#arenaPillars .arena-pillar').forEach(p => p.classList.remove('active'));
+            if (!wasActive) {
+                el.classList.add('active');
+            }
+        }
+
+        // Mission Timer logic — calculated immediately on load with no 1-second interval delay
+        document.addEventListener("DOMContentLoaded", function () {
+            const targetDate = new Date("October 10, 2026 09:00:00").getTime();
+
+            function updateTimer() {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+
+                if (distance < 0) {
+                    const statusBanner = document.getElementById('hud-status-banner');
+                    if (statusBanner) statusBanner.style.display = 'none';
+
+                    const hudWrapper = document.querySelector('.hud-wrapper');
+                    if (hudWrapper) {
+                        // Inject keyframe animation styles once
+                        if (!document.getElementById('event-started-styles')) {
+                            const styleEl = document.createElement('style');
+                            styleEl.id = 'event-started-styles';
+                            styleEl.textContent = `
+                                .event-date-line {
+                                    font-family: 'Orbitron', sans-serif;
+                                    font-size: 2.7rem;
+                                    font-weight: 700;
+                                    letter-spacing: 6px;
+                                    white-space: nowrap;
+                                    background: linear-gradient(90deg, #ffffff 0%, #cccccc 30%, #00f0ff 60%, #ffffff 100%);
+                                    background-size: 200% auto;
+                                    -webkit-background-clip: text;
+                                    -webkit-text-fill-color: transparent;
+                                    text-align: center;
+                                }
+                                .event-started-banner {
+                                    font-family: var(--font-title, 'Orbitron', sans-serif);
+                                    font-size: 2rem;
+                                    font-weight: 700;
+                                    letter-spacing: 6px;
+                                    white-space: nowrap;
+                                    text-transform: uppercase;
+                                    background: linear-gradient(to bottom, #ffffff 0%, #00f0ff 100%);
+                                    -webkit-background-clip: text;
+                                    -webkit-text-fill-color: transparent;
+                                    text-align: center;
+                                    margin-top: 18px;
+                                }
+                            `;
+                            document.head.appendChild(styleEl);
+                        }
+
+                        hudWrapper.innerHTML = `
+                            <div class="event-date-line">OCTOBER &nbsp; 11 &amp; 12</div>
+                        `;
+
+                        if (!document.getElementById('event-started-el')) {
+                            const banner = document.createElement('div');
+                            banner.id = 'event-started-el';
+                            banner.className = 'event-started-banner';
+                            banner.innerHTML = `<i class="confetti-icon">🎉</i> THE EVENT HAS STARTED! <i class="confetti-icon">🎉</i>`;
+                            hudWrapper.parentNode.insertBefore(banner, hudWrapper.nextSibling);
+                        }
+                    }
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                const dEl = document.getElementById("t-days");
+                const hEl = document.getElementById("t-hours");
+                const mEl = document.getElementById("t-mins");
+                const sEl = document.getElementById("t-secs");
+
+                if (dEl) dEl.innerText = days.toString().padStart(2, '0');
+                if (hEl) hEl.innerText = hours.toString().padStart(2, '0');
+                if (mEl) mEl.innerText = minutes.toString().padStart(2, '0');
+                if (sEl) sEl.innerText = seconds.toString().padStart(2, '0');
+            }
+
+            // Run immediately on load so timer box displays values instantly without delay
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        });
+    </script>
+</body>
+
+</html>

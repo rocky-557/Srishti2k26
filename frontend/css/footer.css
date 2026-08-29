@@ -1,0 +1,126 @@
+@import url("https://fonts.googleapis.com/css2?family=Arimo:wght@600&family=Comic+Neue&family=Imprima&family=Poppins&family=Roboto&family=Rubik:wght@300&family=Sora:wght@800&family=Yatra+One&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+
+@font-face {
+  font-family: Agency FB;
+  src: url("../assets/fonts/AgencyFB-Bold.ttf");
+}
+@font-face {
+  font-family: production;
+  src: url("../assets/fonts/production.ttf");
+}
+
+footer {
+  margin: 0;
+  padding: 0;
+  background-color: transparent !important;
+  backdrop-filter: blur(20px) !important;
+  /* background-image: url("../assets/images/blob-shape.svg");
+  background-repeat:no-repeat;  */
+}
+
+#ft-container {
+  margin: auto !important;
+  padding-top: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: center;
+  padding-bottom:25px !important;
+  gap: 1.5rem;
+}
+
+#ft-text {
+  padding-top: 1.5rem !important;
+}
+
+.ft-contact {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: center;
+}
+
+.ft-contact .ftcard {
+  border: none !important;
+  border-radius: 1rem;
+  background-color: transparent !important;
+  color: #6da5c0;
+  display: grid;
+  place-content: center;
+  text-align: center;
+}
+
+.phn {
+  font-size: 24px;
+  color: #9b96cf;
+}
+
+.wp {
+  font-size: 24px;
+  color: #caffbf;
+}
+
+.ftcard-title {
+  font-size: 1rem;
+  font-family: production;
+  text-align: center !important;
+  justify-content: center;
+  color:  #6da5c0;
+  font-weight: bold !important;
+}
+.contact-details {
+  list-style: none;
+}
+
+.contact-item {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-content: center;
+  align-items: center;
+  margin: 1rem 0;
+  gap: 1rem;
+}
+
+.contact-item img {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+.contact-link {
+  text-decoration: none;
+  font-size: 1rem;
+  color: #6da5c0;
+  font-weight: 500;
+  font-family: "Playfair Display", serif;
+}
+
+.f-logo {
+}
+
+.asso {
+}
+
+.ft-asso {
+  text-decoration: none;
+  font-family: "production";
+  font-size: 1rem;
+  color: #032c30;
+}
+
+.ft-asso span {
+  font-family: "Agency FB";
+}
+
+.ft-end {
+  color: #47408c;
+  font-size: 8px;
+  text-align: center;
+  opacity: 0.7;
+  background-color: #141227;
+}

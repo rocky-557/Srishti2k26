@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRiSHTi 2k26 | Live Statistics</title>
+    <meta name="description" content="SRiSHTi 2k26 — Live event registration statistics and breakdown">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/avengers-admin.css">
+</head>
+<body>
+
+    <!-- Cinematic Layers -->
+    <div class="cin-overlay"></div>
+    <div class="cin-glow-iron"></div>
+    <div class="cin-glow-thor"></div>
+    <div class="cin-glow-witch"></div>
+    <div class="cin-glow-card"></div>
+    <div class="cin-bloom-layer"></div>
+    <div class="cin-vignette"></div>
+    <div class="cin-rays-wrap">
+        <div class="cin-ray cin-ray-1"></div>
+        <div class="cin-ray cin-ray-2"></div>
+        <div class="cin-ray cin-ray-3"></div>
+    </div>
+    <canvas id="particleCanvas"></canvas>
+    <div class="avengers-grid-bg"></div>
+
+    <div class="container py-5" style="position:relative;z-index:10;">
+
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <div class="d-inline-flex align-items-center gap-2 mb-3 px-3 py-1 rounded-pill"
+                style="background:rgba(201,162,39,0.1);border:1px solid rgba(201,162,39,0.3);">
+                <i class="bi bi-broadcast" style="color:var(--gold)"></i>
+                <span class="small fw-semibold" style="color:var(--gold-light);letter-spacing:1.5px;font-family:var(--font-display);">REAL-TIME DATA FEED</span>
+            </div>
+            <h1 class="display-5 fw-bold section-title">SRiSHTi 2k26 Live Statistics</h1>
+            <div class="section-title-bar mx-auto mt-2 mb-3"></div>
+            <p style="color:var(--text-muted);">
+                Last updated: <span style="color:var(--gold-light);">03/08/2026 21:22:00</span>
+            </p>
+            <div class="d-flex justify-content-center gap-3 mt-3 flex-wrap">
+                <a href="dashboard.html" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-speedometer2 me-1"></i>Dashboard
+                </a>
+                <a href="event_stats1.html" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-terminal me-1"></i>Terminal View
+                </a>
+            </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="row g-4 mb-5">
+            <div class="col-lg-4 col-md-6">
+                <div class="stat-card">
+                    <div class="icon bg-gold-light"><i class="bi bi-people-fill"></i></div>
+                    <div>
+                        <div class="stat-title">Total Sign-ups</div>
+                        <div class="stat-value" id="stat-total-signups">--</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="stat-card">
+                    <div class="icon bg-green-light"><i class="bi bi-cash-stack"></i></div>
+                    <div>
+                        <div class="stat-title">General Fee Paid</div>
+                        <div class="stat-value" id="stat-total-paid">--</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="stat-card">
+                    <div class="icon bg-primary-light"><i class="bi bi-tools"></i></div>
+                    <div>
+                        <div class="stat-title">Workshop Registrations (Paid)</div>
+                        <div class="stat-value" id="stat-workshop-paid">--</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="text-center mb-4 section-title fs-2">
+            <i class="bi bi-grid-3x3-gap-fill me-2" style="color:var(--gold)"></i>Event Breakdown
+        </h2>
+        <div class="section-title-bar mx-auto mb-5"></div>
+
+        <!-- Event Cards Container -->
+        <div class="row g-4 mb-5" id="stats-cards-container">
+            <!-- Dynamically populated from /api/admin/stats -->
+        </div>
+
+    </div><!-- /container -->
+
+    <script>
+    async function loadLiveStats() {
+        try {
+            const res = await fetch('/api/admin/stats');
+            const data = await res.json();
+            
+            document.getElementById('stat-total-signups').textContent = data.totalSignups ?? 0;
+            document.getElementById('stat-total-paid').textContent = data.totalPaid ?? 0;
+            document.getElementById('stat-workshop-paid').textContent = data.totalWorkshopPaid ?? 0;
+
+            const container = document.getElementById('stats-cards-container');
+            container.innerHTML = '';
+
+            const sections = [
+                { title: 'Technical Events', icon: 'bi-cpu', color: 'primary', data: data.technical },
+                { title: 'Non-Technical Events', icon: 'bi-controller', color: 'secondary', data: data.nonTechnical },
+                { title: 'Paper Presentations', icon: 'bi-file-earmark-text', color: 'primary', data: data.papers },
+                { title: 'Flagship Events', icon: 'bi-trophy', color: 'secondary', data: data.flagship },
+                { title: 'Workshops (Paid)', icon: 'bi-tools', color: 'success', data: data.workshops }
+            ];
+
+            sections.forEach(sec => {
+                if (!sec.data || !sec.data.events) return;
+                let rowsHtml = '';
+                sec.data.events.forEach(evt => {
+                    const count = sec.data.counts[evt] ?? 0;
+                    rowsHtml += `
+                        <tr>
+                            <td>${evt}</td>
+                            <td class="text-end"><span class="badge text-bg-${sec.color}">${count}</span></td>
+                        </tr>
+                    `;
+                });
+
+                const cardHtml = `
+                    <div class="col-lg-6 col-md-12">
+                        <div class="card-custom h-100 p-4">
+                            <div class="section-title fs-5 mb-3 d-flex align-items-center">
+                                <i class="bi ${sec.icon} me-2" style="color:var(--gold)"></i>${sec.title}
+                            </div>
+                            <div class="section-title-bar mb-3"></div>
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <tbody>${rowsHtml}</tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += cardHtml;
+            });
+        } catch (err) {
+            console.error('Error loading live stats:', err);
+        }
+    }
+    document.addEventListener('DOMContentLoaded', loadLiveStats);
+    </script>
+
+    <!-- Particle Canvas -->
+    <script>
+    (function () {
+        const canvas = document.getElementById('particleCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const PALETTE = ['rgba(201,162,39,','rgba(240,192,64,','rgba(226,54,54,','rgba(192,200,216,','rgba(26,109,189,'];
+        const COUNT = 50;
+        let W, H, particles = [];
+        function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+        function spawnParticle(fb) {
+            const r = 0.8 + Math.random() * 1.6;
+            return { x: Math.random() * W, y: fb ? H + r : Math.random() * H, r,
+                alpha: 0.1 + Math.random() * 0.45, speed: 0.12 + Math.random() * 0.28,
+                drift: (Math.random() - 0.5) * 0.14,
+                color: PALETTE[Math.floor(Math.random() * PALETTE.length)],
+                pulse: Math.random() * Math.PI * 2 };
+        }
+        function init() { resize(); particles = Array.from({ length: COUNT }, () => spawnParticle(false)); }
+        let lt = 0;
+        function render(ts) {
+            const dt = Math.min(ts - lt, 50); lt = ts; ctx.clearRect(0, 0, W, H);
+            for (let i = 0; i < particles.length; i++) {
+                const p = particles[i];
+                p.y -= p.speed * (dt / 16.67); p.x += p.drift * (dt / 16.67); p.pulse += 0.025 * (dt / 16.67);
+                const a = Math.max(0, p.alpha * (0.8 + 0.2 * Math.sin(p.pulse)));
+                if (p.y < -p.r * 4 || p.x < -20 || p.x > W + 20) { particles[i] = spawnParticle(true); continue; }
+                const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 3);
+                g.addColorStop(0, p.color + a.toFixed(3) + ')');
+                g.addColorStop(0.4, p.color + (a * 0.5).toFixed(3) + ')');
+                g.addColorStop(1, p.color + '0)');
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 3, 0, Math.PI * 2); ctx.fillStyle = g; ctx.fill();
+            }
+            requestAnimationFrame(render);
+        }
+        window.addEventListener('resize', resize, { passive: true });
+        init(); requestAnimationFrame(render);
+    })();
+    </script>
+</body>
+</html>
