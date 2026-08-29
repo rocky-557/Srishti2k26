@@ -1,6 +1,6 @@
 services:
   mongodb:
-    image: mongo:5
+    image: mongo:4.4
     container_name: srishti_mongodb
     restart: unless-stopped
     ports:
@@ -21,9 +21,9 @@ services:
     container_name: srishti_app
     restart: unless-stopped
     ports:
-      - "4173:4173"
+      - "7102:7102"
     environment:
-      - PORT=4173
+      - PORT=7102
       - MONGODB_URI=mongodb://mongodb:27017/s25
       - SESSION_SECRET=srishti2k25_s3cr3t_k3y_ch4ng3_m3
     depends_on:

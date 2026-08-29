@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Set production environment defaults
 ENV NODE_ENV=production
-ENV PORT=4173
+ENV PORT=7102
 
 # Install dependencies first for optimal Docker layer caching
 COPY package*.json ./
@@ -22,8 +22,7 @@ RUN chown -R node:node /app
 USER node
 
 # Expose application port
-EXPOSE 4173
-
+EXPOSE 7102
 
 # Launch application server
 CMD ["node", "server.js"]
