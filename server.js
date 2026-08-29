@@ -86,13 +86,16 @@ app.use('/api/admin', adminRoutes);
 // Payment Gateway Callback
 app.get('/payconfirm', confirmPayment);
 
-// ============ STATIC FILES & FRONTEND ============
+// ============ PAGE ROUTE ALIASES ============
 
-app.use(express.static(STATIC_DIR));
+// Admin Panel Routes
+app.get(['/admin/login.html', '/admin/ad-login.html', '/admin/login', '/admin'], (req, res) => {
+  res.sendFile(path.join(STATIC_DIR, 'admin', 'ad-login.html'));
+});
 
-// Root route
-app.get('/', (req, res) => {
-  res.sendFile(path.join(STATIC_DIR, 'index.html'));
+app.get(['/admin/dashboard.html', '/admin/dashboard'], (req, res) => {
+  if (!req.session || !req.session.admin_user) return res.redirect('/admin/ad-login.html');
+  res.sendFile(path.join(STATIC_DIR, 'admin', 'dashboard.html'));
 });
 
 // Clean Page Aliases
@@ -104,15 +107,14 @@ app.get('/events.html', (req, res) => {
   res.sendFile(path.join(STATIC_DIR, 'event.html'));
 });
 
-// Admin Panel Routes
-app.get(['/admin/login.html', '/admin/login', '/admin'], (req, res) => {
-  res.sendFile(path.join(STATIC_DIR, 'admin', 'login.html'));
+// Root route
+app.get('/', (req, res) => {
+  res.sendFile(path.join(STATIC_DIR, 'index.html'));
 });
 
-app.get(['/admin/dashboard.html', '/admin/dashboard'], (req, res) => {
-  if (!req.session || !req.session.admin_user) return res.redirect('/admin/login.html');
-  res.sendFile(path.join(STATIC_DIR, 'admin', 'dashboard.html'));
-});
+// ============ STATIC FILES & FRONTEND ============
+
+app.use(express.static(STATIC_DIR));
 
 // ============ API STATUS CHECK ============
 app.get('/api/status', (req, res) => {
