@@ -4,6 +4,9 @@ FROM node:22-alpine
 # Set working directory
 WORKDIR /app
 
+# Install git for admin git-pull updates
+RUN apk add --no-cache git
+
 # Set production environment defaults
 ENV NODE_ENV=production
 ENV PORT=7102
