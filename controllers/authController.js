@@ -33,11 +33,11 @@ async function signup(req, res) {
 
     // Normalize field names
     name = name || ((firstName || '') + (lastName ? ' ' + lastName : '')).trim();
-    createpassword = createpassword || password;
-    confirmpassword = confirmpassword || confirmPassword || createpassword;
     phone = phone || mobile;
+    createpassword = createpassword || password || ('Srishti@' + (phone && phone.length >= 4 ? phone.slice(-4) : '2026') + '!');
+    confirmpassword = confirmpassword || confirmPassword || createpassword;
     depart = depart || department || 'General';
-    cgname = cgname || college;
+    cgname = (cgname === 'others' || college === 'others') ? (req.body.otherCollege || 'Other College') : (cgname || college);
     gcheck = gcheck || gender || '';
     accomodation = accomodation || accommodation || 'No';
 

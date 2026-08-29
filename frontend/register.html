@@ -232,6 +232,84 @@
 
   <script src="js/app.js"></script>
   <script src="cinematic.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const form = document.getElementById('signupForm');
+      const successModal = document.getElementById('successModal');
+      const closeModalBtn = document.getElementById('closeModalBtn');
+
+      if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', function () {
+          window.location.href = 'profile.html';
+        });
+      }
+
+      if (form) {
+        form.addEventListener('submit', async function (e) {
+          e.preventDefault();
+
+          const firstName = document.getElementById('firstName')?.value.trim() || '';
+          const lastName = document.getElementById('lastName')?.value.trim() || '';
+          const email = document.getElementById('email')?.value.trim() || '';
+          const phone = document.getElementById('phone')?.value.trim() || '';
+          let college = document.getElementById('college')?.value || '';
+          if (college === 'others') {
+            college = document.getElementById('otherCollege')?.value.trim() || 'Other College';
+          }
+          let department = document.getElementById('department')?.value || '';
+          if (department === 'others') {
+            department = document.getElementById('otherDepartment')?.value.trim() || 'General';
+          }
+          const accommodation = document.getElementById('accommodation')?.checked ? 'Yes' : 'No';
+
+          const registerBtn = document.getElementById('registerBtn');
+          const originalText = registerBtn ? registerBtn.innerHTML : 'Register Now';
+          if (registerBtn) {
+            registerBtn.disabled = true;
+            registerBtn.innerHTML = '<span>Processing...</span>';
+          }
+
+          try {
+            const res = await fetch('/api/auth/signup', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'same-origin',
+              body: JSON.stringify({
+                name: (firstName + ' ' + lastName).trim(),
+                email,
+                phone,
+                college,
+                department,
+                accommodation
+              })
+            });
+
+            const text = await res.text();
+
+            if (text === 'true' || text.includes('success')) {
+              if (successModal) {
+                successModal.style.display = 'flex';
+                setTimeout(() => {
+                  window.location.href = 'profile.html';
+                }, 1800);
+              } else {
+                window.location.href = 'profile.html';
+              }
+            } else {
+              alert(text || 'Registration failed. Please check your inputs.');
+            }
+          } catch (err) {
+            alert('Registration request failed. Please try again.');
+          } finally {
+            if (registerBtn) {
+              registerBtn.disabled = false;
+              registerBtn.innerHTML = originalText;
+            }
+          }
+        });
+      }
+    });
+  </script>
 </body>
 
 </html>
