@@ -4,7 +4,7 @@ services:
     container_name: srishti_mongodb
     restart: unless-stopped
     ports:
-      - "27526:27017"
+      - "27017:27017"
     environment:
       MONGO_INITDB_DATABASE: s25
     volumes:
@@ -21,18 +21,14 @@ services:
     container_name: srishti_app
     restart: unless-stopped
     ports:
-      - "8526:8526"
+      - "4173:4173"
     environment:
-      - PORT=8526
+      - PORT=4173
       - MONGODB_URI=mongodb://mongodb:27017/s25
       - SESSION_SECRET=srishti2k25_s3cr3t_k3y_ch4ng3_m3
-      - STATIC_DIR=/app/Srishti_2k26_repo
     depends_on:
       mongodb:
         condition: service_healthy
-    volumes:
-      - ./Srishti_2k26_repo:/app/Srishti_2k26_repo
-      - ./public:/app/public
 
 volumes:
   mongo_data:
