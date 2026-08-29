@@ -50,13 +50,19 @@ async function adminLogin(req, res) {
       return res.json(response);
     }
 
-    // Set admin session
+    // Set admin session & explicitly save before response
     req.session.admin_user = admin.user;
     req.session.admin_designation = admin.designation;
 
-    response.status = 'success';
-    response.message = 'Login successful! Redirecting...';
-    return res.json(response);
+    req.session.save((err) => {
+      if (err) {
+        console.error('Session save error:', err);
+        return res.json({ status: 'error', message: 'Session error.' });
+      }
+      response.status = 'success';
+      response.message = 'Login successful! Redirecting...';
+      return res.json(response);
+    });
   } catch (err) {
     console.error('Admin login error:', err);
     response.message = 'Server error.';

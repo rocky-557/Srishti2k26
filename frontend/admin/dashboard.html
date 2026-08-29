@@ -763,9 +763,18 @@
                 const res = await fetch('/api/admin/events/download', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'same-origin',
                     body: JSON.stringify({ event_type: eventType, event_name: eventName })
                 });
+                if (res.status === 401) {
+                    window.location.href = '/admin/login.html';
+                    return;
+                }
                 const html = await res.text();
+                if (html.includes('Unauthorized access')) {
+                    window.location.href = '/admin/login.html';
+                    return;
+                }
                 tableBody.html(html || '<tr><td colspan="8" class="text-center py-4 text-muted">No registrations found.</td></tr>');
             } catch (err) {
                 tableBody.html('<tr><td colspan="8" class="text-center py-4 text-danger">Failed to fetch report from server.</td></tr>');
@@ -783,9 +792,18 @@
                 const res = await fetch('/api/admin/events/download', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'same-origin',
                     body: JSON.stringify({ event_type: eventType, event_name: eventName })
                 });
+                if (res.status === 401) {
+                    window.location.href = '/admin/login.html';
+                    return;
+                }
                 const html = await res.text();
+                if (html.includes('Unauthorized access')) {
+                    window.location.href = '/admin/login.html';
+                    return;
+                }
                 const tableBody = (eventType === 'Paid') ? $('#payment-export-body') : $('#event-export-body');
                 tableBody.html(html);
                 const tableToExport = (eventType === 'Paid') ? $('#payment-export-table')[0] : $('#event-export-table')[0];
