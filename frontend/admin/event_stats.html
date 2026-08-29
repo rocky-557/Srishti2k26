@@ -97,9 +97,22 @@
     <script>
     async function loadLiveStats() {
         try {
-            const res = await fetch('/api/admin/stats');
+            const res = await fetch('/api/admin/stats', { credentials: 'same-origin' });
+            if (res.status === 401) {
+                window.location.href = '/admin/login.html';
+                return;
+            }
             const data = await res.json();
+            if (data.error) {
+                window.location.href = '/admin/login.html';
+                return;
+            }
             
+            if (data.date) {
+                const dateEl = document.querySelector('p[style*="var(--text-muted)"] span');
+                if (dateEl) dateEl.textContent = data.date;
+            }
+
             document.getElementById('stat-total-signups').textContent = data.totalSignups ?? 0;
             document.getElementById('stat-total-paid').textContent = data.totalPaid ?? 0;
             document.getElementById('stat-workshop-paid').textContent = data.totalWorkshopPaid ?? 0;
@@ -110,8 +123,10 @@
             const sections = [
                 { title: 'Technical Events', icon: 'bi-cpu', color: 'primary', data: data.technical },
                 { title: 'Non-Technical Events', icon: 'bi-controller', color: 'secondary', data: data.nonTechnical },
-                { title: 'Paper Presentations', icon: 'bi-file-earmark-text', color: 'primary', data: data.papers },
-                { title: 'Flagship Events', icon: 'bi-trophy', color: 'secondary', data: data.flagship },
+                { title: 'Bots Arena', icon: 'bi-robot', color: 'warning', data: data.bots },
+                { title: 'Gaming Esports', icon: 'bi-controller', color: 'danger', data: data.gaming },
+                { title: 'Paper Presentations', icon: 'bi-file-earmark-text', color: 'info', data: data.papers },
+                { title: 'Flagship Events', icon: 'bi-trophy', color: 'gold', data: data.flagship },
                 { title: 'Workshops (Paid)', icon: 'bi-tools', color: 'success', data: data.workshops }
             ];
 
@@ -122,8 +137,8 @@
                     const count = sec.data.counts[evt] ?? 0;
                     rowsHtml += `
                         <tr>
-                            <td>${evt}</td>
-                            <td class="text-end"><span class="badge text-bg-${sec.color}">${count}</span></td>
+                            <td class="fw-semibold">${evt}</td>
+                            <td class="text-end"><span class="badge text-bg-${sec.color === 'gold' ? 'warning' : sec.color}">${count}</span></td>
                         </tr>
                     `;
                 });
