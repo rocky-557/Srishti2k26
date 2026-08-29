@@ -103,7 +103,7 @@ app.get(['/admin/login.html', '/admin/ad-login.html', '/admin/login', '/admin'],
   res.sendFile(path.join(STATIC_DIR, 'admin', 'ad-login.html'));
 });
 
-app.get(['/admin/dashboard.html', '/admin/dashboard'], (req, res) => {
+app.get(['/admin/dashboard.html', '/admin/dashboard', '/dashboard.html', '/dashboard'], (req, res) => {
   if (!req.session || !req.session.admin_user) return res.redirect('/admin/ad-login.html');
   res.sendFile(path.join(STATIC_DIR, 'admin', 'dashboard.html'));
 });

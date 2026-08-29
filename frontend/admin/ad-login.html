@@ -475,7 +475,7 @@
         if (data.status === 'success') {
           errBox.innerHTML = '<div class="alert alert-success"><i class="bi bi-check-circle-fill me-2"></i>Access Granted! Redirecting to dashboard...</div>';
           setTimeout(function() {
-            window.location.href = 'dashboard.html';
+            window.location.href = '/admin/dashboard.html';
           }, 500);
         } else {
           errBox.innerHTML = `<div class="alert alert-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>${data.message || 'Authentication failed.'}</div>`;
