@@ -108,6 +108,10 @@ app.get(['/signup.html', '/signup'], (req, res) => {
   res.sendFile(path.join(STATIC_DIR, 'register.html'));
 });
 
+app.get(['/forgot-password.html', '/forgot-password'], (req, res) => {
+  res.redirect('/home.html#contact');
+});
+
 app.get('/events.html', (req, res) => {
   res.sendFile(path.join(STATIC_DIR, 'event.html'));
 });

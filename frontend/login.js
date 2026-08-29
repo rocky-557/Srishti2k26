@@ -74,22 +74,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* =============================================
-     FORGOT PASSWORD HANDLER
+     FORGOT PASSWORD HANDLER (Redirect to Contact Section)
   ============================================= */
   const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
   if (forgotPasswordBtn) {
-    forgotPasswordBtn.addEventListener('click', () => {
-      const email = emailInput ? emailInput.value.trim() : '';
-      if (email && validators.email(email)) {
-        clearError('email');
-        alert(`A password reset link has been sent to ${email}. Please check your inbox.`);
-      } else {
-        showError('email');
-        if (emailInput) {
-          emailInput.focus();
-        }
-        alert('Please enter a valid email address first to reset your password.');
-      }
+    forgotPasswordBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.location.href = 'home.html#contact';
     });
   }
 
