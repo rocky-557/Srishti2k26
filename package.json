@@ -28,6 +28,7 @@
     "mongoose": "^9.8.0",
     "morgan": "^1.11.0",
     "node-mailjet": "^6.0.11",
-    "nodemailer": "^9.0.3"
+    "nodemailer": "^9.0.3",
+    "pm2": "^7.0.4"
   }
 }

@@ -572,17 +572,26 @@ async function updateUI(req, res) {
 
 /**
  * POST /api/admin/git-pull
- * Pulls full repo code and reloads PM2 server process.
+ * Pulls full repo code and reloads PM2 server process gracefully.
  */
 async function gitPull(req, res) {
   const { exec } = require('child_process');
-  // Pull latest code and automatically reload PM2 if PM2 is running
-  exec('git pull origin main && (pm2 reload all || true)', { cwd: process.cwd() }, (error, stdout, stderr) => {
+  exec('git pull origin main', { cwd: process.cwd() }, (error, stdout, stderr) => {
     if (error) {
       console.error(`Git pull error: ${error.message}`);
       return res.status(500).json({ error: error.message, stderr });
     }
-    return res.json({ success: true, message: stdout || 'Full system updated and server reloaded successfully.' });
+
+    // Return success response to dashboard UI before reloading process
+    res.json({
+      success: true,
+      message: (stdout || 'Code updated successfully.') + ' System is reloading in background.'
+    });
+
+    // Asynchronously trigger PM2 reload 500ms later so HTTP socket completes cleanly
+    setTimeout(() => {
+      exec('npx pm2 reload srishti2k26 || pm2 reload all || true', { cwd: process.cwd() }, () => {});
+    }, 500);
   });
 }
 
