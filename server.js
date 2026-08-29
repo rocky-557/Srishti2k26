@@ -1,7 +1,7 @@
 /**
  * SRiSHTi 2k26 — Node.js / Express / MongoDB Backend Server
  * 
- * Serves the static frontend and provides REST API endpoints under /api/*.
+ * Serves the static HTML frontend and provides REST API endpoints under /api/*.
  */
 require('dotenv').config();
 
@@ -83,8 +83,8 @@ app.use('/api/user', userRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/admin', adminRoutes);
 
-// Payment Gateway Callbacks
-app.get(['/payconfirm.php', '/payconfirm'], confirmPayment);
+// Payment Gateway Callback
+app.get('/payconfirm', confirmPayment);
 
 // ============ STATIC FILES & FRONTEND ============
 
@@ -95,43 +95,21 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(STATIC_DIR, 'index.html'));
 });
 
-// Page URL Aliases
-app.get(['/signup.html', '/signup.php', '/signup'], (req, res) => {
+// Clean Page Aliases
+app.get(['/signup.html', '/signup'], (req, res) => {
   res.sendFile(path.join(STATIC_DIR, 'register.html'));
 });
 
-app.get('/login.php', (req, res) => {
-  if (req.session && req.session.email) {
-    return res.redirect('/profile.html');
-  }
-  res.sendFile(path.join(STATIC_DIR, 'login.html'));
-});
-
-app.get('/profile.php', (req, res) => {
-  if (!req.session || !req.session.email) {
-    return res.redirect('/login.html');
-  }
-  res.sendFile(path.join(STATIC_DIR, 'profile.html'));
-});
-
-app.get('/home.php', (req, res) => {
-  res.sendFile(path.join(STATIC_DIR, 'home.html'));
-});
-
-app.get(['/events.php', '/events.html'], (req, res) => {
+app.get('/events.html', (req, res) => {
   res.sendFile(path.join(STATIC_DIR, 'event.html'));
 });
 
-app.get('/workshop.php', (req, res) => {
-  res.sendFile(path.join(STATIC_DIR, 'workshop.html'));
-});
-
-// Admin Panel Aliases
-app.get(['/adminlogin/login.html', '/admin/login.html', '/admin/login', '/admin'], (req, res) => {
+// Admin Panel Routes
+app.get(['/admin/login.html', '/admin/login', '/admin'], (req, res) => {
   res.sendFile(path.join(STATIC_DIR, 'admin', 'login.html'));
 });
 
-app.get(['/adminlogin/dashboard.html', '/admin/dashboard.html', '/admin/dashboard'], (req, res) => {
+app.get(['/admin/dashboard.html', '/admin/dashboard'], (req, res) => {
   if (!req.session || !req.session.admin_user) return res.redirect('/admin/login.html');
   res.sendFile(path.join(STATIC_DIR, 'admin', 'dashboard.html'));
 });
