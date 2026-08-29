@@ -27,12 +27,20 @@ async function adminLogin(req, res) {
   try {
     const { username, password, designation } = req.body;
 
-    if (!username || !password) {
-      response.message = 'Please fill in all fields.';
-      return res.json(response);
+    // Auto-seed default admins if production Admin collection is empty
+    const adminCount = await Admin.countDocuments();
+    if (adminCount === 0) {
+      const defaultPasswordHash = await bcrypt.hash('Admin@123', 10);
+      await Admin.create([
+        { user: 'Sri Raghav', password: defaultPasswordHash, designation: 'admin' },
+        { user: 'Niranjan', password: defaultPasswordHash, designation: 'admin' },
+        { user: 'admin', password: defaultPasswordHash, designation: 'admin' }
+      ]);
+      console.log('✅ Auto-seeded master admins ("Sri Raghav", "Niranjan", "admin") into database.');
     }
 
-    const admin = await Admin.findOne({ user: username });
+    // Case-insensitive username match
+    const admin = await Admin.findOne({ user: { $regex: new RegExp(`^${username.trim()}$`, 'i') } });
 
     if (!admin) {
       response.message = 'Incorrect username or password.';
