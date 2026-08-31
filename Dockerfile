@@ -27,5 +27,5 @@ USER node
 # Expose application port
 EXPOSE 7102
 
-# Launch application server
-CMD ["node", "server.js"]
+# Launch application server with pm2-runtime for live git-pull reload
+CMD ["npx", "pm2-runtime", "server.js", "--name", "srishti2k26"]
