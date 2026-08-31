@@ -46,21 +46,6 @@ async function signup(req, res) {
       return res.send('Please fill all the mandatory fields.');
     }
 
-    // Google reCAPTCHA v2 verification
-    const recaptchaToken = req.body['g-recaptcha-response'] || req.body.recaptcha;
-    const recaptchaSecret = process.env.RECAPTCHA_SECRET_KEY || '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe';
-    if (recaptchaToken) {
-      try {
-        const verifyRes = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${recaptchaSecret}&response=${recaptchaToken}`, { method: 'POST' });
-        const verifyData = await verifyRes.json();
-        if (!verifyData.success) {
-          return res.send('CAPTCHA verification failed. Please check "I am not a robot".');
-        }
-      } catch (e) {
-        console.warn('reCAPTCHA verification error:', e);
-      }
-    }
-
     // Email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
