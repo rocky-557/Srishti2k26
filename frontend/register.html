@@ -158,6 +158,18 @@
             <span class="error-message">Please select your year of study</span>
           </div>
 
+          <div class="form-group" id="group-createpassword">
+            <label for="createpassword">Password <span>*</span></label>
+            <input type="password" id="createpassword" name="createpassword" placeholder="Min 8 chars, 1 upper, 1 lower, 1 number, 1 special" required>
+            <span class="error-message">Password must be 8+ chars with upper, lower, number & special</span>
+          </div>
+
+          <div class="form-group" id="group-confirmpassword">
+            <label for="confirmpassword">Confirm Password <span>*</span></label>
+            <input type="password" id="confirmpassword" name="confirmpassword" placeholder="Re-enter password" required>
+            <span class="error-message">Passwords do not match</span>
+          </div>
+
           <div class="form-group full-width" id="group-referenceId">
             <label for="referenceId">
               Reference ID
@@ -252,6 +264,8 @@
             department = document.getElementById('otherDepartment')?.value.trim() || 'General';
           }
           const accommodation = document.getElementById('accommodation')?.checked ? 'Yes' : 'No';
+          const createpassword = document.getElementById('createpassword')?.value || '';
+          const confirmpassword = document.getElementById('confirmpassword')?.value || '';
 
           const registerBtn = document.getElementById('registerBtn');
           const originalText = registerBtn ? registerBtn.innerHTML : 'Register Now';
@@ -271,7 +285,9 @@
                 phone,
                 college,
                 department,
-                accommodation
+                accommodation,
+                createpassword,
+                confirmpassword
               })
             });
 
