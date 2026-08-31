@@ -286,7 +286,7 @@
 
             const text = await res.text();
 
-            if (text === 'true' || text.includes('success')) {
+            if (text === 'true' || text.toLowerCase().includes('success')) {
               if (successModal) {
                 successModal.style.display = 'flex';
                 setTimeout(() => {
