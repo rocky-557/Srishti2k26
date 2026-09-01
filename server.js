@@ -35,7 +35,9 @@ const { confirmPayment } = require('./controllers/paymentController');
 
 const app = express();
 const PORT = process.env.PORT || 8526;
-const STATIC_DIR = process.env.STATIC_DIR || path.join(__dirname, 'frontend');
+const fs = require('fs');
+const defaultStatic = fs.existsSync(path.join(__dirname, 'frontend-2')) ? path.join(__dirname, 'frontend-2') : path.join(__dirname, 'frontend');
+const STATIC_DIR = process.env.STATIC_DIR || defaultStatic;
 
 // ============ MIDDLEWARE ============
 
