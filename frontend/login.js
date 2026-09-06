@@ -91,8 +91,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const emailInput = document.getElementById('email');
 
   const validators = {
-    email: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
-    password: v => v.trim().length > 0
+    email: v => v && v.trim().length >= 2,
+    password: v => v && v.trim().length > 0
   };
 
   function showError(id) {
@@ -144,6 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
       credentials: 'same-origin',
       body: JSON.stringify({
         email: emailInput.value.trim(),
+        username: emailInput.value.trim(),
         password: passwordInput.value
       })
     })
@@ -155,10 +156,10 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = redirect;
       } else if (text === 'pass' || text.includes('Invalid') || text.includes('Incorrect')) {
         showError('password');
-        alert('Invalid email or password. Please try again.');
-      } else if (text === 'email' || text.includes('not registered') || text.includes('User not found')) {
+        alert('Incorrect password. Please try again or reset your password.');
+      } else if (text === 'false' || text === 'email' || text.includes('not registered') || text.includes('User not found')) {
         showError('email');
-        alert('No account found with this email. Please register first.');
+        alert('No registered account found with this Email / SRiSHTi ID / Mobile. Please sign up or check your details.');
       } else {
         alert('Login failed: ' + text);
       }

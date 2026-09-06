@@ -138,18 +138,65 @@ async function signup(req, res) {
 }
 
 /**
+ * Helper to build flexible user query matching Email, Mobile, or SRiSHTi ID
+ */
+function buildUserLookupQuery(input) {
+  if (!input || typeof input !== 'string') return null;
+  const raw = input.trim();
+  if (!raw) return null;
+
+  const lower = raw.toLowerCase();
+  const conditions = [
+    { email: lower },
+    { mobile: raw }
+  ];
+
+  // Extract numeric ID from SRiSHTi ID (e.g. SRiSHTi251024, SRISHTI261024, SR1024, or raw digits)
+  const srishtiPrefixMatch = raw.match(/^(?:srishti|sri|s)?(?:2[456])?(\d+)$/i);
+  if (srishtiPrefixMatch && srishtiPrefixMatch[1]) {
+    const num = parseInt(srishtiPrefixMatch[1], 10);
+    if (!isNaN(num) && num > 0) {
+      conditions.push({ memberId: num });
+    }
+  }
+
+  const digitsOnly = raw.replace(/\D/g, '');
+  if (digitsOnly && digitsOnly.length >= 1 && digitsOnly.length <= 8) {
+    const num = parseInt(digitsOnly, 10);
+    if (!isNaN(num) && num > 0) {
+      conditions.push({ memberId: num });
+    }
+  }
+
+  return { $or: conditions };
+}
+
+/**
  * POST /api/auth/login
  * 
- * Mirrors pcheck.php exactly:
- * - bcrypt.compare for password verification
- * - Returns 'true', 'pass', or 'false' as plain text
+ * Supports login via:
+ * 1. Email Address (case-insensitive, trimmed)
+ * 2. SRiSHTi ID (e.g. SRiSHTi251024, SRISHTI1024, or 1024)
+ * 3. Mobile Number (10 digits)
+ * 
+ * Returns 'true', 'pass', or 'false' as plain text for frontend compatibility
  */
 async function login(req, res) {
   try {
-    const { email, password } = req.body;
+    const { email, username, loginId, identifier, password } = req.body;
+    const loginIdentifier = email || username || loginId || identifier;
 
-    // Find user by email
-    const user = await User.findOne({ email: email.toLowerCase() });
+    if (!loginIdentifier || !password) {
+      return res.send('false');
+    }
+
+    const query = buildUserLookupQuery(loginIdentifier);
+    if (!query) {
+      return res.send('false');
+    }
+
+    // Find user by Email / Mobile / SRiSHTi ID
+    const user = await User.findOne(query);
     if (!user) {
       return res.send('false');
     }
@@ -289,13 +336,15 @@ async function sendOtp(req, res) {
       return res.json({ status: 'error', message: 'Please enter your registered email or phone number.' });
     }
 
-    const val = emailOrPhone.trim().toLowerCase();
-    const user = await User.findOne({
-      $or: [{ email: val }, { mobile: val }]
-    });
+    const query = buildUserLookupQuery(emailOrPhone);
+    if (!query) {
+      return res.json({ status: 'error', message: 'Please enter your registered email, SRiSHTi ID, or phone number.' });
+    }
+
+    const user = await User.findOne(query);
 
     if (!user) {
-      return res.json({ status: 'error', message: 'No registered account found with this email/mobile.' });
+      return res.json({ status: 'error', message: 'No registered account found with this email, SRiSHTi ID, or mobile number.' });
     }
 
     // Generate 6-digit OTP
