@@ -379,6 +379,12 @@
           <button type="submit" id="submit-btn" class="btn-login">
             <i class="bi bi-terminal me-2"></i>Access Terminal
           </button>
+
+          <div class="text-center mt-3 pt-2" style="border-top: 1px solid rgba(255,255,255,0.08);">
+            <a href="/admin/ad-login.html?redirect=/admin/pw-reg.html" style="font-size: 0.84rem; color: var(--gold-light); text-decoration: none;">
+              <i class="bi bi-person-plus-fill me-1"></i> Support Desk? Direct Login to On-Spot &amp; Passwords &rarr;
+            </a>
+          </div>
         </form>
       </div>
     </div>
@@ -473,9 +479,11 @@
         const data = await res.json();
 
         if (data.status === 'success') {
-          errBox.innerHTML = '<div class="alert alert-success"><i class="bi bi-check-circle-fill me-2"></i>Access Granted! Redirecting to dashboard...</div>';
+          errBox.innerHTML = '<div class="alert alert-success"><i class="bi bi-check-circle-fill me-2"></i>Access Granted! Redirecting...</div>';
           setTimeout(function() {
-            window.location.href = '/admin/dashboard.html';
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirectUrl = urlParams.get('redirect') || '/admin/dashboard.html';
+            window.location.href = redirectUrl;
           }, 500);
         } else {
           errBox.innerHTML = `<div class="alert alert-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>${data.message || 'Authentication failed.'}</div>`;

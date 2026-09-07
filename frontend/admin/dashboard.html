@@ -45,7 +45,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="pw-reg.html">
+                    <a class="nav-link" href="/admin/pw-reg.html">
                         <i class="bi bi-person-plus-fill"></i>On-Spot &amp; Passwords
                     </a>
                 </li>
@@ -76,7 +76,7 @@
                 </li>
             </ul>
 
-            <a href="ad-login.html" class="logout-btn">
+            <a href="/admin/ad-login.html" class="logout-btn" id="adminLogoutBtn">
                 <i class="bi bi-box-arrow-right"></i> Logout
             </a>
         </aside>
@@ -95,6 +95,22 @@
                     <div class="tagline-badge">⚡ COMMAND CENTER</div>
                     <h1>Welcome back, <span class="text-gradient">Admin</span>!</h1>
                     <p>Live summary of SRiSHTi 2k26 event registrations and activity.</p>
+                </div>
+
+                <!-- Support Desk Quick Access Banner -->
+                <div class="card-custom mb-4" style="background: linear-gradient(135deg, rgba(201, 162, 39, 0.15), rgba(226, 54, 54, 0.10)); border: 1px solid rgba(201, 162, 39, 0.35);">
+                    <div class="card-body p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+                        <div>
+                            <span class="badge badge-paid px-3 py-1 mb-2"><i class="bi bi-lightning-charge-fill me-1"></i> SUPPORT DESK HUB</span>
+                            <h4 class="mb-1 text-white">On-Spot Registrations &amp; Attendee Password Resets</h4>
+                            <p class="mb-0 text-muted" style="font-size:0.9rem;">Register new attendees on-site or look up existing participants to instantly reset/view passwords.</p>
+                        </div>
+                        <div>
+                            <a href="/admin/pw-reg.html" class="btn btn-warning px-4 py-2 text-dark fw-bold">
+                                <i class="bi bi-person-plus-fill me-2"></i>Open Support Hub &rarr;
+                            </a>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="row g-4 mb-4">
@@ -625,13 +641,22 @@
 
         // Sidebar Navigation
         $('#sidebar .nav-link').on('click', function (e) {
+            const href = $(this).attr('href');
+            const targetId = $(this).data('target');
+            
             if ($(this).attr('target') === '_blank') return;
+            if (href && href !== '#' && !targetId) {
+                // Allow direct page navigation (e.g. pw-reg.html)
+                return;
+            }
+            
             e.preventDefault();
             $('#sidebar .nav-link').removeClass('active');
             $(this).addClass('active');
-            const targetId = $(this).data('target');
             $('.content-section').removeClass('active');
-            $('#' + targetId).addClass('active');
+            if (targetId) {
+                $('#' + targetId).addClass('active');
+            }
             if ($(window).width() < 992) $('#sidebar').removeClass('active');
         });
 
@@ -866,6 +891,16 @@
                 btn.html(originalHtml);
                 btn.removeClass('disabled');
             }
+        });
+
+        // Admin Logout
+        $('#adminLogoutBtn').on('click', function (e) {
+            e.preventDefault();
+            fetch('/api/admin/logout').then(() => {
+                window.location.href = '/admin/ad-login.html';
+            }).catch(() => {
+                window.location.href = '/admin/ad-login.html';
+            });
         });
     });
     </script>

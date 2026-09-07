@@ -102,16 +102,20 @@ app.get('/payconfirm', confirmPayment);
 
 // Admin Panel Routes
 app.get(['/admin/login.html', '/admin/ad-login.html', '/admin/login', '/admin'], (req, res) => {
+  if (req.session && req.session.admin_user) {
+    const redirectUrl = req.query.redirect || '/admin/dashboard.html';
+    return res.redirect(redirectUrl);
+  }
   res.sendFile(path.join(STATIC_DIR, 'admin', 'ad-login.html'));
 });
 
 app.get(['/admin/dashboard.html', '/admin/dashboard', '/dashboard.html', '/dashboard'], (req, res) => {
-  if (!req.session || !req.session.admin_user) return res.redirect('/admin/ad-login.html');
+  if (!req.session || !req.session.admin_user) return res.redirect('/admin/ad-login.html?redirect=/admin/dashboard.html');
   res.sendFile(path.join(STATIC_DIR, 'admin', 'dashboard.html'));
 });
 
 app.get(['/admin/pw-reg.html', '/admin/pw-reg', '/admin/pwreg', '/pw-reg'], (req, res) => {
-  if (!req.session || !req.session.admin_user) return res.redirect('/admin/ad-login.html');
+  if (!req.session || !req.session.admin_user) return res.redirect('/admin/ad-login.html?redirect=/admin/pw-reg.html');
   res.sendFile(path.join(STATIC_DIR, 'admin', 'pw-reg.html'));
 });
 
