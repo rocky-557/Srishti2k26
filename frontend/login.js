@@ -74,13 +74,81 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* =============================================
-     FORGOT PASSWORD HANDLER (Redirect to Contact Section)
+     QUICK PASSWORD RESET MODAL HANDLER
   ============================================= */
   const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
-  if (forgotPasswordBtn) {
+  const resetModal = document.getElementById('resetModal');
+  const closeResetModalBtn = document.getElementById('closeResetModalBtn');
+  const cancelResetBtn = document.getElementById('cancelResetBtn');
+  const quickResetForm = document.getElementById('quickResetForm');
+  const resetStatusAlert = document.getElementById('resetStatusAlert');
+
+  if (forgotPasswordBtn && resetModal) {
     forgotPasswordBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      window.location.href = 'home.html#contact';
+      resetModal.style.display = 'flex';
+      resetStatusAlert.style.display = 'none';
+      quickResetForm.reset();
+    });
+
+    [closeResetModalBtn, cancelResetBtn].forEach(btn => {
+      if (!btn) return;
+      btn.addEventListener('click', () => {
+        resetModal.style.display = 'none';
+      });
+    });
+
+    quickResetForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const submitBtn = document.getElementById('submitQuickResetBtn');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span>Verifying &amp; Resetting...</span>';
+
+      const payload = {
+        identifier: document.getElementById('resetIdentifier').value.trim(),
+        mobile: document.getElementById('resetMobile').value.trim(),
+        newPassword: document.getElementById('resetNewPassword').value.trim()
+      };
+
+      try {
+        const res = await fetch('/api/auth/quick-reset-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        if (data.status === 'success') {
+          resetStatusAlert.style.background = 'rgba(94, 255, 122, 0.15)';
+          resetStatusAlert.style.border = '1px solid #5eff7a';
+          resetStatusAlert.style.color = '#5eff7a';
+          resetStatusAlert.innerHTML = `<strong>${data.message}</strong>`;
+          resetStatusAlert.style.display = 'block';
+
+          setTimeout(() => {
+            resetModal.style.display = 'none';
+            document.getElementById('email').value = payload.identifier;
+            if (data.password) {
+              document.getElementById('password').value = data.password;
+            }
+          }, 2000);
+        } else {
+          resetStatusAlert.style.background = 'rgba(226, 54, 54, 0.15)';
+          resetStatusAlert.style.border = '1px solid #ff6b6b';
+          resetStatusAlert.style.color = '#ff6b6b';
+          resetStatusAlert.textContent = data.message || 'Verification failed.';
+          resetStatusAlert.style.display = 'block';
+        }
+      } catch (err) {
+        resetStatusAlert.style.background = 'rgba(226, 54, 54, 0.15)';
+        resetStatusAlert.style.border = '1px solid #ff6b6b';
+        resetStatusAlert.style.color = '#ff6b6b';
+        resetStatusAlert.textContent = 'Connection error: ' + err.message;
+        resetStatusAlert.style.display = 'block';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span>Reset Password</span>';
+      }
     });
   }
 

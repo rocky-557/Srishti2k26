@@ -483,4 +483,84 @@ async function resetPassword(req, res) {
   }
 }
 
-module.exports = { signup, login, logout, sendWelcomeEmail, sendOtp, verifyOtp, resetPassword };
+/**
+ * POST /api/auth/quick-reset-password
+ * Automated OTP-less 2-Field Identity Verification (Email/SRiSHTi ID + Registered Phone)
+ */
+async function quickResetPassword(req, res) {
+  try {
+    const { identifier, email, srishtiId, mobile, phone, newPassword, confirmPassword } = req.body;
+    const userIdentifier = (identifier || email || srishtiId || '').trim();
+    const userPhone = (mobile || phone || '').trim();
+
+    if (!userIdentifier || !userPhone) {
+      return res.json({ 
+        status: 'error', 
+        message: 'Please provide both your Email / SRiSHTi ID and your registered 10-digit mobile number.' 
+      });
+    }
+
+    const query = buildUserLookupQuery(userIdentifier);
+    if (!query) {
+      return res.json({ status: 'error', message: 'Invalid identifier provided.' });
+    }
+
+    // Must match the identifier AND the registered mobile number
+    const user = await User.findOne({
+      $and: [
+        query,
+        { mobile: userPhone }
+      ]
+    });
+
+    if (!user) {
+      return res.json({ 
+        status: 'error', 
+        message: 'Verification failed. The Email/SRiSHTi ID and Phone Number do not match any registered account.' 
+      });
+    }
+
+    // Determine password to set
+    let passwordToSet = (newPassword || '').trim();
+    let isDefault = false;
+
+    if (!passwordToSet) {
+      const last4 = user.mobile && user.mobile.length >= 4 ? user.mobile.slice(-4) : '2026';
+      passwordToSet = `Srishti@${last4}!`;
+      isDefault = true;
+    } else {
+      if (passwordToSet.length < 8) {
+        return res.json({ status: 'error', message: 'Password must be at least 8 characters long.' });
+      }
+      if (confirmPassword && passwordToSet !== confirmPassword.trim()) {
+        return res.json({ status: 'error', message: 'Passwords do not match.' });
+      }
+    }
+
+    const hashedPassword = await bcrypt.hash(passwordToSet, 12);
+    await User.updateOne({ _id: user._id }, { password: hashedPassword });
+
+    return res.json({ 
+      status: 'success', 
+      message: isDefault 
+        ? `Password reset to default: ${passwordToSet}` 
+        : 'Password updated successfully! You can now log in.',
+      password: isDefault ? passwordToSet : undefined
+    });
+  } catch (err) {
+    console.error('Quick reset password error:', err);
+    return res.json({ status: 'error', message: 'Failed to reset password. Please try again.' });
+  }
+}
+
+module.exports = { 
+  signup, 
+  login, 
+  logout, 
+  sendWelcomeEmail, 
+  sendOtp, 
+  verifyOtp, 
+  resetPassword, 
+  quickResetPassword,
+  buildUserLookupQuery 
+};

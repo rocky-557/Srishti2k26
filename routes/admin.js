@@ -13,7 +13,10 @@ const {
   getStats,
   listAdmins,
   gitPull,
-  updateUI
+  updateUI,
+  onSpotRegister,
+  adminLookupUser,
+  adminResetPassword
 } = require('../controllers/adminController');
 
 // POST /api/admin/login — admin login (no auth required)
@@ -21,6 +24,15 @@ router.post('/login', adminLogin);
 
 // GET /api/admin/logout — admin logout
 router.get('/logout', adminLogout);
+
+// POST /api/admin/onspot-register — on-spot registration (requires admin)
+router.post('/onspot-register', requireAdmin, onSpotRegister);
+
+// POST /api/admin/user/lookup — lookup user by ID/Email/Mobile (requires admin)
+router.post('/user/lookup', requireAdmin, adminLookupUser);
+
+// POST /api/admin/user/reset-password-direct — reset user password by ID (requires admin)
+router.post('/user/reset-password-direct', requireAdmin, adminResetPassword);
 
 // POST /api/admin/add — add new admin (requires admin designation)
 router.post('/add', requireAdmin, addAdmin);

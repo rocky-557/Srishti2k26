@@ -110,13 +110,18 @@ app.get(['/admin/dashboard.html', '/admin/dashboard', '/dashboard.html', '/dashb
   res.sendFile(path.join(STATIC_DIR, 'admin', 'dashboard.html'));
 });
 
+app.get(['/admin/pw-reg.html', '/admin/pw-reg', '/admin/pwreg', '/pw-reg'], (req, res) => {
+  if (!req.session || !req.session.admin_user) return res.redirect('/admin/ad-login.html');
+  res.sendFile(path.join(STATIC_DIR, 'admin', 'pw-reg.html'));
+});
+
 // Clean Page Aliases
 app.get(['/signup.html', '/signup'], (req, res) => {
   res.sendFile(path.join(STATIC_DIR, 'register.html'));
 });
 
 app.get(['/forgot-password.html', '/forgot-password'], (req, res) => {
-  res.redirect('/home.html#contact');
+  res.redirect('/login.html?action=reset');
 });
 
 app.get('/events.html', (req, res) => {

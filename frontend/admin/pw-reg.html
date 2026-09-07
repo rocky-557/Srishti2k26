@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRiSHTi 2k26 | On-Spot Registration & Password Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="./css/avengers-admin.css">
+    <style>
+        .nav-tabs-custom {
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 25px;
+            gap: 12px;
+        }
+        .nav-tabs-custom .nav-link {
+            color: #8899a6;
+            background: rgba(14, 20, 32, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px 8px 0 0;
+            padding: 12px 24px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            transition: all 0.25s ease;
+        }
+        .nav-tabs-custom .nav-link.active {
+            color: #00f2fe;
+            background: rgba(14, 20, 32, 0.95);
+            border-color: rgba(0, 242, 254, 0.4);
+            border-bottom-color: transparent;
+            box-shadow: 0 -4px 15px rgba(0, 242, 254, 0.15);
+        }
+        .nav-tabs-custom .nav-link:hover:not(.active) {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .admin-box {
+            background: rgba(13, 19, 31, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 28px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+        }
+        .user-result-card {
+            background: rgba(18, 26, 42, 0.95);
+            border: 1.5px solid rgba(0, 242, 254, 0.3);
+            border-radius: 10px;
+            padding: 22px;
+            margin-top: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+        }
+        .srishti-badge {
+            font-family: monospace;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #5eff7a;
+            background: rgba(94, 255, 122, 0.1);
+            padding: 6px 14px;
+            border-radius: 6px;
+            border: 1px dashed rgba(94, 255, 122, 0.4);
+            display: inline-block;
+        }
+        .badge-paid {
+            background: rgba(94, 255, 122, 0.15);
+            color: #5eff7a;
+            border: 1px solid #5eff7a;
+        }
+        .badge-unpaid {
+            background: rgba(226, 54, 54, 0.15);
+            color: #ff6b6b;
+            border: 1px solid #ff6b6b;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Cinematic Lighting Layers -->
+    <div class="cin-overlay"></div>
+    <div class="cin-glow-iron"></div>
+    <div class="cin-glow-thor"></div>
+    <div class="cin-vignette"></div>
+    <div class="avengers-grid-bg"></div>
+
+    <div class="app-container">
+
+        <!-- Sidebar -->
+        <aside id="sidebar">
+            <div class="logo-container">
+                <img src="./srishti_logo.png" alt="SRiSHTi Logo" class="logo-img">
+                <span class="logo-text">SRiSHTi 2k26</span>
+            </div>
+
+            <div class="nav-section-label">Navigation</div>
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="dashboard.html">
+                        <i class="bi bi-grid-fill"></i>Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="pw-reg.html">
+                        <i class="bi bi-person-plus-fill"></i>On-Spot &amp; Passwords
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="dashboard.html#registrations">
+                        <i class="bi bi-people-fill"></i>All Members
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="event_stats.html" target="_blank">
+                        <i class="bi bi-bar-chart-line-fill"></i>Event Stats
+                    </a>
+                </li>
+            </ul>
+
+            <a href="ad-login.html" class="logout-btn" id="logoutBtn">
+                <i class="bi bi-box-arrow-right"></i> Logout
+            </a>
+        </aside>
+
+        <!-- Main Content -->
+        <main id="main-content">
+            <div class="header-welcome mb-4">
+                <div class="tagline-badge">⚡ SUPPORT DESK COMMAND</div>
+                <h1>On-Spot Registration &amp; <span class="text-gradient">Password Hub</span></h1>
+                <p>Register attendees on-spot, look up attendee profiles, and reset passwords with zero delays.</p>
+            </div>
+
+            <!-- Tab Headers -->
+            <ul class="nav nav-tabs nav-tabs-custom" id="actionTabs" role="tablist">
+                <li class="nav-item">
+                    <button class="nav-link active" id="tab-onspot-btn" data-bs-toggle="tab" data-bs-target="#tab-onspot" type="button" role="tab">
+                        <i class="bi bi-person-plus-fill me-2"></i>⚡ On-Spot Registration
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="tab-pwreset-btn" data-bs-toggle="tab" data-bs-target="#tab-pwreset" type="button" role="tab">
+                        <i class="bi bi-key-fill me-2"></i>🔑 Password Reset &amp; Member Lookup
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="actionTabsContent">
+
+                <!-- ================= TAB 1: ON-SPOT REGISTRATION ================= -->
+                <div class="tab-pane fade show active" id="tab-onspot" role="tabpanel">
+                    <div class="admin-box">
+                        <h4 class="mb-3 text-white"><i class="bi bi-person-badge-fill me-2 text-warning"></i>New Attendee Registration</h4>
+                        <form id="onspotForm" autocomplete="off">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label text-light">Full Name *</label>
+                                    <input type="text" class="form-control bg-dark text-white border-secondary" id="regName" placeholder="e.g. John Doe" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-light">Email Address *</label>
+                                    <input type="email" class="form-control bg-dark text-white border-secondary" id="regEmail" placeholder="john@example.com" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-light">Mobile Number (10 Digits) *</label>
+                                    <input type="tel" class="form-control bg-dark text-white border-secondary" id="regMobile" maxlength="10" placeholder="9876543210" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-light">Department *</label>
+                                    <input type="text" class="form-control bg-dark text-white border-secondary" id="regDept" placeholder="e.g. CSE / ECE / Mechanical" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-light">College Name *</label>
+                                    <input type="text" class="form-control bg-dark text-white border-secondary" id="regCollege" value="PSG College of Technology" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label text-light">Gender</label>
+                                    <select class="form-select bg-dark text-white border-secondary" id="regGender">
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label text-light">Accommodation</label>
+                                    <select class="form-select bg-dark text-white border-secondary" id="regAccom">
+                                        <option value="No">No</option>
+                                        <option value="Yes">Yes</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-light">Custom Password (Leave blank for default: <code>Srishti@&lt;phone_last4&gt;!</code>)</label>
+                                    <input type="text" class="form-control bg-dark text-white border-secondary" id="regPassword" placeholder="Default: Srishti@<phone_last4>!">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-light">General Registration Fee Status</label>
+                                    <div class="d-flex gap-3 align-items-center mt-2">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="regFeeStatus" id="feePaid" value="paid" checked>
+                                            <label class="form-check-label text-success fw-bold" for="feePaid">Paid (Cash / Spot Paid)</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="regFeeStatus" id="feeUnpaid" value="unpaid">
+                                            <label class="form-check-label text-danger fw-bold" for="feeUnpaid">Unpaid</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4 d-flex justify-content-end gap-3">
+                                <button type="reset" class="btn btn-outline-secondary px-4">Clear</button>
+                                <button type="submit" class="btn btn-primary px-5 fw-bold" id="btnSubmitOnspot">
+                                    <i class="bi bi-check-circle-fill me-2"></i>Complete On-Spot Registration
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- On-Spot Success Card Modal/Alert -->
+                        <div id="onspotSuccessArea" style="display:none;" class="user-result-card mt-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="text-success m-0"><i class="bi bi-check-circle-fill me-2"></i>Attendee Registered Successfully!</h5>
+                                <button class="btn btn-sm btn-outline-info" onclick="copyRegisteredDetails()">
+                                    <i class="bi bi-clipboard me-1"></i>Copy Details
+                                </button>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <div class="text-muted small">SRiSHTi ID:</div>
+                                    <div class="srishti-badge mt-1" id="resSrishtiId">SRiSHTi251000</div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="text-muted small">Name &amp; Phone:</div>
+                                    <div class="text-white fw-bold mt-1" id="resNamePhone">John Doe (9876543210)</div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="text-muted small">Generated Password:</div>
+                                    <div class="text-warning fw-bold mt-1 font-monospace" id="resPassword">Srishti@3210!</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= TAB 2: PASSWORD RESET & USER LOOKUP ================= -->
+                <div class="tab-pane fade" id="tab-pwreset" role="tabpanel">
+                    <div class="admin-box">
+                        <h4 class="mb-3 text-white"><i class="bi bi-search me-2 text-info"></i>Lookup Attendee &amp; Reset Password</h4>
+                        <div class="input-group mb-4">
+                            <input type="text" class="form-control form-control-lg bg-dark text-white border-secondary" id="lookupInput" placeholder="Enter SRiSHTi ID (e.g. 1024 or SRiSHTi251024), Email, or 10-Digit Mobile...">
+                            <button class="btn btn-info px-4 fw-bold" id="btnLookup" type="button">
+                                <i class="bi bi-search me-1"></i> Search Attendee
+                            </button>
+                        </div>
+
+                        <!-- User Info Display Container -->
+                        <div id="lookupResultContainer" style="display:none;">
+                            <div class="user-result-card">
+                                <div class="d-flex justify-content-between align-items-start border-bottom border-secondary pb-3 mb-3">
+                                    <div>
+                                        <h3 class="text-white m-0" id="lookupName">Attendee Name</h3>
+                                        <div class="text-muted mt-1" id="lookupSub">email@domain.com • +91 9876543210</div>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="srishti-badge" id="lookupSrishtiId">SRiSHTi25XXXX</div>
+                                        <div class="mt-2">
+                                            <span class="badge badge-paid px-3 py-1" id="lookupFeeBadge">General Fee Paid</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row g-3 mb-4">
+                                    <div class="col-md-4">
+                                        <div class="text-muted small">College:</div>
+                                        <div class="text-light fw-bold" id="lookupCollege">PSG College of Technology</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="text-muted small">Department:</div>
+                                        <div class="text-light fw-bold" id="lookupDept">CSE</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="text-muted small">Registered Events / Workshops:</div>
+                                        <div class="text-info fw-bold" id="lookupRegCount">0 Registrations</div>
+                                    </div>
+                                </div>
+
+                                <hr class="border-secondary">
+
+                                <!-- Password Reset Section -->
+                                <h5 class="text-warning mb-3"><i class="bi bi-shield-lock-fill me-2"></i>Reset Password for this Attendee</h5>
+                                <div class="row g-3 align-items-end">
+                                    <div class="col-md-6">
+                                        <label class="form-label text-light">New Custom Password (or leave blank to use default)</label>
+                                        <input type="text" class="form-control bg-dark text-white border-secondary" id="directNewPassword" placeholder="Default: Srishti@<phone_last4>!">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button class="btn btn-outline-warning w-100 fw-bold" id="btnResetDefault" type="button">
+                                            <i class="bi bi-arrow-counterclockwise me-1"></i>Set Default Password
+                                        </button>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button class="btn btn-danger w-100 fw-bold" id="btnResetCustom" type="button">
+                                            <i class="bi bi-check-lg me-1"></i>Update Password
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div id="pwResetStatusAlert" class="alert alert-success mt-3" style="display:none;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentLookedUpUser = null;
+
+        // Logout
+        document.getElementById('logoutBtn')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            fetch('/api/admin/logout').then(() => window.location.href = 'ad-login.html');
+        });
+
+        // ----------------- TAB 1: ON-SPOT REGISTRATION -----------------
+        document.getElementById('onspotForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnSubmitOnspot');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Registering...';
+
+            const payload = {
+                name: document.getElementById('regName').value.trim(),
+                email: document.getElementById('regEmail').value.trim(),
+                mobile: document.getElementById('regMobile').value.trim(),
+                department: document.getElementById('regDept').value.trim(),
+                collegeName: document.getElementById('regCollege').value.trim(),
+                gender: document.getElementById('regGender').value,
+                accommodation: document.getElementById('regAccom').value,
+                password: document.getElementById('regPassword').value.trim(),
+                genfee: document.querySelector('input[name="regFeeStatus"]:checked').value
+            };
+
+            try {
+                const res = await fetch('/api/admin/onspot-register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+
+                if (data.status === 'success') {
+                    document.getElementById('resSrishtiId').textContent = data.user.srishtiId;
+                    document.getElementById('resNamePhone').textContent = `${data.user.name} (${data.user.mobile})`;
+                    document.getElementById('resPassword').textContent = data.user.password;
+                    document.getElementById('onspotSuccessArea').style.display = 'block';
+                    document.getElementById('onspotForm').reset();
+                    document.getElementById('regCollege').value = 'PSG College of Technology';
+                    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                } else {
+                    alert('Error: ' + (data.message || 'Failed to register attendee.'));
+                }
+            } catch (err) {
+                alert('Connection error: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i>Complete On-Spot Registration';
+            }
+        });
+
+        function copyRegisteredDetails() {
+            const id = document.getElementById('resSrishtiId').textContent;
+            const namePhone = document.getElementById('resNamePhone').textContent;
+            const pw = document.getElementById('resPassword').textContent;
+            const text = `SRiSHTi 2k26 Registration Confirmed!\nID: ${id}\nName: ${namePhone}\nPassword: ${pw}\nPortal: http://localhost:8526/login.html`;
+            navigator.clipboard.writeText(text).then(() => alert('Registration details copied to clipboard!'));
+        }
+
+        // ----------------- TAB 2: LOOKUP & RESET PASSWORD -----------------
+        document.getElementById('btnLookup').addEventListener('click', performLookup);
+        document.getElementById('lookupInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') performLookup();
+        });
+
+        async function performLookup() {
+            const val = document.getElementById('lookupInput').value.trim();
+            if (!val) {
+                alert('Please enter an Email, SRiSHTi ID, or Mobile number.');
+                return;
+            }
+
+            const btn = document.getElementById('btnLookup');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Searching...';
+
+            try {
+                const res = await fetch('/api/admin/user/lookup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ identifier: val })
+                });
+                const data = await res.json();
+
+                if (data.status === 'success' && data.user) {
+                    currentLookedUpUser = data.user;
+                    document.getElementById('lookupName').textContent = data.user.name;
+                    document.getElementById('lookupSub').textContent = `${data.user.email} • +91 ${data.user.mobile}`;
+                    document.getElementById('lookupSrishtiId').textContent = data.user.srishtiId;
+                    document.getElementById('lookupCollege').textContent = data.user.collegeName || 'N/A';
+                    document.getElementById('lookupDept').textContent = data.user.department || 'N/A';
+                    document.getElementById('lookupRegCount').textContent = `${data.registrations ? data.registrations.length : 0} Event/Workshop(s)`;
+
+                    const feeBadge = document.getElementById('lookupFeeBadge');
+                    if (data.user.genfee === 'paid') {
+                        feeBadge.className = 'badge badge-paid px-3 py-1';
+                        feeBadge.textContent = 'General Fee Paid';
+                    } else {
+                        feeBadge.className = 'badge badge-unpaid px-3 py-1';
+                        feeBadge.textContent = 'General Fee Unpaid';
+                    }
+
+                    document.getElementById('lookupResultContainer').style.display = 'block';
+                    document.getElementById('pwResetStatusAlert').style.display = 'none';
+                    document.getElementById('directNewPassword').value = '';
+                } else {
+                    document.getElementById('lookupResultContainer').style.display = 'none';
+                    alert(data.message || 'No attendee found.');
+                }
+            } catch (err) {
+                alert('Server error: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-search me-1"></i> Search Attendee';
+            }
+        }
+
+        // Reset password triggers
+        document.getElementById('btnResetDefault').addEventListener('click', () => {
+            if (!currentLookedUpUser) return;
+            triggerPasswordReset(true);
+        });
+
+        document.getElementById('btnResetCustom').addEventListener('click', () => {
+            if (!currentLookedUpUser) return;
+            const customPw = document.getElementById('directNewPassword').value.trim();
+            if (!customPw) {
+                if (confirm('No custom password typed. Reset to default (Srishti@<phone_last4>!)?')) {
+                    triggerPasswordReset(true);
+                }
+                return;
+            }
+            triggerPasswordReset(false, customPw);
+        });
+
+        async function triggerPasswordReset(useDefault, customPassword) {
+            if (!currentLookedUpUser) return;
+
+            try {
+                const res = await fetch('/api/admin/user/reset-password-direct', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        identifier: String(currentLookedUpUser.memberId),
+                        newPassword: customPassword,
+                        useDefault
+                    })
+                });
+                const data = await res.json();
+
+                const alertBox = document.getElementById('pwResetStatusAlert');
+                if (data.status === 'success') {
+                    alertBox.className = 'alert alert-success mt-3';
+                    alertBox.innerHTML = `<strong>Success!</strong> Password for <strong>${data.name}</strong> has been updated to: <code class="fs-5">${data.newPassword}</code>`;
+                    alertBox.style.display = 'block';
+                } else {
+                    alertBox.className = 'alert alert-danger mt-3';
+                    alertBox.textContent = data.message || 'Failed to update password.';
+                    alertBox.style.display = 'block';
+                }
+            } catch (err) {
+                alert('Error updating password: ' + err.message);
+            }
+        }
+    </script>
+</body>
+</html>

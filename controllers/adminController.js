@@ -603,6 +603,213 @@ async function gitPull(req, res) {
   });
 }
 
+/**
+ * POST /api/admin/onspot-register
+ * Creates attendee record on-spot at the desk
+ */
+async function onSpotRegister(req, res) {
+  try {
+    let {
+      name,
+      email,
+      phone,
+      mobile,
+      department,
+      depart,
+      collegeName,
+      college,
+      gender,
+      accommodation,
+      accomodation,
+      password,
+      genfee,
+      feePaid
+    } = req.body;
+
+    name = (name || '').trim();
+    email = (email || '').trim().toLowerCase();
+    mobile = (mobile || phone || '').trim();
+    department = (department || depart || 'General').trim();
+    collegeName = (collegeName || college || 'PSG College of Technology').trim();
+    gender = (gender || '').trim();
+    accommodation = (accommodation || accomodation || 'No').trim();
+    const isFeePaid = genfee === 'paid' || feePaid === true || feePaid === 'paid' || feePaid === 'true';
+
+    if (!name || !email || !mobile) {
+      return res.status(400).json({ status: 'error', message: 'Name, Email, and 10-digit Mobile Number are required.' });
+    }
+
+    if (mobile.length !== 10) {
+      return res.status(400).json({ status: 'error', message: 'Mobile Number must be exactly 10 digits.' });
+    }
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ 
+        status: 'error', 
+        message: `An account with email "${email}" already exists (SRiSHTi ID: SRiSHTi25${existingUser.memberId}).` 
+      });
+    }
+
+    // Default password or custom
+    let rawPassword = (password || '').trim();
+    let isDefault = false;
+    if (!rawPassword) {
+      const last4 = mobile.length >= 4 ? mobile.slice(-4) : '2026';
+      rawPassword = `Srishti@${last4}!`;
+      isDefault = true;
+    }
+
+    const { getNextSequence } = require('../models/Counter');
+    const hashedPassword = await bcrypt.hash(rawPassword, 12);
+    const memberId = await getNextSequence('userId');
+
+    const newUser = await User.create({
+      name,
+      email,
+      password: hashedPassword,
+      mobile,
+      department,
+      collegeName,
+      gender,
+      accommodation,
+      genfee: isFeePaid ? 'paid' : '',
+      memberId
+    });
+
+    // If marked paid on-spot, record offline payment entry
+    if (isFeePaid) {
+      await Payment.create({
+        memberId,
+        name,
+        amount: 250,
+        transactionId: `ONSPOT_GEN_${memberId}_${Date.now().toString().slice(-4)}`,
+        paymentStatus: 'success',
+        addedOn: new Date()
+      });
+    }
+
+    const srishtiId = `SRiSHTi25${memberId}`;
+
+    return res.json({
+      status: 'success',
+      message: `Attendee registered successfully!`,
+      user: {
+        memberId,
+        srishtiId,
+        name: newUser.name,
+        email: newUser.email,
+        mobile: newUser.mobile,
+        collegeName: newUser.collegeName,
+        department: newUser.department,
+        genfee: newUser.genfee || 'unpaid',
+        password: rawPassword,
+        isDefaultPassword: isDefault
+      }
+    });
+  } catch (err) {
+    console.error('Admin on-spot registration error:', err);
+    return res.status(500).json({ status: 'error', message: 'Failed to complete on-spot registration.' });
+  }
+}
+
+/**
+ * POST /api/admin/user/lookup
+ * Fetch attendee profile & registrations by SRiSHTi ID, Email, or Mobile
+ */
+async function adminLookupUser(req, res) {
+  try {
+    const { identifier } = req.body;
+    if (!identifier) {
+      return res.status(400).json({ status: 'error', message: 'Please provide an Email, SRiSHTi ID, or Mobile number.' });
+    }
+
+    const { buildUserLookupQuery } = require('./authController');
+    const query = buildUserLookupQuery(identifier);
+    if (!query) {
+      return res.status(400).json({ status: 'error', message: 'Invalid identifier.' });
+    }
+
+    const user = await User.findOne(query).select('-password');
+    if (!user) {
+      return res.status(404).json({ status: 'error', message: 'No attendee found matching this identifier.' });
+    }
+
+    const registrations = await Registration.find({ email: user.email });
+    const payments = await Payment.find({ memberId: user.memberId });
+
+    return res.json({
+      status: 'success',
+      user: {
+        ...user.toObject(),
+        srishtiId: `SRiSHTi25${user.memberId}`
+      },
+      registrations,
+      payments
+    });
+  } catch (err) {
+    console.error('Admin user lookup error:', err);
+    return res.status(500).json({ status: 'error', message: 'Server error looking up attendee.' });
+  }
+}
+
+/**
+ * POST /api/admin/user/reset-password-direct
+ * Directly change any user password by Member ID, SRiSHTi ID, or Email
+ */
+async function adminResetPassword(req, res) {
+  try {
+    const { identifier, memberId, email, newPassword, useDefault } = req.body;
+    const lookupKey = identifier || (memberId ? String(memberId) : email);
+
+    if (!lookupKey) {
+      return res.status(400).json({ status: 'error', message: 'Member ID, Email, or Identifier is required.' });
+    }
+
+    const { buildUserLookupQuery } = require('./authController');
+    const query = buildUserLookupQuery(lookupKey);
+    if (!query) {
+      return res.status(400).json({ status: 'error', message: 'Invalid identifier.' });
+    }
+
+    const user = await User.findOne(query);
+    if (!user) {
+      return res.status(404).json({ status: 'error', message: 'Attendee not found in database.' });
+    }
+
+    let passwordToSet = (newPassword || '').trim();
+    let isDefault = false;
+
+    if (useDefault || !passwordToSet) {
+      const last4 = user.mobile && user.mobile.length >= 4 ? user.mobile.slice(-4) : '2026';
+      passwordToSet = `Srishti@${last4}!`;
+      isDefault = true;
+    } else {
+      if (passwordToSet.length < 8) {
+        return res.status(400).json({ status: 'error', message: 'Password must be at least 8 characters long.' });
+      }
+    }
+
+    const hashedPassword = await bcrypt.hash(passwordToSet, 12);
+    await User.updateOne({ _id: user._id }, { password: hashedPassword });
+
+    console.log(`🔑 Admin [${req.session?.admin_user || 'support'}] reset password for ${user.email} (ID: SRiSHTi25${user.memberId})`);
+
+    return res.json({
+      status: 'success',
+      message: `Password for ${user.name} (SRiSHTi25${user.memberId}) updated successfully!`,
+      srishtiId: `SRiSHTi25${user.memberId}`,
+      email: user.email,
+      name: user.name,
+      newPassword: passwordToSet,
+      isDefault
+    });
+  } catch (err) {
+    console.error('Admin password reset error:', err);
+    return res.status(500).json({ status: 'error', message: 'Failed to reset attendee password.' });
+  }
+}
+
 module.exports = {
   adminLogin,
   adminLogout,
@@ -615,5 +822,8 @@ module.exports = {
   getStats,
   listAdmins,
   gitPull,
-  updateUI
+  updateUI,
+  onSpotRegister,
+  adminLookupUser,
+  adminResetPassword
 };
