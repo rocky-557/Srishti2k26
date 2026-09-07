@@ -74,21 +74,74 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* =============================================
-     QUICK PASSWORD RESET MODAL HANDLER
+     SEQUENTIAL PASSWORD RESET WIZARD HANDLER
   ============================================= */
   const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
   const resetModal = document.getElementById('resetModal');
   const closeResetModalBtn = document.getElementById('closeResetModalBtn');
   const cancelResetBtn = document.getElementById('cancelResetBtn');
-  const quickResetForm = document.getElementById('quickResetForm');
-  const resetStatusAlert = document.getElementById('resetStatusAlert');
+
+  // Step containers
+  const resetStep1 = document.getElementById('resetStep1');
+  const resetStep2 = document.getElementById('resetStep2');
+  const resetStep3 = document.getElementById('resetStep3');
+  const stepIndicator = document.getElementById('stepIndicator');
+  const resetModalTitle = document.getElementById('resetModalTitle');
+
+  // Step 1 Form
+  const verifyIdentityForm = document.getElementById('verifyIdentityForm');
+  const step1Alert = document.getElementById('step1Alert');
+  const btnVerifyIdentity = document.getElementById('btnVerifyIdentity');
+
+  // Step 2 Form
+  const setNewPasswordForm = document.getElementById('setNewPasswordForm');
+  const step2Alert = document.getElementById('step2Alert');
+  const btnSubmitNewPassword = document.getElementById('btnSubmitNewPassword');
+  const btnBackToStep1 = document.getElementById('btnBackToStep1');
+  const btnUseDefaultPwChip = document.getElementById('btnUseDefaultPwChip');
+  const defaultPwLabel = document.getElementById('defaultPwLabel');
+  const verifiedUserName = document.getElementById('verifiedUserName');
+  const verifiedUserSrishtiId = document.getElementById('verifiedUserSrishtiId');
+
+  // Step 3
+  const btnFinishAndLogin = document.getElementById('btnFinishAndLogin');
+
+  let verifiedUserData = null;
+
+  function showResetStep(stepNum) {
+    if (stepNum === 1) {
+      resetStep1.style.display = 'block';
+      resetStep2.style.display = 'none';
+      resetStep3.style.display = 'none';
+      stepIndicator.style.display = 'block';
+      stepIndicator.textContent = 'Step 1 of 2';
+      resetModalTitle.textContent = 'Find Your Account';
+      step1Alert.style.display = 'none';
+    } else if (stepNum === 2) {
+      resetStep1.style.display = 'none';
+      resetStep2.style.display = 'block';
+      resetStep3.style.display = 'none';
+      stepIndicator.style.display = 'block';
+      stepIndicator.textContent = 'Step 2 of 2';
+      resetModalTitle.textContent = 'Choose New Password';
+      step2Alert.style.display = 'none';
+      document.getElementById('step2NewPassword').value = '';
+      document.getElementById('step2ConfirmPassword').value = '';
+    } else if (stepNum === 3) {
+      resetStep1.style.display = 'none';
+      resetStep2.style.display = 'none';
+      resetStep3.style.display = 'block';
+      stepIndicator.style.display = 'none';
+      resetModalTitle.textContent = 'Success!';
+    }
+  }
 
   if (forgotPasswordBtn && resetModal) {
     forgotPasswordBtn.addEventListener('click', (e) => {
       e.preventDefault();
       resetModal.style.display = 'flex';
-      resetStatusAlert.style.display = 'none';
-      quickResetForm.reset();
+      verifyIdentityForm.reset();
+      showResetStep(1);
     });
 
     [closeResetModalBtn, cancelResetBtn].forEach(btn => {
@@ -98,57 +151,135 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    quickResetForm.addEventListener('submit', async (e) => {
+    // Step 1: Verify Identity
+    verifyIdentityForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const submitBtn = document.getElementById('submitQuickResetBtn');
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<span>Verifying &amp; Resetting...</span>';
+      btnVerifyIdentity.disabled = true;
+      btnVerifyIdentity.innerHTML = '<span>Verifying...</span>';
 
-      const payload = {
-        identifier: document.getElementById('resetIdentifier').value.trim(),
-        mobile: document.getElementById('resetMobile').value.trim(),
-        newPassword: document.getElementById('resetNewPassword').value.trim()
-      };
+      const identifier = document.getElementById('resetIdentifier').value.trim();
+      const mobile = document.getElementById('resetMobile').value.trim();
+
+      try {
+        const res = await fetch('/api/auth/verify-identity', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ identifier, mobile })
+        });
+        const data = await res.json();
+
+        if (data.status === 'success') {
+          verifiedUserData = {
+            identifier,
+            mobile,
+            name: data.name,
+            srishtiId: data.srishtiId,
+            defaultSuggestion: data.defaultSuggestion
+          };
+
+          verifiedUserName.textContent = data.name;
+          verifiedUserSrishtiId.textContent = data.srishtiId;
+          defaultPwLabel.textContent = data.defaultSuggestion;
+          showResetStep(2);
+        } else {
+          step1Alert.style.background = 'rgba(226, 54, 54, 0.15)';
+          step1Alert.style.border = '1px solid #ff6b6b';
+          step1Alert.style.color = '#ff6b6b';
+          step1Alert.textContent = data.message || 'Account not found. Please verify details.';
+          step1Alert.style.display = 'block';
+        }
+      } catch (err) {
+        step1Alert.style.background = 'rgba(226, 54, 54, 0.15)';
+        step1Alert.style.border = '1px solid #ff6b6b';
+        step1Alert.style.color = '#ff6b6b';
+        step1Alert.textContent = 'Connection error: ' + err.message;
+        step1Alert.style.display = 'block';
+      } finally {
+        btnVerifyIdentity.disabled = false;
+        btnVerifyIdentity.innerHTML = '<span>Verify Account &rarr;</span>';
+      }
+    });
+
+    // Step 2: Back button
+    btnBackToStep1.addEventListener('click', () => {
+      showResetStep(1);
+    });
+
+    // Step 2: Quick default button
+    btnUseDefaultPwChip.addEventListener('click', () => {
+      if (verifiedUserData && verifiedUserData.defaultSuggestion) {
+        document.getElementById('step2NewPassword').value = verifiedUserData.defaultSuggestion;
+        document.getElementById('step2ConfirmPassword').value = verifiedUserData.defaultSuggestion;
+      }
+    });
+
+    // Step 2: Submit New Password
+    setNewPasswordForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const newPassword = document.getElementById('step2NewPassword').value.trim();
+      const confirmPassword = document.getElementById('step2ConfirmPassword').value.trim();
+
+      if (newPassword.length < 8) {
+        step2Alert.style.background = 'rgba(226, 54, 54, 0.15)';
+        step2Alert.style.border = '1px solid #ff6b6b';
+        step2Alert.style.color = '#ff6b6b';
+        step2Alert.textContent = 'Password must be at least 8 characters long.';
+        step2Alert.style.display = 'block';
+        return;
+      }
+
+      if (newPassword !== confirmPassword) {
+        step2Alert.style.background = 'rgba(226, 54, 54, 0.15)';
+        step2Alert.style.border = '1px solid #ff6b6b';
+        step2Alert.style.color = '#ff6b6b';
+        step2Alert.textContent = 'Passwords do not match.';
+        step2Alert.style.display = 'block';
+        return;
+      }
+
+      btnSubmitNewPassword.disabled = true;
+      btnSubmitNewPassword.innerHTML = '<span>Updating...</span>';
 
       try {
         const res = await fetch('/api/auth/quick-reset-password', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
+          body: JSON.stringify({
+            identifier: verifiedUserData.identifier,
+            mobile: verifiedUserData.mobile,
+            newPassword,
+            confirmPassword
+          })
         });
         const data = await res.json();
 
         if (data.status === 'success') {
-          resetStatusAlert.style.background = 'rgba(94, 255, 122, 0.15)';
-          resetStatusAlert.style.border = '1px solid #5eff7a';
-          resetStatusAlert.style.color = '#5eff7a';
-          resetStatusAlert.innerHTML = `<strong>${data.message}</strong>`;
-          resetStatusAlert.style.display = 'block';
-
-          setTimeout(() => {
-            resetModal.style.display = 'none';
-            document.getElementById('email').value = payload.identifier;
-            if (data.password) {
-              document.getElementById('password').value = data.password;
-            }
-          }, 2000);
+          showResetStep(3);
+          document.getElementById('email').value = verifiedUserData.identifier;
+          document.getElementById('password').value = newPassword;
         } else {
-          resetStatusAlert.style.background = 'rgba(226, 54, 54, 0.15)';
-          resetStatusAlert.style.border = '1px solid #ff6b6b';
-          resetStatusAlert.style.color = '#ff6b6b';
-          resetStatusAlert.textContent = data.message || 'Verification failed.';
-          resetStatusAlert.style.display = 'block';
+          step2Alert.style.background = 'rgba(226, 54, 54, 0.15)';
+          step2Alert.style.border = '1px solid #ff6b6b';
+          step2Alert.style.color = '#ff6b6b';
+          step2Alert.textContent = data.message || 'Failed to update password.';
+          step2Alert.style.display = 'block';
         }
       } catch (err) {
-        resetStatusAlert.style.background = 'rgba(226, 54, 54, 0.15)';
-        resetStatusAlert.style.border = '1px solid #ff6b6b';
-        resetStatusAlert.style.color = '#ff6b6b';
-        resetStatusAlert.textContent = 'Connection error: ' + err.message;
-        resetStatusAlert.style.display = 'block';
+        step2Alert.style.background = 'rgba(226, 54, 54, 0.15)';
+        step2Alert.style.border = '1px solid #ff6b6b';
+        step2Alert.style.color = '#ff6b6b';
+        step2Alert.textContent = 'Connection error: ' + err.message;
+        step2Alert.style.display = 'block';
       } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<span>Reset Password</span>';
+        btnSubmitNewPassword.disabled = false;
+        btnSubmitNewPassword.innerHTML = '<span>Update Password</span>';
       }
+    });
+
+    // Step 3: Finish and Login button
+    btnFinishAndLogin.addEventListener('click', () => {
+      resetModal.style.display = 'none';
+      document.getElementById('loginBtn').click();
     });
   }
 

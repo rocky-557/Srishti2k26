@@ -553,6 +553,49 @@ async function quickResetPassword(req, res) {
   }
 }
 
+/**
+ * POST /api/auth/verify-identity
+ * Verifies Email/SRiSHTi ID + Mobile number before presenting new password form
+ */
+async function verifyIdentity(req, res) {
+  try {
+    const { identifier, mobile, phone } = req.body;
+    const userIdentifier = (identifier || '').trim();
+    const userPhone = (mobile || phone || '').trim();
+
+    if (!userIdentifier || !userPhone) {
+      return res.json({ status: 'error', message: 'Please enter your Email / SRiSHTi ID and Phone Number.' });
+    }
+
+    const query = buildUserLookupQuery(userIdentifier);
+    if (!query) {
+      return res.json({ status: 'error', message: 'Invalid identifier.' });
+    }
+
+    const user = await User.findOne({
+      $and: [query, { mobile: userPhone }]
+    });
+
+    if (!user) {
+      return res.json({ status: 'error', message: 'Account not found matching this Email/ID and Phone Number.' });
+    }
+
+    const last4 = user.mobile && user.mobile.length >= 4 ? user.mobile.slice(-4) : '2026';
+    const defaultSuggestion = `Srishti@${last4}!`;
+
+    return res.json({
+      status: 'success',
+      name: user.name,
+      email: user.email,
+      srishtiId: `SRiSHTi25${user.memberId}`,
+      defaultSuggestion
+    });
+  } catch (err) {
+    console.error('Verify identity error:', err);
+    return res.json({ status: 'error', message: 'Verification error.' });
+  }
+}
+
 module.exports = { 
   signup, 
   login, 
@@ -562,5 +605,6 @@ module.exports = {
   verifyOtp, 
   resetPassword, 
   quickResetPassword,
+  verifyIdentity,
   buildUserLookupQuery 
 };

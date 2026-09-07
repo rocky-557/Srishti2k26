@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const Registration = require('../models/Registration');
-const { signup, login, logout, sendOtp, verifyOtp, resetPassword, quickResetPassword } = require('../controllers/authController');
+const { signup, login, logout, sendOtp, verifyOtp, resetPassword, quickResetPassword, verifyIdentity } = require('../controllers/authController');
 
 // POST /api/auth/signup — user registration
 router.post('/signup', signup);
@@ -18,6 +18,9 @@ router.post('/verify-otp', verifyOtp);
 
 // POST /api/auth/reset-password — reset user password via OTP
 router.post('/reset-password', resetPassword);
+
+// POST /api/auth/verify-identity — verify user identity (Step 1)
+router.post('/verify-identity', verifyIdentity);
 
 // POST /api/auth/quick-reset-password — OTP-less identity verification (Email/ID + Mobile)
 router.post('/quick-reset-password', quickResetPassword);

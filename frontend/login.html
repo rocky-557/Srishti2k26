@@ -83,7 +83,10 @@
           </div>
 
           <div class="form-group" id="group-password" style="margin-top: 1rem;">
-            <label for="password">Password</label>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+              <label for="password" style="margin:0;">Password</label>
+              <a href="#" class="forgot-password-btn" id="forgotPasswordBtn">Forgot password?</a>
+            </div>
             <div class="password-wrapper">
               <input type="password" id="password" name="password" placeholder="Enter your password" required>
               <button type="button" class="toggle-password" aria-label="Toggle Password Visibility">
@@ -95,10 +98,6 @@
               </button>
             </div>
             <span class="error-message">Password is required</span>
-          </div>
-
-          <div class="forgot-password-wrap">
-            Forgot your password? <a href="#" class="forgot-password-btn" id="forgotPasswordBtn">Reset Password</a>
           </div>
 
           <button type="submit" class="submit-btn" id="loginBtn">
@@ -114,44 +113,102 @@
 
   </div>
 
-  <!-- Quick Password Reset Modal (OTP-less 2-Field Verification) -->
+  <!-- Sequential Step-by-Step Password Reset Modal -->
   <div id="resetModal" class="reset-modal-overlay" style="display:none;">
     <div class="reset-modal-card">
       <div class="reset-modal-header">
-        <h3>⚡ Reset Password</h3>
+        <div class="d-flex align-items-center gap-2">
+          <span class="step-indicator" id="stepIndicator">Step 1 of 2</span>
+          <h3 id="resetModalTitle">Find Your Account</h3>
+        </div>
         <button type="button" class="reset-close-btn" id="closeResetModalBtn">&times;</button>
       </div>
-      <p class="reset-modal-desc">Enter your registered Email or SRiSHTi ID along with your 10-digit Phone Number to reset your password instantly.</p>
-      
-      <form id="quickResetForm">
-        <div class="form-group mb-3">
-          <label for="resetIdentifier">Email or SRiSHTi ID</label>
-          <input type="text" id="resetIdentifier" placeholder="e.g. john@example.com or SRiSHTi251024" required>
-        </div>
 
-        <div class="form-group mb-3">
-          <label for="resetMobile">Registered Mobile Number (10 Digits)</label>
-          <input type="tel" id="resetMobile" maxlength="10" placeholder="e.g. 9876543210" required>
-        </div>
+      <!-- STEP 1: Verify Identity -->
+      <div id="resetStep1">
+        <p class="reset-modal-desc">Enter your registered Email or SRiSHTi ID and 10-digit mobile number to verify your account.</p>
+        <form id="verifyIdentityForm">
+          <div class="form-group mb-3">
+            <label for="resetIdentifier">Email Address or SRiSHTi ID</label>
+            <input type="text" id="resetIdentifier" placeholder="e.g. name@domain.com or SRiSHTi251024" required>
+          </div>
 
-        <div class="form-group mb-3">
-          <label for="resetNewPassword">New Password (Leave blank for default: <code>Srishti@&lt;last4&gt;!</code>)</label>
-          <input type="password" id="resetNewPassword" placeholder="Default: Srishti@<last4>!">
-        </div>
+          <div class="form-group mb-3">
+            <label for="resetMobile">Registered Mobile Number (10 Digits)</label>
+            <input type="tel" id="resetMobile" maxlength="10" placeholder="e.g. 9876543210" required>
+          </div>
 
-        <div id="resetStatusAlert" style="display:none; padding:10px 14px; border-radius:6px; font-size:0.9rem; margin-bottom:15px;"></div>
+          <div id="step1Alert" style="display:none; padding:10px 14px; border-radius:6px; font-size:0.9rem; margin-bottom:15px;"></div>
 
-        <div class="reset-modal-actions">
-          <button type="button" class="btn-cancel" id="cancelResetBtn">Cancel</button>
-          <button type="submit" class="submit-btn" id="submitQuickResetBtn">
-            <span>Reset Password</span>
-          </button>
+          <div class="reset-modal-actions">
+            <button type="button" class="btn-cancel" id="cancelResetBtn">Cancel</button>
+            <button type="submit" class="submit-btn-sm" id="btnVerifyIdentity">
+              <span>Verify Account &rarr;</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- STEP 2: Set New Password -->
+      <div id="resetStep2" style="display:none;">
+        <div class="user-verified-badge mb-3" id="verifiedUserInfo">
+          <i class="bi bi-check-circle-fill text-success me-1"></i> Account Verified: <strong id="verifiedUserName">John Doe</strong> (<span id="verifiedUserSrishtiId">SRiSHTi251001</span>)
         </div>
-      </form>
+        <p class="reset-modal-desc">Choose a new password for your account, or use the standard default password.</p>
+        
+        <form id="setNewPasswordForm">
+          <div class="form-group mb-3">
+            <label for="step2NewPassword">New Password (Min 8 chars)</label>
+            <input type="password" id="step2NewPassword" placeholder="Enter new password" required>
+          </div>
+
+          <div class="form-group mb-3">
+            <label for="step2ConfirmPassword">Confirm New Password</label>
+            <input type="password" id="step2ConfirmPassword" placeholder="Re-enter new password" required>
+          </div>
+
+          <div class="mb-3">
+            <button type="button" class="btn-default-pw-chip" id="btnUseDefaultPwChip">
+              ⚡ Or set default password: <code id="defaultPwLabel">Srishti@3210!</code>
+            </button>
+          </div>
+
+          <div id="step2Alert" style="display:none; padding:10px 14px; border-radius:6px; font-size:0.9rem; margin-bottom:15px;"></div>
+
+          <div class="reset-modal-actions">
+            <button type="button" class="btn-cancel" id="btnBackToStep1">&larr; Back</button>
+            <button type="submit" class="submit-btn-sm" id="btnSubmitNewPassword">
+              <span>Update Password</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- STEP 3: Success -->
+      <div id="resetStep3" style="display:none; text-align:center; padding:15px 0;">
+        <div style="font-size:3rem; color:#5eff7a; margin-bottom:10px;">✓</div>
+        <h4 style="color:#ffffff; margin-bottom:8px;">Password Updated!</h4>
+        <p style="color:#94a3b8; font-size:0.95rem; margin-bottom:20px;" id="step3SuccessMsg">Your password has been successfully updated. You can now log in.</p>
+        <button type="button" class="submit-btn-sm" id="btnFinishAndLogin" style="margin:0 auto;">
+          <span>Continue to Login</span>
+        </button>
+      </div>
+
     </div>
   </div>
 
   <style>
+    .forgot-password-btn {
+      color: #00f2fe !important;
+      font-size: 0.85rem !important;
+      font-weight: 600 !important;
+      text-decoration: none !important;
+      transition: all 0.2s ease;
+    }
+    .forgot-password-btn:hover {
+      color: #38bdf8 !important;
+      text-decoration: underline !important;
+    }
     .reset-modal-overlay {
       position: fixed;
       inset: 0;
@@ -176,11 +233,19 @@
     .reset-modal-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
       margin-bottom: 12px;
     }
+    .step-indicator {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #f59e0b;
+      font-weight: 700;
+      display: block;
+    }
     .reset-modal-header h3 {
-      margin: 0;
+      margin: 2px 0 0 0;
       color: #00f2fe;
       font-size: 1.35rem;
     }
@@ -199,6 +264,29 @@
       margin-bottom: 18px;
       line-height: 1.5;
     }
+    .user-verified-badge {
+      background: rgba(94, 255, 122, 0.1);
+      border: 1px solid rgba(94, 255, 122, 0.3);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      color: #e2e8f0;
+    }
+    .btn-default-pw-chip {
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px dashed rgba(245, 158, 11, 0.4);
+      color: #fcd34d;
+      font-size: 0.85rem;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      transition: all 0.2s ease;
+    }
+    .btn-default-pw-chip:hover {
+      background: rgba(245, 158, 11, 0.2);
+    }
     .reset-modal-actions {
       display: flex;
       justify-content: flex-end;
@@ -209,14 +297,23 @@
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.15);
       color: #cbd5e1;
-      padding: 10px 18px;
+      padding: 8px 16px;
       border-radius: 6px;
       cursor: pointer;
     }
     .btn-cancel:hover { background: rgba(255, 255, 255, 0.15); color: #ffffff; }
+    .submit-btn-sm {
+      background: linear-gradient(135deg, var(--orange) 0%, var(--orange-light) 100%);
+      border: none;
+      color: #ffffff;
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+    }
   </style>
 
-  <script src="login.js?v=10"></script>
+  <script src="login.js?v=11"></script>
   <script src="cinematic.js"></script>
 </body>
 
