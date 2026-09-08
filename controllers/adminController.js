@@ -469,6 +469,22 @@ function csvEsc(str) {
  */
 async function getStats(req, res) {
   try {
+    const passkey = req.headers['x-passkey'] || req.query.passkey || (req.body && req.body.passkey);
+    const isAdmin = !!(req.session && req.session.admin_user);
+    const isPasskeyValid = String(passkey).trim() === '2026' || (req.session && req.session.stats_passkey === '2026');
+
+    if (!isAdmin && !isPasskeyValid) {
+      return res.status(401).json({
+        status: 'error',
+        code: 'PASSKEY_REQUIRED',
+        message: 'Please enter the 4-digit passkey to access live statistics.'
+      });
+    }
+
+    if (isPasskeyValid && req.session) {
+      req.session.stats_passkey = '2026';
+    }
+
     // Srishti 2k26 Canonical Event Configuration from EVENT HALL SPLITUP.pdf
     const technicalEvents = [
       'TECH NEXUS',

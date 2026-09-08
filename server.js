@@ -132,6 +132,17 @@ app.get('/events.html', (req, res) => {
   res.sendFile(path.join(STATIC_DIR, 'event.html'));
 });
 
+// Live Stats Routes (accessible with 4-digit passkey 2026 or admin)
+app.get(['/event_stats.html', '/event-stats.html', '/event-stats', '/stats', '/stats.html'], (req, res) => {
+  res.sendFile(path.join(STATIC_DIR, 'admin', 'event_stats.html'));
+});
+
+app.get(['/event_stats1.html', '/event-stats1.html', '/stats/terminal', '/stats-terminal'], (req, res) => {
+  res.sendFile(path.join(STATIC_DIR, 'admin', 'event_stats1.html'));
+});
+
+app.all('/api/stats', require('./controllers/adminController').getStats);
+
 // Root route
 app.get('/', (req, res) => {
   res.sendFile(path.join(STATIC_DIR, 'index.html'));

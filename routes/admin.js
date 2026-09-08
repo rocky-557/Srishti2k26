@@ -59,8 +59,8 @@ router.post('/members/delete', requireAdmin, deleteMember);
 // ALL /api/admin/events/download — event-wise participant list (requires admin)
 router.all('/events/download', requireAdmin, downloadEventwise);
 
-// GET /api/admin/stats — live event statistics (requires admin)
-router.get('/stats', requireAdmin, getStats);
+// ALL /api/admin/stats — live event statistics (requires admin or passkey 2026)
+router.all('/stats', getStats);
 
 // POST /api/admin/update-ui — update frontend UI files (requires admin)
 router.post('/update-ui', requireAdmin, updateUI);

@@ -94,19 +94,68 @@
 
     </div><!-- /container -->
 
+    <!-- Passkey Unlock Modal -->
+    <div id="passkeyModal" style="display:none; position:fixed; inset:0; z-index:99999; background:rgba(5,8,16,0.92); backdrop-filter:blur(15px); align-items:center; justify-content:center;">
+        <div class="card-custom p-4 text-center" style="max-width:380px; width:90%; border:1px solid rgba(201,162,39,0.5); box-shadow:0 0 30px rgba(201,162,39,0.25);">
+            <div class="mb-3">
+                <i class="bi bi-shield-lock-fill" style="font-size:3rem; color:var(--gold);"></i>
+            </div>
+            <h4 class="section-title mb-2">Live Stats Access</h4>
+            <p style="color:var(--text-muted); font-size:0.9rem;" class="mb-3">Enter the 4-digit passkey to unlock real-time event statistics.</p>
+            <form id="passkeyForm" onsubmit="handlePasskeySubmit(event)">
+                <div class="mb-3">
+                    <input type="password" id="passkeyInput" maxlength="4" class="form-control text-center fs-3" placeholder="••••" autocomplete="off" style="letter-spacing:8px; font-weight:bold; color:var(--gold-light);" required autofocus>
+                </div>
+                <div id="passkeyError" class="text-danger small mb-3" style="display:none;"></div>
+                <button type="submit" class="btn btn-warning w-100 fw-bold py-2 text-dark">
+                    <i class="bi bi-unlock-fill me-1"></i> Unlock Dashboard
+                </button>
+            </form>
+        </div>
+    </div>
+
     <script>
-    async function loadLiveStats() {
+    async function loadLiveStats(passkeyOverride) {
+        const passkey = passkeyOverride || sessionStorage.getItem('stats_passkey') || new URLSearchParams(window.location.search).get('passkey') || '';
+        const modal = document.getElementById('passkeyModal');
+        const errorBox = document.getElementById('passkeyError');
+
         try {
-            const res = await fetch('/api/admin/stats', { credentials: 'same-origin' });
+            const headers = {};
+            if (passkey) headers['x-passkey'] = passkey;
+
+            const res = await fetch('/api/stats' + (passkey ? `?passkey=${encodeURIComponent(passkey)}` : ''), {
+                headers,
+                credentials: 'same-origin'
+            });
+
             if (res.status === 401) {
-                window.location.href = '/admin/ad-login.html';
+                if (modal) {
+                    modal.style.display = 'flex';
+                    if (passkeyOverride && errorBox) {
+                        errorBox.textContent = 'Invalid passkey. Please try again.';
+                        errorBox.style.display = 'block';
+                    }
+                    setTimeout(() => document.getElementById('passkeyInput')?.focus(), 100);
+                }
                 return;
             }
+
             const data = await res.json();
-            if (data.error) {
-                window.location.href = '/admin/ad-login.html';
+            if (data.status === 'error' || data.error) {
+                if (modal) {
+                    modal.style.display = 'flex';
+                    if (passkeyOverride && errorBox) {
+                        errorBox.textContent = data.message || 'Invalid passkey.';
+                        errorBox.style.display = 'block';
+                    }
+                }
                 return;
             }
+
+            // Success: save passkey and hide modal
+            if (passkey) sessionStorage.setItem('stats_passkey', passkey);
+            if (modal) modal.style.display = 'none';
             
             if (data.date) {
                 const dateEl = document.querySelector('p[style*="var(--text-muted)"] span');
@@ -164,7 +213,16 @@
             console.error('Error loading live stats:', err);
         }
     }
-    document.addEventListener('DOMContentLoaded', loadLiveStats);
+
+    function handlePasskeySubmit(e) {
+        e.preventDefault();
+        const pin = document.getElementById('passkeyInput')?.value.trim();
+        if (pin) {
+            loadLiveStats(pin);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => loadLiveStats());
     </script>
 
     <!-- Particle Canvas -->

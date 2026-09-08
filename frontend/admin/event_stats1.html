@@ -312,12 +312,32 @@
             await new Promise(r => setTimeout(r, 150));
             printLine('Connection established with MongoDB. Authenticating...', 'output');
             await new Promise(r => setTimeout(r, 150));
+            let passkey = sessionStorage.getItem('stats_passkey') || new URLSearchParams(window.location.search).get('passkey') || '';
+            let res = await fetch('/api/stats' + (passkey ? `?passkey=${encodeURIComponent(passkey)}` : ''), {
+                headers: passkey ? { 'x-passkey': passkey } : {},
+                credentials: 'same-origin'
+            });
+
+            if (res.status === 401) {
+                const userPin = prompt('Enter 4-digit passkey to access SRiSHTi 2k26 Statistics:');
+                if (userPin) {
+                    passkey = userPin.trim();
+                    res = await fetch('/api/stats?passkey=' + encodeURIComponent(passkey), {
+                        headers: { 'x-passkey': passkey },
+                        credentials: 'same-origin'
+                    });
+                }
+            }
+
+            if (!res.ok) {
+                printLine('ACCESS DENIED: Invalid 4-digit passkey or unauthorized session.', 'output-red');
+                return;
+            }
+
+            const data = await res.json();
+            if (passkey) sessionStorage.setItem('stats_passkey', passkey);
             printLine('Access Granted. Welcome, Commander.', 'output-green');
             printLine('==========================================================', 'separator');
-
-            try {
-                const res = await fetch('/api/admin/stats');
-                const data = await res.json();
 
                 printLine(`Last System Sync: ${data.date || new Date().toLocaleString()}`, 'output');
                 printLine('Executing query: GET_OVERALL_METRICS', 'prompt');
