@@ -16,7 +16,8 @@ const {
   updateUI,
   onSpotRegister,
   adminLookupUser,
-  adminResetPassword
+  adminResetPassword,
+  deleteMember
 } = require('../controllers/adminController');
 
 // POST /api/admin/login — admin login (no auth required)
@@ -51,6 +52,9 @@ router.get('/members/:id', requireAdmin, getMember);
 
 // POST /api/admin/members/update — update member (requires admin)
 router.post('/members/update', requireAdmin, updateMember);
+
+// POST /api/admin/members/delete — delete member (requires admin)
+router.post('/members/delete', requireAdmin, deleteMember);
 
 // ALL /api/admin/events/download — event-wise participant list (requires admin)
 router.all('/events/download', requireAdmin, downloadEventwise);

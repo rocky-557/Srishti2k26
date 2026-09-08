@@ -247,6 +247,50 @@
         });
       }
 
+      // College 'Others' toggle
+      const collegeSelect = document.getElementById('college');
+      const otherCollegeGroup = document.getElementById('group-otherCollege');
+      const otherCollegeInput = document.getElementById('otherCollege');
+      if (collegeSelect && otherCollegeGroup) {
+        collegeSelect.addEventListener('change', function () {
+          if (this.value === 'others') {
+            otherCollegeGroup.style.display = 'block';
+            if (otherCollegeInput) {
+              otherCollegeInput.required = true;
+              otherCollegeInput.focus();
+            }
+          } else {
+            otherCollegeGroup.style.display = 'none';
+            if (otherCollegeInput) {
+              otherCollegeInput.required = false;
+              otherCollegeInput.value = '';
+            }
+          }
+        });
+      }
+
+      // Department 'Others' toggle
+      const deptSelect = document.getElementById('department');
+      const otherDeptGroup = document.getElementById('group-otherDepartment');
+      const otherDeptInput = document.getElementById('otherDepartment');
+      if (deptSelect && otherDeptGroup) {
+        deptSelect.addEventListener('change', function () {
+          if (this.value === 'others') {
+            otherDeptGroup.style.display = 'block';
+            if (otherDeptInput) {
+              otherDeptInput.required = true;
+              otherDeptInput.focus();
+            }
+          } else {
+            otherDeptGroup.style.display = 'none';
+            if (otherDeptInput) {
+              otherDeptInput.required = false;
+              otherDeptInput.value = '';
+            }
+          }
+        });
+      }
+
       if (form) {
         form.addEventListener('submit', async function (e) {
           e.preventDefault();

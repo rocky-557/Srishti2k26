@@ -102,9 +102,12 @@
 
                             <hr style="border-color: var(--border-color);" class="my-4">
 
-                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                                 <a href="dashboard.html" class="btn btn-outline-primary"><i class="bi bi-arrow-left-circle me-1"></i> Back to Dashboard</a>
-                                <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle me-1"></i> Save Changes</button>
+                                <div class="d-flex gap-2">
+                                    <button type="button" class="btn btn-outline-danger" id="delete-member-btn"><i class="bi bi-trash-fill me-1"></i> Delete Attendee</button>
+                                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle me-1"></i> Save Changes</button>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -210,6 +213,35 @@
                     }
                 } catch (err) {
                     $('#message-container').html('<div class="alert alert-danger">Server connection error.</div>');
+                }
+            });
+
+            $('#delete-member-btn').on('click', async function() {
+                const memberId = $('#member_id').val();
+                const memberName = $('#member_name').val();
+                if (!memberId) return;
+
+                if (confirm(`Are you sure you want to permanently delete "${memberName}" (ID: ${memberId}) and all their registrations?`)) {
+                    const btn = $(this);
+                    btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1"></span> Deleting...');
+                    try {
+                        const res = await fetch('/api/admin/members/delete', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ memberId })
+                        });
+                        const data = await res.json();
+                        if (data.status === 'success') {
+                            alert(data.message || 'Member deleted.');
+                            window.location.href = 'dashboard.html';
+                        } else {
+                            alert(data.message || 'Failed to delete member.');
+                            btn.prop('disabled', false).html('<i class="bi bi-trash-fill me-1"></i> Delete Attendee');
+                        }
+                    } catch (err) {
+                        alert('Error deleting member: ' + err.message);
+                        btn.prop('disabled', false).html('<i class="bi bi-trash-fill me-1"></i> Delete Attendee');
+                    }
                 }
             });
         });

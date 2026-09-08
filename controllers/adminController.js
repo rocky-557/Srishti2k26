@@ -292,6 +292,52 @@ async function updateMember(req, res) {
 }
 
 /**
+ * POST /api/admin/members/delete
+ * Delete an individual attendee and their registrations/payments
+ */
+async function deleteMember(req, res) {
+  try {
+    const { id, memberId, email } = req.body;
+    const lookupId = memberId || id;
+
+    let query = null;
+    if (lookupId !== undefined && lookupId !== null && String(lookupId).trim() !== '') {
+      const num = parseInt(lookupId, 10);
+      if (!isNaN(num)) query = { memberId: num };
+      else query = { _id: String(lookupId) };
+    } else if (email) {
+      query = { email: String(email).trim().toLowerCase() };
+    }
+
+    if (!query) {
+      return res.status(400).json({ status: 'error', message: 'Member ID or Email is required.' });
+    }
+
+    const user = await User.findOne(query);
+    if (!user) {
+      return res.status(404).json({ status: 'error', message: 'Member not found.' });
+    }
+
+    // Delete attendee record, registrations, and payment records
+    await Promise.all([
+      User.deleteOne({ _id: user._id }),
+      Registration.deleteMany({ email: user.email }),
+      Payment.deleteMany({ memberId: user.memberId })
+    ]);
+
+    console.log(`🗑️ Admin [${req.session?.admin_user || 'support'}] deleted attendee ${user.name} (${user.email} / ID: ${user.memberId})`);
+
+    return res.json({
+      status: 'success',
+      message: `Attendee ${user.name} (SRiSHTi25${user.memberId}) removed successfully.`
+    });
+  } catch (err) {
+    console.error('Delete member error:', err);
+    return res.status(500).json({ status: 'error', message: 'Failed to delete member: ' + err.message });
+  }
+}
+
+/**
  * POST /api/admin/events/download
  * 
  * Mirrors adminlogin/download_eventwise.php
@@ -832,5 +878,6 @@ module.exports = {
   updateUI,
   onSpotRegister,
   adminLookupUser,
-  adminResetPassword
+  adminResetPassword,
+  deleteMember
 };
