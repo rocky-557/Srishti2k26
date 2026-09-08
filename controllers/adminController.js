@@ -730,9 +730,16 @@ async function adminLookupUser(req, res) {
       return res.status(400).json({ status: 'error', message: 'Invalid identifier.' });
     }
 
-    const user = await User.findOne(query).select('-password');
+    let user = await User.findOne(query).select('-password');
     if (!user) {
-      return res.status(404).json({ status: 'error', message: 'No attendee found matching this identifier.' });
+      // Check EMS fallback
+      const { syncOrProvisionFromEms } = require('../utils/ems');
+      const emsResult = await syncOrProvisionFromEms(identifier);
+      if (emsResult && emsResult.success && emsResult.user) {
+        user = emsResult.user;
+      } else {
+        return res.status(404).json({ status: 'error', message: 'No attendee found matching this identifier (or not paid on EMS).' });
+      }
     }
 
     const registrations = await Registration.find({ email: user.email });

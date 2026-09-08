@@ -10,6 +10,7 @@ const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const User = require('../models/User');
 const { getNextSequence } = require('../models/Counter');
+const { syncOrProvisionFromEms } = require('../utils/ems');
 
 /**
  * POST /api/auth/signup
@@ -196,9 +197,15 @@ async function login(req, res) {
     }
 
     // Find user by Email / Mobile / SRiSHTi ID
-    const user = await User.findOne(query);
+    let user = await User.findOne(query);
     if (!user) {
-      return res.send('false');
+      // Check if user is registered & paid on EMS (auto-provision)
+      const emsResult = await syncOrProvisionFromEms(loginIdentifier);
+      if (emsResult && emsResult.success && emsResult.user) {
+        user = emsResult.user;
+      } else {
+        return res.send('false');
+      }
     }
 
     // Verify password (bcryptjs handles PHP's $2y$ prefix transparently)
@@ -341,10 +348,16 @@ async function sendOtp(req, res) {
       return res.json({ status: 'error', message: 'Please enter your registered email, SRiSHTi ID, or phone number.' });
     }
 
-    const user = await User.findOne(query);
+    let user = await User.findOne(query);
 
     if (!user) {
-      return res.json({ status: 'error', message: 'No registered account found with this email, SRiSHTi ID, or mobile number.' });
+      // Check EMS fallback
+      const emsResult = await syncOrProvisionFromEms(emailOrPhone);
+      if (emsResult && emsResult.success && emsResult.user) {
+        user = emsResult.user;
+      } else {
+        return res.json({ status: 'error', message: 'No registered account found with this email, SRiSHTi ID, or mobile number.' });
+      }
     }
 
     // Generate 6-digit OTP
@@ -506,7 +519,7 @@ async function quickResetPassword(req, res) {
     }
 
     // Must match the identifier AND the registered mobile number
-    const user = await User.findOne({
+    let user = await User.findOne({
       $and: [
         query,
         { mobile: userPhone }
@@ -514,10 +527,16 @@ async function quickResetPassword(req, res) {
     });
 
     if (!user) {
-      return res.json({ 
-        status: 'error', 
-        message: 'Verification failed. The Email/SRiSHTi ID and Phone Number do not match any registered account.' 
-      });
+      // Check EMS fallback
+      const emsResult = await syncOrProvisionFromEms(userPhone);
+      if (emsResult && emsResult.success && emsResult.user) {
+        user = emsResult.user;
+      } else {
+        return res.json({ 
+          status: 'error', 
+          message: 'Verification failed. The Email/SRiSHTi ID and Phone Number do not match any registered account.' 
+        });
+      }
     }
 
     // Determine password to set
@@ -572,12 +591,18 @@ async function verifyIdentity(req, res) {
       return res.json({ status: 'error', message: 'Invalid identifier.' });
     }
 
-    const user = await User.findOne({
+    let user = await User.findOne({
       $and: [query, { mobile: userPhone }]
     });
 
     if (!user) {
-      return res.json({ status: 'error', message: 'Account not found matching this Email/ID and Phone Number.' });
+      // Check EMS fallback
+      const emsResult = await syncOrProvisionFromEms(userPhone);
+      if (emsResult && emsResult.success && emsResult.user) {
+        user = emsResult.user;
+      } else {
+        return res.json({ status: 'error', message: 'Account not found matching this Email/ID and Phone Number.' });
+      }
     }
 
     const last4 = user.mobile && user.mobile.length >= 4 ? user.mobile.slice(-4) : '2026';

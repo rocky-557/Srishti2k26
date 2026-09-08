@@ -26,6 +26,20 @@ async function getNextSequence(name) {
     { $inc: { seq: 1 } },
     { returnDocument: 'after', upsert: true }
   );
+  
+  if (name === 'userId' || name === 'memberId') {
+    const User = mongoose.models.User || mongoose.model('User');
+    if (User) {
+      const highest = await User.findOne({}, { memberId: 1 }).sort({ memberId: -1 });
+      if (highest && highest.memberId && counter.seq <= highest.memberId) {
+        // Fast forward counter to prevent unique constraint collision
+        const nextVal = highest.memberId + 1;
+        await Counter.findByIdAndUpdate(name, { seq: nextVal });
+        return nextVal;
+      }
+    }
+  }
+
   return counter.seq;
 }
 
