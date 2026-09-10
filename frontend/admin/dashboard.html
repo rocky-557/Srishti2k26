@@ -185,6 +185,9 @@
                                 <button class="btn btn-success" id="download-excel-btn">
                                     <i class="bi bi-file-earmark-excel-fill me-1"></i>Excel
                                 </button>
+                                <button class="btn btn-warning text-dark" id="btn-deduplicate" title="Scan for duplicate mobile numbers and merge with EMS data">
+                                    <i class="bi bi-arrow-repeat me-1"></i>Fix Duplicates
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -706,6 +709,45 @@
                     alert('Error removing member: ' + err.message);
                     btn.prop('disabled', false).html('<i class="bi bi-trash-fill me-1"></i>Remove');
                 }
+            }
+        });
+
+        // Deduplicate Users — merge duplicate mobile accounts with EMS data
+        $('#btn-deduplicate').on('click', async function () {
+            if (!confirm('This will scan the entire DB for duplicate mobile numbers, merge them with EMS data, and delete redundant accounts.\n\nAll registrations from removed accounts will be migrated to the primary account.\n\nProceed?')) return;
+
+            const btn = $(this);
+            btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1"></span>Scanning...');
+
+            try {
+                const res = await fetch('/api/admin/deduplicate-users', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'same-origin'
+                });
+                const data = await res.json();
+
+                if (data.status === 'success') {
+                    let msg = `✅ ${data.message}\n\nSummary:\n`;
+                    if (data.details && data.details.length > 0) {
+                        data.details.forEach(d => {
+                            msg += `\n📱 ${d.mobile} → ${d.primaryId} (${d.name})\n`;
+                            msg += `   Removed: ${d.removedAccounts.join(', ')}\n`;
+                            msg += `   Paid: ${d.paid ? '✅ Yes' : '❌ No'}\n`;
+                        });
+                    } else {
+                        msg += '\nNo duplicate mobile numbers found. DB is clean! 🎉';
+                    }
+                    alert(msg);
+                    loadLiveMembers($('#member_search').val());
+                    loadLiveDashboardStats();
+                } else {
+                    alert('❌ ' + (data.message || 'Deduplication failed.'));
+                }
+            } catch (err) {
+                alert('Error running deduplication: ' + err.message);
+            } finally {
+                btn.prop('disabled', false).html('<i class="bi bi-arrow-repeat me-1"></i>Fix Duplicates');
             }
         });
 

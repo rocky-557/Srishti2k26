@@ -879,6 +879,123 @@ async function adminResetPassword(req, res) {
   }
 }
 
+/**
+ * POST /api/admin/deduplicate-users
+ * Scans DB for duplicate mobile numbers, merges them with EMS data and preserves registrations.
+ */
+async function deduplicateUsers(req, res) {
+  try {
+    const { fetchEmsStatus } = require('../utils/ems');
+    const Registration = require('../models/Registration');
+    const Payment = require('../models/Payment');
+
+    const duplicates = await User.aggregate([
+      { $match: { mobile: { $exists: true, $ne: null, $ne: '' } } },
+      {
+        $group: {
+          _id: "$mobile",
+          count: { $sum: 1 },
+          docs: { $push: "$$ROOT" }
+        }
+      },
+      { $match: { count: { $gt: 1 } } }
+    ]);
+
+    let mergedCount = 0;
+    let deletedCount = 0;
+    let details = [];
+
+    for (const group of duplicates) {
+      const mobile = group._id;
+      const docs = group.docs;
+
+      // Sort: paid account first, then lowest memberId
+      docs.sort((a, b) => {
+        const aPaid = a.genfee === 'paid' ? 2 : 0;
+        const bPaid = b.genfee === 'paid' ? 2 : 0;
+        if (aPaid !== bPaid) return bPaid - aPaid;
+        return (a.memberId || 999999) - (b.memberId || 999999);
+      });
+
+      const primaryDoc = docs[0];
+      const otherDocs = docs.slice(1);
+      const otherMemberIds = otherDocs.map(d => d.memberId).filter(Boolean);
+      const otherDbIds = otherDocs.map(d => d._id);
+
+      // EMS sync
+      const ems187 = await fetchEmsStatus(187, mobile);
+      const ems106 = (!ems187 || ems187.StatusCode !== 1) ? await fetchEmsStatus(106, mobile) : null;
+      const ems = (ems187 && ems187.StatusCode === 1) ? ems187 : ems106;
+
+      let updatedName = primaryDoc.name;
+      let updatedEmail = primaryDoc.email;
+      let updatedGenfee = primaryDoc.genfee;
+
+      if (ems && ems.StatusCode === 1 && ems.Response) {
+        const emsData = ems.Response;
+        if (emsData.Name && emsData.Name.trim()) updatedName = emsData.Name.trim();
+        if (emsData.Email && emsData.Email.trim()) updatedEmail = emsData.Email.trim().toLowerCase();
+        if (emsData.Paid_status === 1 || emsData.Paid_status === '1') updatedGenfee = 'paid';
+      }
+
+      // Password ensure
+      let activePassword = primaryDoc.password;
+      if (!activePassword || activePassword.length < 10) {
+        const last4 = mobile.slice(-4);
+        activePassword = await bcrypt.hash(`Srishti@${last4}!`, 12);
+      }
+
+      // Migrate registrations & payments
+      if (otherMemberIds.length > 0) {
+        await Registration.updateMany(
+          { memberId: { $in: otherMemberIds } },
+          { $set: { memberId: primaryDoc.memberId, email: updatedEmail, mobile } }
+        );
+        await Payment.updateMany(
+          { memberId: { $in: otherMemberIds } },
+          { $set: { memberId: primaryDoc.memberId, email: updatedEmail, mobile } }
+        );
+      }
+
+      // Update primary doc
+      await User.findByIdAndUpdate(primaryDoc._id, {
+        $set: {
+          name: updatedName,
+          email: updatedEmail,
+          mobile,
+          genfee: updatedGenfee,
+          password: activePassword
+        }
+      });
+
+      // Delete duplicates
+      const delRes = await User.deleteMany({ _id: { $in: otherDbIds } });
+      deletedCount += (delRes.deletedCount || 0);
+      mergedCount++;
+
+      details.push({
+        mobile,
+        primaryId: `SRiSHTi25${primaryDoc.memberId}`,
+        name: updatedName,
+        email: updatedEmail,
+        paid: updatedGenfee === 'paid',
+        removedAccounts: otherMemberIds.map(id => `SRiSHTi25${id}`)
+      });
+    }
+
+    return res.json({
+      status: 'success',
+      message: `Successfully resolved ${mergedCount} duplicate mobile numbers (removed ${deletedCount} redundant accounts).`,
+      groupsProcessed: mergedCount,
+      accountsRemoved: deletedCount,
+      details
+    });
+  } catch (err) {
+    console.error('Deduplication error:', err);
+    return res.status(500).json({ status: 'error', message: 'Failed to deduplicate accounts.' });
+  }
+}
+
 module.exports = {
   adminLogin,
   adminLogout,
@@ -895,5 +1012,6 @@ module.exports = {
   onSpotRegister,
   adminLookupUser,
   adminResetPassword,
-  deleteMember
+  deleteMember,
+  deduplicateUsers
 };
