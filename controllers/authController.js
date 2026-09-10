@@ -85,10 +85,10 @@ async function signup(req, res) {
       return res.send('Your Password Must Contain At Least 1 special character!');
     }
 
-    // Check for existing email
-    const existingUser = await User.findOne({ email: email.toLowerCase() });
+    // Check for existing user by mobile (primary identifier)
+    const existingUser = await User.findOne({ mobile: phone });
     if (existingUser) {
-      return res.send('Email already in system! Try to Login');
+      return res.send('Mobile number already in system! Try to Login');
     }
 
     // Hash password with bcrypt cost 12 (same as PHP PASSWORD_BCRYPT with cost 12)

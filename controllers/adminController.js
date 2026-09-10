@@ -705,11 +705,11 @@ async function onSpotRegister(req, res) {
       return res.status(400).json({ status: 'error', message: 'Mobile Number must be exactly 10 digits.' });
     }
 
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ mobile });
     if (existingUser) {
       return res.status(400).json({ 
         status: 'error', 
-        message: `An account with email "${email}" already exists (SRiSHTi ID: SRiSHTi25${existingUser.memberId}).` 
+        message: `An account with Mobile "${mobile}" already exists (SRiSHTi ID: SRiSHTi25${existingUser.memberId}).` 
       });
     }
 
