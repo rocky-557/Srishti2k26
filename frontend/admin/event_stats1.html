@@ -308,15 +308,16 @@
                 window.scrollTo(0, document.body.scrollHeight);
             }
 
-            printLine('Booting SRiSHTi 2k26 Statistics Interface v3.0...', 'prompt');
-            await new Promise(r => setTimeout(r, 150));
-            printLine('Connection established with MongoDB. Authenticating...', 'output');
-            await new Promise(r => setTimeout(r, 150));
-            let passkey = sessionStorage.getItem('stats_passkey') || new URLSearchParams(window.location.search).get('passkey') || '';
-            let res = await fetch('/api/stats' + (passkey ? `?passkey=${encodeURIComponent(passkey)}` : ''), {
-                headers: passkey ? { 'x-passkey': passkey } : {},
-                credentials: 'same-origin'
-            });
+            try {
+                printLine('Booting SRiSHTi 2k26 Statistics Interface v3.0...', 'prompt');
+                await new Promise(r => setTimeout(r, 150));
+                printLine('Connection established with MongoDB. Authenticating...', 'output');
+                await new Promise(r => setTimeout(r, 150));
+                let passkey = sessionStorage.getItem('stats_passkey') || new URLSearchParams(window.location.search).get('passkey') || '';
+                let res = await fetch('/api/stats' + (passkey ? `?passkey=${encodeURIComponent(passkey)}` : ''), {
+                    headers: passkey ? { 'x-passkey': passkey } : {},
+                    credentials: 'same-origin'
+                });
 
             if (res.status === 401) {
                 const userPin = prompt('Enter 4-digit passkey to access SRiSHTi 2k26 Statistics:');
