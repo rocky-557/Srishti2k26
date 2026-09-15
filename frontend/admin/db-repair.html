@@ -28,6 +28,14 @@
 </div>
 <button id="loadBtn" class="btn-primary"><i class="bi bi-search"></i> Show Duplicates</button>
 </div>
+<div class="card-custom p-3 mb-3">
+<h5><i class="bi bi-telephone"></i> Manual Lookup — any mobile / email / SRiSHTi ID</h5>
+<div class="d-flex gap-2 flex-wrap">
+<input id="manualInput" class="form-control" style="max-width:320px" placeholder="e.g. 9876543210">
+<button id="manualBtn" class="btn-primary"><i class="bi bi-search"></i> Lookup</button>
+</div>
+<div id="manualOut" class="mt-3"></div>
+</div>
 <div id="emsPanel" class="card-custom p-3 mb-3" style="display:none">
 <h5>EMS Details</h5>
 <pre id="emsPre" style="white-space:pre-wrap;max-height:400px;overflow:auto"></pre>
@@ -82,6 +90,32 @@ async function pushEms(phone){
  }catch(e){ alert(e.message); }
 }
 $('#loadBtn').on('click',load);
+async function manualLookup(){
+ const q=$('#manualInput').val().trim();
+ if(!q){ alert('Enter a mobile / email / SRiSHTi ID'); return; }
+ $('#manualOut').html('<div class="spinner-border"></div> Looking up '+q+'...');
+ try{
+  const [u,e]=await Promise.all([
+   fetch('/api/admin/user/lookup',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({identifier:q})}).then(r=>r.json()),
+   fetch('/api/admin/db-repair/ems-preview?phone='+encodeURIComponent(q),{credentials:'same-origin'}).then(r=>r.json())
+  ]);
+  let html='';
+  if(u.status==='success'){
+   const usr=u.user;
+   html+=`<div class="table-responsive"><table class="table table-hover"><thead><tr><th>SRiSHTi ID</th><th>Name</th><th>Email</th><th>Mobile</th><th>College</th><th>Genfee</th><th>Regs</th><th>Pays</th><th>Action</th></tr></thead><tbody>
+   <tr><td>SRiSHTi25${usr.memberId}</td><td>${usr.name}</td><td>${usr.email}</td><td>${usr.mobile}</td><td>${(usr.collegeName||'').substring(0,25)}</td><td>${usr.genfee||'unpaid'}</td><td>${(u.registrations||[]).length}</td><td>${(u.payments||[]).length}</td>
+   <td><button class="btn btn-sm btn-outline-danger" onclick="delUser(${usr.memberId},'${usr.name}')">Delete</button> <button class="btn btn-sm btn-success ms-1" onclick="pushEms('${usr.mobile}')">Push EMS Copy</button></td></tr></tbody></table></div>`;
+   if((u.registrations||[]).length) html+=`<div><strong>Registrations:</strong> ${u.registrations.map(r=>r.type+': '+r.name+(r.fees?' ('+r.fees+')':'')).join(' | ')}</div>`;
+   if((u.payments||[]).length) html+=`<div><strong>Payments:</strong> ${u.payments.map(p=>p.transactionId+' ₹'+p.amount+' '+p.paymentStatus).join(' | ')}</div>`;
+  } else {
+   html+=`<div class="alert alert-warning">DB: ${u.message||'not found'}</div>`;
+  }
+  html+=`<div class="mt-2"><strong>Raw EMS:</strong><pre style="white-space:pre-wrap;max-height:300px;overflow:auto">${JSON.stringify(e,null,2)}</pre></div>`;
+  $('#manualOut').html(html);
+ }catch(err){ $('#manualOut').html('<div class="alert alert-danger">'+err.message+'</div>'); }
+}
+$('#manualBtn').on('click',manualLookup);
+$('#manualInput').on('keydown',e=>{ if(e.key==='Enter') manualLookup(); });
 </script>
 </body>
 </html>
