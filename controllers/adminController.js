@@ -170,22 +170,31 @@ async function removeAdmin(req, res) {
 
 async function searchMembers(req, res) {
   try {
-    const query = req.body.query || req.body.search || req.query.query || '';
+    const query = (req.body.query || req.body.search || req.query.query || '').trim();
     const wantsJson = req.headers.accept?.includes('application/json') || req.body.format === 'json' || req.query.format === 'json';
 
     let members;
-    if (!query || query.trim() === '') {
+    if (!query) {
       members = await User.find({}).sort({ memberId: -1 }).limit(100);
     } else {
-      const regex = new RegExp(query.trim(), 'i');
-      members = await User.find({
-        $or: [
-          { name: regex },
-          { email: regex },
-          { mobile: regex },
-          { collegeName: regex }
-        ]
-      }).sort({ memberId: -1 });
+      const regex = new RegExp(query, 'i');
+      const orConditions = [
+        { name: regex },
+        { email: regex },
+        { mobile: regex },
+        { collegeName: regex }
+      ];
+      // Support searching by SRiSHTi ID (numeric part) or raw memberId
+      const numQuery = parseInt(query, 10);
+      if (!isNaN(numQuery)) {
+        orConditions.push({ memberId: numQuery });
+      }
+      // Support SRiSHTi25XXXX format — extract numeric suffix
+      const sIdMatch = query.match(/(?:SRiSHTi\d{2,4})(\d+)$/i);
+      if (sIdMatch) {
+        orConditions.push({ memberId: parseInt(sIdMatch[1], 10) });
+      }
+      members = await User.find({ $or: orConditions }).sort({ memberId: -1 });
     }
 
     if (wantsJson) {
@@ -265,8 +274,13 @@ async function getMember(req, res) {
  */
 async function updateMember(req, res) {
   try {
-    const { id, name, email, mobile, cgname, genfee, accomodation } = req.body;
+    const { id, name, email, mobile, cgname, genfee, accomodation, events, workshops, papers, flagship } = req.body;
     const memberId = parseInt(id);
+
+    const oldUser = await User.findOne({ memberId });
+    if (!oldUser) {
+      return res.json({ status: 'error', message: 'Member not found.' });
+    }
 
     const result = await User.updateOne(
       { memberId },
@@ -280,6 +294,26 @@ async function updateMember(req, res) {
       }
     );
 
+    // Re-link registrations if email changed
+    if (email && oldUser.email !== email.toLowerCase()) {
+      await Registration.updateMany({ email: oldUser.email }, { email: email.toLowerCase() });
+    }
+
+    // Sync registrations if provided
+    const effectiveEmail = (email || oldUser.email).toLowerCase();
+    const updates = { event: events, workshop: workshops, paper: papers, flagship: flagship };
+    for (const [type, list] of Object.entries(updates)) {
+      if (!Array.isArray(list)) continue;
+      const existing = await Registration.find({ email: effectiveEmail, type });
+      const existingNames = existing.map(r => r.name);
+      const toRemove = existingNames.filter(n => !list.includes(n));
+      const toAdd = list.filter(n => !existingNames.includes(n));
+      if (toRemove.length) await Registration.deleteMany({ email: effectiveEmail, type, name: { $in: toRemove } });
+      for (const n of toAdd) {
+        await Registration.create({ email: effectiveEmail, type, name: n, fees: '' });
+      }
+    }
+
     if (result.modifiedCount > 0 || result.matchedCount > 0) {
       return res.json({ status: 'success', message: 'Member details updated successfully!' });
     } else {
@@ -292,9 +326,45 @@ async function updateMember(req, res) {
 }
 
 /**
- * POST /api/admin/members/delete
- * Delete an individual attendee and their registrations/payments
+ * POST /api/admin/members/update-registrations
+ * Add/remove registrations for a user by memberId.
+ * Body: { memberId, events?: [], workshops?: [], papers?: [], flagship?: [] }
+ * Each array is the desired FINAL list of registration names.
  */
+async function updateRegistrations(req, res) {
+  try {
+    const { memberId, events, workshops, papers, flagship } = req.body;
+    if (!memberId) {
+      return res.status(400).json({ status: 'error', message: 'memberId is required.' });
+    }
+    const user = await User.findOne({ memberId });
+    if (!user) {
+      return res.status(404).json({ status: 'error', message: 'Member not found.' });
+    }
+    const updates = {
+      event: events,
+      workshop: workshops,
+      paper: papers,
+      flagship: flagship
+    };
+    for (const [type, list] of Object.entries(updates)) {
+      if (!Array.isArray(list)) continue;
+      // Remove registrations not in the new list
+      const existing = await Registration.find({ email: user.email, type });
+      const existingNames = existing.map(r => r.name);
+      const toRemove = existingNames.filter(n => !list.includes(n));
+      const toAdd = list.filter(n => !existingNames.includes(n));
+      if (toRemove.length) await Registration.deleteMany({ email: user.email, type, name: { $in: toRemove } });
+      for (const name of toAdd) {
+        await Registration.create({ email: user.email, type, name, fees: '' });
+      }
+    }
+    return res.json({ status: 'success', message: 'Registrations updated.' });
+  } catch (err) {
+    console.error('Update registrations error:', err);
+    return res.status(500).json({ status: 'error', message: 'Error updating registrations.' });
+  }
+}
 async function deleteMember(req, res) {
   try {
     const { id, memberId, email } = req.body;
@@ -623,21 +693,6 @@ function escHtml(str) {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
-}
-
-/**
- * POST /api/admin/update-ui
- * Pulls latest frontend UI files without restarting backend server process.
- */
-async function updateUI(req, res) {
-  const { exec } = require('child_process');
-  exec('git fetch origin main && git checkout origin/main -- frontend/', { cwd: process.cwd() }, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`UI Update error: ${error.message}`);
-      return res.status(500).json({ error: error.message, stderr });
-    }
-    return res.json({ success: true, message: stdout || 'UI Frontend files updated successfully.' });
-  });
 }
 
 /**
@@ -996,6 +1051,75 @@ async function deduplicateUsers(req, res) {
   }
 }
 
+/**
+ * GET /api/admin/db-repair/duplicates?by=mobile|email
+ * Show duplicate groups with all details
+ */
+async function getDuplicates(req, res) {
+  try {
+    const by = (req.query.by || 'mobile').toLowerCase();
+    const field = by === 'email' ? 'email' : 'mobile';
+    const groups = await User.aggregate([
+      { $match: { [field]: { $exists: true, $ne: null, $ne: '' } } },
+      { $group: { _id: `$${field}`, count: { $sum: 1 }, docs: { $push: '$$ROOT' } } },
+      { $match: { count: { $gt: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: 50 }
+    ]);
+    const enriched = [];
+    for (const g of groups) {
+      const docs = [];
+      for (const d of g.docs) {
+        const regs = await Registration.find({ email: d.email });
+        const pays = await Payment.find({ memberId: d.memberId });
+        docs.push({ ...d, srishtiId: `SRiSHTi25${d.memberId}`, regs, pays, regCount: regs.length, payCount: pays.length });
+      }
+      enriched.push({ key: g._id, count: g.count, docs });
+    }
+    return res.json({ status: 'success', by: field, groups: enriched });
+  } catch (err) {
+    console.error('Get duplicates error:', err);
+    return res.status(500).json({ status: 'error', message: 'Failed to fetch duplicates.' });
+  }
+}
+
+/**
+ * GET /api/admin/db-repair/ems-preview?phone=xxx
+ * Fetch EMS details separately
+ */
+async function getEmsPreview(req, res) {
+  try {
+    const phone = req.query.phone || req.query.mobile || req.body.phone;
+    if (!phone) return res.status(400).json({ status: 'error', message: 'Phone required.' });
+    const { fetchEmsStatus } = require('../utils/ems');
+    const e187 = await fetchEmsStatus(187, phone);
+    const e106 = (!e187 || e187.StatusCode !== 1) ? await fetchEmsStatus(106, phone) : null;
+    const ems = (e187 && e187.StatusCode === 1) ? e187 : e106;
+    if (!ems) return res.json({ status: 'error', message: 'No EMS response.' });
+    return res.json({ status: 'success', ems });
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: err.message });
+  }
+}
+
+/**
+ * POST /api/admin/db-repair/push-ems {phone}
+ * Push EMS based user details as new copy (exact payment details)
+ */
+async function pushEmsCopy(req, res) {
+  try {
+    const phone = req.body.phone || req.body.mobile;
+    if (!phone) return res.status(400).json({ status: 'error', message: 'Phone required.' });
+    const { syncOrProvisionFromEms } = require('../utils/ems');
+    // Force create new copy: if exists, create duplicate with new memberId using EMS data directly
+    const emsRes = await syncOrProvisionFromEms(phone);
+    if (!emsRes.success) return res.status(404).json({ status: 'error', message: emsRes.message });
+    return res.json({ status: 'success', message: emsRes.isNewUser ? 'New EMS copy created.' : 'Existing EMS user synced.', user: emsRes.user, defaultPassword: emsRes.defaultPassword });
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: err.message });
+  }
+}
+
 module.exports = {
   adminLogin,
   adminLogout,
@@ -1008,10 +1132,13 @@ module.exports = {
   getStats,
   listAdmins,
   gitPull,
-  updateUI,
   onSpotRegister,
   adminLookupUser,
   adminResetPassword,
-  deleteMember,
-  deduplicateUsers
+   deleteMember,
+   deduplicateUsers,
+   updateRegistrations,
+   getDuplicates,
+   getEmsPreview,
+   pushEmsCopy
 };

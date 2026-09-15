@@ -13,12 +13,15 @@ const {
   getStats,
   listAdmins,
   gitPull,
-  updateUI,
   onSpotRegister,
   adminLookupUser,
   adminResetPassword,
   deleteMember,
-  deduplicateUsers
+  deduplicateUsers,
+  updateRegistrations,
+  getDuplicates,
+  getEmsPreview,
+  pushEmsCopy
 } = require('../controllers/adminController');
 
 // POST /api/admin/login — admin login (no auth required)
@@ -54,20 +57,25 @@ router.get('/members/:id', requireAdmin, getMember);
 // POST /api/admin/members/update — update member (requires admin)
 router.post('/members/update', requireAdmin, updateMember);
 
+// POST /api/admin/members/update-registrations — add/remove registrations (requires admin)
+router.post('/members/update-registrations', requireAdmin, updateRegistrations);
+
 // POST /api/admin/members/delete — delete member (requires admin)
 router.post('/members/delete', requireAdmin, deleteMember);
 
 // POST /api/admin/deduplicate-users — deduplicate duplicate mobiles and reconcile with EMS (requires admin)
 router.post('/deduplicate-users', requireAdmin, deduplicateUsers);
 
+// DB Repair — duplicates handling (requires admin)
+router.get('/db-repair/duplicates', requireAdmin, getDuplicates);
+router.get('/db-repair/ems-preview', requireAdmin, getEmsPreview);
+router.post('/db-repair/push-ems', requireAdmin, pushEmsCopy);
+
 // ALL /api/admin/events/download — event-wise participant list (requires admin)
 router.all('/events/download', requireAdmin, downloadEventwise);
 
 // ALL /api/admin/stats — live event statistics (requires admin or passkey 2026)
 router.all('/stats', getStats);
-
-// POST /api/admin/update-ui — update frontend UI files (requires admin)
-router.post('/update-ui', requireAdmin, updateUI);
 
 // POST /api/admin/git-pull — pull latest from git & reload PM2 (requires admin)
 router.post('/git-pull', requireAdmin, gitPull);

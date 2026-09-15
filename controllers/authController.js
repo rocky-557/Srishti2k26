@@ -371,11 +371,6 @@ async function sendOtp(req, res) {
       verified: false
     };
 
-const dns = require('dns');
-if (dns.setDefaultResultOrder) {
-  dns.setDefaultResultOrder('ipv4first');
-}
-
     // Log OTP to server console for testing/development
     console.log(`\n==============================================`);
     console.log(`🔑 SRiSHTi 2k26 OTP for ${user.email}: [ ${otp} ]`);

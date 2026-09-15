@@ -119,6 +119,11 @@ app.get(['/admin/pw-reg.html', '/admin/pw-reg', '/admin/pwreg', '/pw-reg'], (req
   res.sendFile(path.join(STATIC_DIR, 'admin', 'pw-reg.html'));
 });
 
+app.get(['/admin/db-repair.html', '/admin/db-repair', '/db-repair'], (req, res) => {
+  if (!req.session || !req.session.admin_user) return res.redirect('/admin/ad-login.html?redirect=/admin/db-repair.html');
+  res.sendFile(path.join(STATIC_DIR, 'admin', 'db-repair.html'));
+});
+
 // Clean Page Aliases
 app.get(['/signup.html', '/signup'], (req, res) => {
   res.sendFile(path.join(STATIC_DIR, 'register.html'));
@@ -150,7 +155,19 @@ app.get('/', (req, res) => {
 
 // ============ STATIC FILES & FRONTEND ============
 
-app.use(express.static(STATIC_DIR));
+// Auto-serve .webp when client supports it and file exists (85% saving)
+app.use((req, res, next) => {
+  const accept = req.headers.accept || '';
+  if (accept.includes('image/webp') && /\.(jpe?g|png)$/i.test(req.path)) {
+    const webpPath = path.join(STATIC_DIR, req.path.replace(/\.(jpe?g|png)$/i, '.webp'));
+    if (fs.existsSync(webpPath)) {
+      req.url = req.url.replace(/\.(jpe?g|png)(\?.*)?$/i, '.webp$2');
+      res.set('X-Served-WebP', '1');
+    }
+  }
+  next();
+});
+app.use(express.static(STATIC_DIR, { maxAge: '7d', etag: true }));
 
 // ============ API STATUS CHECK ============
 app.get('/api/status', (req, res) => {

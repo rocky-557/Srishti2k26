@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DB Repair — SRiSHTi 2k26</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="./css/avengers-admin.css">
+</head>
+<body>
+<div class="app-container">
+<aside id="sidebar">
+<div class="logo-container"><img src="./srishti_logo.png" class="logo-img"><span class="logo-text">SRiSHTi 2k26</span></div>
+<ul class="nav">
+<li class="nav-item"><a class="nav-link" href="/admin/dashboard.html"><i class="bi bi-grid-fill"></i>Dashboard</a></li>
+<li class="nav-item"><a class="nav-link active" href="#"><i class="bi bi-tools"></i>DB Repair</a></li>
+<li class="nav-item"><a class="nav-link" href="/admin/pw-reg.html"><i class="bi bi-person-plus-fill"></i>On-Spot</a></li>
+</ul>
+<a href="/admin/ad-login.html" class="logout-btn">Logout</a>
+</aside>
+<div id="main-content">
+<h2 class="section-title">DB Repair — Duplicates</h2>
+<p class="text-muted">Find duplicates by mobile/email, view all details, fetch EMS separately, delete or push EMS copy.</p>
+<div class="card-custom p-3 mb-3 d-flex gap-2 align-items-end flex-wrap">
+<div>
+<label class="form-label">Based on</label>
+<select id="bySelect" class="form-select"><option value="mobile">Mobile</option><option value="email">Email</option></select>
+</div>
+<button id="loadBtn" class="btn-primary"><i class="bi bi-search"></i> Show Duplicates</button>
+</div>
+<div id="emsPanel" class="card-custom p-3 mb-3" style="display:none">
+<h5>EMS Details</h5>
+<pre id="emsPre" style="white-space:pre-wrap;max-height:400px;overflow:auto"></pre>
+<button class="btn btn-sm btn-outline-primary" onclick="document.getElementById('emsPanel').style.display='none'">Close</button>
+</div>
+<div id="groups"></div>
+</div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+async function load(){
+ const by=$('#bySelect').val();
+ $('#groups').html('<div class="text-center p-4"><div class="spinner-border"></div> Loading</div>');
+ try{
+  const res=await fetch('/api/admin/db-repair/duplicates?by='+by,{credentials:'same-origin'});
+  const data=await res.json();
+  if(data.status!=='success'){ $('#groups').html('<div class="alert alert-danger">'+data.message+'</div>'); return;}
+  if(!data.groups.length){ $('#groups').html('<div class="alert alert-success">No duplicates found for '+by+'</div>'); return;}
+  let html='';
+  data.groups.forEach(g=>{
+   html+=`<div class="card-custom mb-3 p-3"><h5>${by}: <span class="text-warning">${g.key}</span> <span class="badge text-bg-danger">${g.count} dups</span>
+   <button class="btn btn-sm btn-primary ms-2" onclick="fetchEms('${g.key}')">Fetch EMS</button>
+   <button class="btn btn-sm btn-success ms-1" onclick="pushEms('${g.key}')">Push EMS Copy</button></h5><div class="table-responsive"><table class="table table-hover"><thead><tr><th>SRiSHTi ID</th><th>Name</th><th>Email</th><th>Mobile</th><th>College</th><th>Genfee</th><th>Regs</th><th>Pays</th><th>Action</th></tr></thead><tbody>`;
+   g.docs.forEach(d=>{
+    html+=`<tr><td>${d.srishtiId}</td><td>${d.name}</td><td>${d.email}</td><td>${d.mobile}</td><td>${(d.collegeName||'').substring(0,20)}</td><td>${d.genfee||'unpaid'}</td><td>${d.regCount}</td><td>${d.payCount}</td><td><button class="btn btn-sm btn-outline-danger" onclick="delUser(${d.memberId},'${d.name}')">Delete</button> <button class="btn btn-sm btn-outline-primary" onclick="fetchEms('${d.mobile}')">EMS</button></td></tr>`;
+   });
+   html+=`</tbody></table></div></div>`;
+  });
+  $('#groups').html(html);
+ }catch(e){ $('#groups').html('<div class="alert alert-danger">'+e.message+'</div>');}
+}
+async function fetchEms(phone){
+ $('#emsPanel').show(); $('#emsPre').text('Fetching EMS for '+phone+'...');
+ try{
+  const res=await fetch('/api/admin/db-repair/ems-preview?phone='+encodeURIComponent(phone),{credentials:'same-origin'});
+  const data=await res.json();
+  $('#emsPre').text(JSON.stringify(data,null,2));
+ }catch(e){ $('#emsPre').text('Error: '+e.message); }
+}
+async function delUser(id,name){
+ if(!confirm('Delete '+name+' SRiSHTi25'+id+'?')) return;
+ try{
+  const res=await fetch('/api/admin/members/delete',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({memberId:id})});
+  const d=await res.json(); alert(d.message||d.status); load();
+ }catch(e){ alert(e.message); }
+}
+async function pushEms(phone){
+ if(!confirm('Push EMS copy for '+phone+'? This will create/sync user with exact payment details.')) return;
+ try{
+  const res=await fetch('/api/admin/db-repair/push-ems',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({phone})});
+  const d=await res.json(); alert(d.message+(d.defaultPassword?' Pass: '+d.defaultPassword:'')); load();
+ }catch(e){ alert(e.message); }
+}
+$('#loadBtn').on('click',load);
+</script>
+</body>
+</html>
