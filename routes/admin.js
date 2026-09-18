@@ -21,7 +21,8 @@ const {
   updateRegistrations,
   getDuplicates,
   getEmsPreview,
-  pushEmsCopy
+  pushEmsCopy,
+  syncAllEms
 } = require('../controllers/adminController');
 
 // POST /api/admin/login — admin login (no auth required)
@@ -65,6 +66,9 @@ router.post('/members/delete', requireAdmin, deleteMember);
 
 // POST /api/admin/deduplicate-users — deduplicate duplicate mobiles and reconcile with EMS (requires admin)
 router.post('/deduplicate-users', requireAdmin, deduplicateUsers);
+
+// POST /api/admin/sync-all-ems — bulk EMS reconcile + fresh totals (requires admin)
+router.post('/sync-all-ems', requireAdmin, syncAllEms);
 
 // DB Repair — duplicates handling (requires admin)
 router.get('/db-repair/duplicates', requireAdmin, getDuplicates);

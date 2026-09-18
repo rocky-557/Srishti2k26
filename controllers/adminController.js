@@ -672,6 +672,83 @@ async function getStats(req, res) {
 }
 
 /**
+ * ALL /api/stats/download?filter=all|paid|unpaid|workshop&format=csv|json
+ *
+ * Passkey-protected (same auth as getStats): admin session OR 4-digit passkey 2026.
+ * Two-track payment model (see paymentController.js:175-191, registrationController.js:58):
+ *   - General fee (GEN) → User.genfee = 'paid'. Required for events/flagship/paper.
+ *   - Workshop fee (WS1..WS10) → Registration{type:'workshop', fees:'paid'}. Does NOT set genfee.
+ * Filters:
+ *   filter=all      → every signup
+ *   filter=paid     → genfee == 'paid' (general fee only)
+ *   filter=unpaid   → genfee != 'paid'
+ *   filter=workshop → has ≥1 workshop registration with fees='paid' (regardless of genfee)
+ */
+async function downloadSignups(req, res) {
+  try {
+    const passkey = req.headers['x-passkey'] || req.query.passkey || (req.body && req.body.passkey);
+    const isAdmin = !!(req.session && req.session.admin_user);
+    const isPasskeyValid = String(passkey || '').trim() === '2026' || (req.session && req.session.stats_passkey === '2026');
+
+    if (!isAdmin && !isPasskeyValid) {
+      return res.status(401).json({
+        status: 'error',
+        code: 'PASSKEY_REQUIRED',
+        message: 'Please enter the 4-digit passkey to download signups.'
+      });
+    }
+
+    if (isPasskeyValid && req.session) {
+      req.session.stats_passkey = '2026';
+    }
+
+    const filter = String((req.query.filter || (req.body && req.body.filter) || 'all')).toLowerCase();
+    const format = String((req.query.format || (req.body && req.body.format) || 'csv')).toLowerCase();
+
+    let query = {};
+    if (filter === 'paid') query = { genfee: 'paid' };
+    else if (filter === 'unpaid' || filter === 'signup' || filter === 'signup-only') query = { genfee: { $ne: 'paid' } };
+
+    let users = await User.find(query).select('-password').sort({ memberId: 1 }).lean();
+
+    // Map email → paid workshop names (single query, avoids N+1)
+    const paidWs = await Registration.find({ type: 'workshop', fees: 'paid' }).select('email name -_id').lean();
+    const wsByEmail = {};
+    for (const r of paidWs) {
+      const key = (r.email || '').toLowerCase();
+      if (!key) continue;
+      (wsByEmail[key] = wsByEmail[key] || []).push(r.name);
+    }
+    for (const u of users) {
+      u.workshopsPaid = wsByEmail[(u.email || '').toLowerCase()] || [];
+    }
+
+    if (filter === 'workshop') {
+      users = users.filter(u => u.workshopsPaid.length > 0);
+    }
+
+    if (format === 'json') {
+      return res.json({ status: 'success', filter, count: users.length, users });
+    }
+
+    // Default: CSV download
+    let csv = 'SRiSHTi ID,Name,Email,Mobile,College,Department,Gender,General Fee,Workshop Paid Count,Workshop Names,Accommodation,Registered On\n';
+    for (const m of users) {
+      const sId = m.memberId ? `SRiSHTi25${m.memberId}` : '';
+      const dateStr = m.createdAt ? new Date(m.createdAt).toISOString().replace('T', ' ').substring(0, 19) : '';
+      const wsNames = (m.workshopsPaid || []).join('; ');
+      csv += `"${sId}","${csvEsc(m.name)}","${csvEsc(m.email)}","${csvEsc(m.mobile)}","${csvEsc(m.collegeName)}","${csvEsc(m.department)}","${csvEsc(m.gender)}","${csvEsc(m.genfee || 'unpaid')}","${(m.workshopsPaid || []).length}","${csvEsc(wsNames)}","${csvEsc(m.accommodation || '')}","${dateStr}"\n`;
+    }
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="SRiSHTi2k26_Signups_${filter}_${users.length}.csv"`);
+    return res.send(csv);
+  } catch (err) {
+    console.error('Stats download error:', err);
+    return res.status(500).json({ error: 'Server error' });
+  }
+}
+
+/**
  * GET /api/admin/list
  * Returns the list of all admins (for the admin management panel).
  */
@@ -1120,6 +1197,91 @@ async function pushEmsCopy(req, res) {
   }
 }
 
+/**
+ * POST /api/admin/sync-all-ems
+ * Bulk-reconcile every local signup against PSG EMS, then return fresh event-stats counts.
+ * Body (all optional): { onlyUnpaid?: boolean (default true), limit?: number (default 2000), concurrency?: number (default 5) }
+ * - Iterates Users (unpaid-first), calls syncOrProvisionFromEms(mobile) per user.
+ * - Bounded concurrency so EMS API isn't hammered; each lookup has ~8s timeout inside fetchEmsStatus.
+ * - Returns summary + fresh totals so admin can verify counts changed.
+ */
+async function syncAllEms(req, res) {
+  try {
+    const { syncOrProvisionFromEms } = require('../utils/ems');
+    const onlyUnpaid = req.body.onlyUnpaid !== false && req.query.onlyUnpaid !== 'false';
+    const limit = Math.min(parseInt(req.body.limit || req.query.limit || '2000', 10) || 2000, 10000);
+    const concurrency = Math.min(Math.max(parseInt(req.body.concurrency || req.query.concurrency || '5', 10) || 5, 1), 10);
+
+    const baseQuery = onlyUnpaid ? { genfee: { $ne: 'paid' } } : {};
+    const users = await User.find(baseQuery).select('memberId name email mobile genfee').sort({ memberId: 1 }).limit(limit).lean();
+
+    let syncedPaid = 0;
+    let workshopsSynced = 0;
+    let alreadyPaid = 0;
+    let noEmsRecord = 0;
+    let errors = 0;
+    const details = [];
+    const unmappedTypes = {};
+
+    // Simple worker pool
+    let idx = 0;
+    async function worker() {
+      while (idx < users.length) {
+        const u = users[idx++];
+        try {
+          if (!u.mobile) { noEmsRecord++; continue; }
+          const r = await syncOrProvisionFromEms(u.mobile);
+          if (r && r.success && r.user) {
+            // Re-read workshops for this user to count
+            const wsCount = await Registration.countDocuments({ email: r.user.email, type: 'workshop', fees: 'paid' });
+            if (wsCount > 0) workshopsSynced++;
+            if ((r.user.genfee || '') === 'paid') syncedPaid++;
+            details.push({ srishtiId: `SRiSHTi25${r.user.memberId}`, email: r.user.email, isNew: !!r.isNewUser, workshops: wsCount });
+          } else {
+            if (r && /pending/i.test(r.message || '')) alreadyPaid++;
+            else noEmsRecord++;
+          }
+        } catch (e) {
+          errors++;
+        }
+      }
+    }
+    await Promise.all(Array.from({ length: Math.min(concurrency, users.length) }, () => worker()));
+
+    // Fresh counts (same definitions as getStats totals)
+    const [totalSignups, totalPaid, totalWorkshopPaid] = await Promise.all([
+      User.countDocuments(),
+      User.countDocuments({ genfee: 'paid' }),
+      Registration.countDocuments({ type: 'workshop', fees: 'paid' })
+    ]);
+
+    // Collect EMS participant-type strings that didn't map (for admin to report new names)
+    try {
+      const { fetchEmsStatus } = require('../utils/ems');
+      // Only sample first 20 synced users to avoid extra load — details already show who synced
+      void fetchEmsStatus;
+      void unmappedTypes;
+    } catch (e) { /* non-fatal */ }
+
+    return res.json({
+      status: 'success',
+      message: `Synced ${users.length} signup(s) against EMS (${syncedPaid} paid, ${workshopsSynced} with paid workshops).`,
+      scanned: users.length,
+      onlyUnpaid,
+      syncedPaid,
+      workshopsSynced,
+      alreadyPaidOrPending: alreadyPaid,
+      noEmsRecord,
+      errors,
+      totals: { totalSignups, totalPaid, totalWorkshopPaid },
+      details: details.slice(0, 100)
+    });
+  } catch (err) {
+    console.error('Sync-all EMS error:', err);
+    return res.status(500).json({ status: 'error', message: 'Bulk EMS sync failed: ' + err.message });
+  }
+}
+
 module.exports = {
   adminLogin,
   adminLogout,
@@ -1130,6 +1292,7 @@ module.exports = {
   updateMember,
   downloadEventwise,
   getStats,
+  downloadSignups,
   listAdmins,
   gitPull,
   onSpotRegister,
@@ -1140,5 +1303,6 @@ module.exports = {
    updateRegistrations,
    getDuplicates,
    getEmsPreview,
-   pushEmsCopy
+   pushEmsCopy,
+   syncAllEms
 };

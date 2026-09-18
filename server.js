@@ -147,6 +147,7 @@ app.get(['/event_stats1.html', '/event-stats1.html', '/stats/terminal', '/stats-
 });
 
 app.all('/api/stats', require('./controllers/adminController').getStats);
+app.all('/api/stats/download', require('./controllers/adminController').downloadSignups);
 
 // Root route
 app.get('/', (req, res) => {

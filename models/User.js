@@ -52,6 +52,22 @@ const userSchema = new mongoose.Schema({
   memberId: {
     type: Number,
     unique: true
+  },
+  emsRegId: {
+    type: String,
+    default: ''
+  },
+  emsTxnAmount: {
+    type: Number,
+    default: 0
+  },
+  emsParticipantType: {
+    type: String,
+    default: ''
+  },
+  emsRegDate: {
+    type: String,
+    default: ''
   }
 }, {
   timestamps: true

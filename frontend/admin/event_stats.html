@@ -77,7 +77,33 @@
         <h2 class="text-center mb-4 section-title fs-2">
             <i class="bi bi-grid-3x3-gap-fill me-2" style="color:var(--gold)"></i>Event Breakdown
         </h2>
-        <div class="section-title-bar mx-auto mb-5"></div>
+        <div class="section-title-bar mx-auto mb-4"></div>
+
+        <!-- Signup Dump (passkey-protected, same auth as stats) -->
+        <div class="card-custom mb-5">
+            <div class="card-body p-4 text-center">
+                <div class="tagline-badge mb-2">📥 SIGNUP DUMP</div>
+                <h5 class="section-title fs-5">Download Signup Lists</h5>
+                <p style="color:var(--text-muted); font-size:0.9rem;" class="mb-3">
+                    Classified by General-Fee status. Uses the same passkey session as stats.
+                </p>
+                <div class="d-flex justify-content-center gap-2 flex-wrap">
+                    <button class="btn btn-warning fw-bold text-dark" onclick="downloadSignups('all')">
+                        <i class="bi bi-download me-1"></i>All Signups
+                    </button>
+                    <button class="btn btn-success fw-bold" onclick="downloadSignups('paid')">
+                        <i class="bi bi-cash-stack me-1"></i>Gen-Fee Paid
+                    </button>
+                    <button class="btn btn-outline-light fw-bold" onclick="downloadSignups('unpaid')">
+                        <i class="bi bi-person-plus me-1"></i>Signup-Only (Unpaid)
+                    </button>
+                    <button class="btn btn-info fw-bold text-dark" onclick="downloadSignups('workshop')">
+                        <i class="bi bi-tools me-1"></i>Workshop Paid
+                    </button>
+                </div>
+                <div id="dumpMsg" class="small mt-2" style="color:var(--text-muted);"></div>
+            </div>
+        </div>
 
         <!-- Event Cards Container -->
         <div class="row g-4 mb-5" id="stats-cards-container">
@@ -211,6 +237,38 @@
         const pin = document.getElementById('passkeyInput')?.value.trim();
         if (pin) {
             loadLiveStats(pin);
+        }
+    }
+
+    async function downloadSignups(filter) {
+        const msg = document.getElementById('dumpMsg');
+        try {
+            if (msg) msg.textContent = 'Preparing ' + filter + ' list...';
+            const passkey = sessionStorage.getItem('stats_passkey') || new URLSearchParams(window.location.search).get('passkey') || '';
+            const url = '/api/stats/download?filter=' + encodeURIComponent(filter || 'all')
+                + '&format=csv' + (passkey ? '&passkey=' + encodeURIComponent(passkey) : '');
+            const res = await fetch(url, {
+                headers: passkey ? { 'x-passkey': passkey } : {},
+                credentials: 'same-origin'
+            });
+            if (res.status === 401) {
+                if (msg) msg.textContent = 'Enter passkey first, then retry download.';
+                const modal = document.getElementById('passkeyModal');
+                if (modal) modal.style.display = 'flex';
+                return;
+            }
+            if (!res.ok) throw new Error('Download failed: ' + res.status);
+            const blob = await res.blob();
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'SRiSHTi2k26_Signups_' + (filter || 'all') + '.csv';
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+            if (msg) msg.textContent = 'Downloaded ' + (filter || 'all') + ' list.';
+        } catch (err) {
+            console.error('Signup dump error:', err);
+            if (msg) msg.textContent = 'Download failed. Please retry.';
         }
     }
 

@@ -188,6 +188,9 @@
                                 <button class="btn btn-warning text-dark" id="btn-deduplicate" title="Scan for duplicate mobile numbers and merge with EMS data">
                                     <i class="bi bi-arrow-repeat me-1"></i>Fix Duplicates
                                 </button>
+                                <button class="btn btn-primary" id="btn-sync-ems" title="Reconcile all signups against PSG EMS, then refresh totals">
+                                    <i class="bi bi-cloud-arrow-down-fill me-1"></i>Sync EMS + Counts
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -709,6 +712,41 @@
                     alert('Error removing member: ' + err.message);
                     btn.prop('disabled', false).html('<i class="bi bi-trash-fill me-1"></i>Remove');
                 }
+            }
+        });
+
+        // Sync All against EMS — reconcile every signup, then refresh counts
+        $('#btn-sync-ems').on('click', async function () {
+            const onlyUnpaid = confirm('Sync ONLY unpaid signups against EMS? (OK = unpaid only, Cancel = ALL signups)') ? true : false;
+            if (!confirm('This will call the EMS API once per signup (may take a few minutes for large lists).\n\nProceed with bulk EMS sync?')) return;
+
+            const btn = $(this);
+            btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1"></span>Syncing EMS...');
+
+            try {
+                const res = await fetch('/api/admin/sync-all-ems', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({ onlyUnpaid, limit: 2000, concurrency: 5 })
+                });
+                const data = await res.json();
+
+                if (data.status === 'success') {
+                    let msg = `✅ Bulk EMS sync done.\n\nScanned: ${data.scanned} (${data.onlyUnpaid ? 'unpaid only' : 'all'})\n`;
+                    msg += `Paid after sync: ${data.syncedPaid}\nWith paid workshops: ${data.workshopsSynced}\n`;
+                    msg += `No EMS record: ${data.noEmsRecord}\nErrors: ${data.errors}\n\n`;
+                    msg += `Fresh totals — Signups: ${data.totals.totalSignups}, Paid: ${data.totals.totalPaid}, Workshop(Paid): ${data.totals.totalWorkshopPaid}`;
+                    alert(msg);
+                    loadLiveMembers($('#member_search').val());
+                    loadLiveDashboardStats();
+                } else {
+                    alert('❌ ' + (data.message || 'Sync failed.'));
+                }
+            } catch (err) {
+                alert('Error running EMS sync: ' + err.message);
+            } finally {
+                btn.prop('disabled', false).html('<i class="bi bi-cloud-arrow-down-fill me-1"></i>Sync EMS + Counts');
             }
         });
 
