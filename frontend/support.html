@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SRiSHTi 2k26 | Support & Details Lookup</title>
+  <meta name="description" content="Check your SRiSHTi 2k26 registration status, payment confirmation, workshop enrollments, and event registrations instantly." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <style>
+    /* ─── Reset & Base ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-base:   #040811;
+      --bg-1:      #080f1e;
+      --bg-2:      #0d1628;
+      --bg-3:      #111d35;
+      --border:    rgba(255,255,255,0.07);
+      --border-hi: rgba(56,189,248,0.3);
+      --sky:       #38bdf8;
+      --sky-d:     #0284c7;
+      --sky-dd:    #0369a1;
+      --green:     #34d399;
+      --green-d:   #059669;
+      --amber:     #fbbf24;
+      --amber-d:   #d97706;
+      --red:       #f87171;
+      --text-1:    #f1f5f9;
+      --text-2:    #cbd5e1;
+      --text-3:    #64748b;
+      --radius:    12px;
+      --radius-sm: 8px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg-base);
+      color: var(--text-2);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── Animated background ─── */
+    .bg-glow {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 80% 60% at 10% 20%, rgba(56,189,248,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 90% 80%, rgba(99,102,241,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 50% 50%, rgba(52,211,153,0.03) 0%, transparent 60%);
+      animation: bgPulse 8s ease-in-out infinite alternate;
+    }
+    @keyframes bgPulse {
+      from { opacity: 0.7; } to { opacity: 1; }
+    }
+
+    /* ─── Page Layout ─── */
+    .page-wrap {
+      position: relative; z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 16px 60px;
+    }
+
+    /* ─── Header ─── */
+    .page-header {
+      width: 100%; max-width: 720px;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .logo-chip {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(56,189,248,0.08);
+      border: 1px solid rgba(56,189,248,0.2);
+      border-radius: 999px;
+      padding: 6px 16px;
+      font-size: 12px; font-weight: 700; letter-spacing: 1.5px;
+      color: var(--sky);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .logo-chip i { font-size: 14px; }
+    .page-title {
+      font-size: clamp(26px, 5vw, 40px);
+      font-weight: 900;
+      color: var(--text-1);
+      line-height: 1.15;
+      letter-spacing: -0.5px;
+    }
+    .page-title span {
+      background: linear-gradient(135deg, var(--sky) 0%, #818cf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .page-sub {
+      margin-top: 12px;
+      font-size: 15px;
+      color: var(--text-3);
+      line-height: 1.6;
+    }
+
+    /* ─── Main Card ─── */
+    .main-card {
+      width: 100%; max-width: 720px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+    }
+
+    /* ─── Form Section ─── */
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 10px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex; gap: 10px; align-items: stretch;
+    }
+    .input-icon {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      color: var(--text-3); font-size: 16px; pointer-events: none;
+      transition: color 0.2s;
+    }
+    .main-input {
+      flex: 1;
+      background: var(--bg-1);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-1);
+      font-family: inherit;
+      font-size: 15px;
+      padding: 14px 14px 14px 42px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .main-input:focus {
+      border-color: var(--sky);
+      box-shadow: 0 0 0 3px rgba(56,189,248,0.12);
+    }
+    .main-input:focus + .input-icon, .input-wrapper:focus-within .input-icon {
+      color: var(--sky);
+    }
+    .main-input::placeholder { color: var(--text-3); }
+
+    /* ─── Event Pills ─── */
+    .event-pills {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px;
+    }
+    .pill {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-3);
+      font-size: 12px; font-weight: 600;
+      padding: 5px 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .pill:hover { color: var(--text-2); border-color: rgba(255,255,255,0.15); }
+    .pill.active {
+      background: rgba(56,189,248,0.12);
+      border-color: var(--sky);
+      color: var(--sky);
+    }
+
+    /* ─── Submit Button ─── */
+    .btn-lookup {
+      display: flex; align-items: center; gap: 8px; justify-content: center;
+      width: 100%;
+      background: linear-gradient(135deg, var(--sky-d), #4f46e5);
+      color: #fff;
+      border: none; border-radius: var(--radius-sm);
+      padding: 14px 20px;
+      font-size: 15px; font-weight: 700; font-family: inherit;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: opacity 0.2s, transform 0.1s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(2,132,199,0.3);
+      letter-spacing: 0.3px;
+    }
+    .btn-lookup:hover { opacity: 0.92; box-shadow: 0 6px 28px rgba(2,132,199,0.45); }
+    .btn-lookup:active { transform: scale(0.985); }
+    .btn-lookup:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn-lookup .spinner { display: none; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; }
+    .btn-lookup.loading .spinner { display: block; }
+    .btn-lookup.loading .btn-icon { display: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ─── Error Box ─── */
+    .error-box {
+      display: none;
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      font-size: 13px;
+      color: var(--red);
+      line-height: 1.6;
+      margin-top: 20px;
+    }
+
+    /* ─── Result Section ─── */
+    .result-section {
+      display: none;
+      margin-top: 28px;
+      border-top: 1px solid var(--border);
+      padding-top: 28px;
+    }
+
+    /* ─── Status Badge ─── */
+    .status-row {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 12px; font-weight: 800;
+      letter-spacing: 1px; text-transform: uppercase;
+    }
+    .status-badge i { font-size: 13px; }
+    .badge-paid    { background: rgba(52,211,153,0.12); color: var(--green); border: 1px solid rgba(52,211,153,0.35); }
+    .badge-unpaid  { background: rgba(251,191,36,0.1);  color: var(--amber); border: 1px solid rgba(251,191,36,0.3); }
+    .badge-notfound{ background: rgba(100,116,139,0.12);color: var(--text-3); border: 1px solid rgba(100,116,139,0.2); }
+    .badge-ems     { background: rgba(56,189,248,0.1);  color: var(--sky);   border: 1px solid rgba(56,189,248,0.25); }
+
+    /* ─── Cards ─── */
+    .info-card {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 20px;
+      margin-bottom: 14px;
+    }
+    .info-card.highlight { border-color: rgba(56,189,248,0.2); }
+    .card-title {
+      font-size: 13px; font-weight: 700;
+      color: var(--text-1);
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 16px;
+      letter-spacing: 0.3px;
+    }
+    .card-title i { color: var(--sky); font-size: 16px; }
+
+    /* ─── Data Grid ─── */
+    .data-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 14px;
+    }
+    .data-item {}
+    .data-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--text-3);
+      margin-bottom: 4px;
+    }
+    .data-val {
+      font-size: 14px; font-weight: 500; color: var(--text-1);
+      word-break: break-all;
+    }
+    .data-val.mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+    }
+    .srishti-id-chip {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 16px; font-weight: 700;
+      color: var(--green);
+      background: rgba(52,211,153,0.08);
+      border: 1px dashed rgba(52,211,153,0.3);
+      padding: 6px 14px; border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .srishti-id-chip:hover { background: rgba(52,211,153,0.14); }
+    .srishti-id-chip .copy-icon { font-size: 13px; color: var(--text-3); }
+    .copy-toast {
+      font-size: 11px; color: var(--green); font-family: inherit;
+      opacity: 0; transition: opacity 0.3s;
+      font-weight: 600;
+    }
+    .copy-toast.show { opacity: 1; }
+
+    /* ─── Fee Status ─── */
+    .fee-status {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 700;
+      padding: 5px 12px; border-radius: 6px;
+    }
+    .fee-paid    { background: rgba(52,211,153,0.1);  color: var(--green); border: 1px solid rgba(52,211,153,0.3); }
+    .fee-unpaid  { background: rgba(251,191,36,0.08); color: var(--amber); border: 1px solid rgba(251,191,36,0.25); }
+
+    /* ─── Lists ─── */
+    .reg-list { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+    .reg-item {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--bg-2); border: 1px solid var(--border);
+      border-radius: 6px; padding: 10px 14px;
+      font-size: 13px; color: var(--text-2);
+      transition: border-color 0.2s;
+    }
+    .reg-item:hover { border-color: rgba(56,189,248,0.15); }
+    .reg-item-name { flex: 1; padding-right: 12px; line-height: 1.4; }
+    .reg-status {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+      padding: 3px 8px; border-radius: 4px; white-space: nowrap; flex-shrink: 0;
+    }
+    .rs-paid    { background: rgba(52,211,153,0.1); color: var(--green); border: 1px solid rgba(52,211,153,0.25); }
+    .rs-pending { background: rgba(251,191,36,0.08); color: var(--amber); border: 1px solid rgba(251,191,36,0.2); }
+    .rs-free    { background: rgba(56,189,248,0.08); color: var(--sky); border: 1px solid rgba(56,189,248,0.2); }
+    .empty-state {
+      font-size: 13px; color: var(--text-3);
+      padding: 16px; text-align: center;
+      border: 1px dashed var(--border); border-radius: 6px;
+    }
+
+    /* ─── EMS Records ─── */
+    .ems-record {
+      background: var(--bg-2); border: 1px solid var(--border);
+      border-radius: 8px; padding: 16px; margin-bottom: 10px;
+    }
+    .ems-record-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 12px;
+    }
+    .ems-rec-name { font-size: 15px; font-weight: 700; color: var(--text-1); }
+
+    /* ─── Quick Actions ─── */
+    .actions-row {
+      display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px;
+    }
+    .action-btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 9px 16px; border-radius: 7px;
+      font-size: 13px; font-weight: 600; font-family: inherit;
+      text-decoration: none; cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+    .action-btn i { font-size: 14px; }
+    .ab-primary {
+      background: rgba(56,189,248,0.12); color: var(--sky); border: 1px solid rgba(56,189,248,0.2);
+    }
+    .ab-primary:hover { background: rgba(56,189,248,0.2); color: var(--sky); text-decoration: none; }
+    .ab-green {
+      background: rgba(52,211,153,0.1); color: var(--green); border: 1px solid rgba(52,211,153,0.2);
+    }
+    .ab-green:hover { background: rgba(52,211,153,0.18); color: var(--green); text-decoration: none; }
+    .ab-amber {
+      background: rgba(251,191,36,0.08); color: var(--amber); border: 1px solid rgba(251,191,36,0.2);
+    }
+    .ab-amber:hover { background: rgba(251,191,36,0.15); text-decoration: none; color: var(--amber); }
+
+    /* ─── Raw JSON toggle ─── */
+    .raw-toggle {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; color: var(--sky);
+      background: none; border: none; cursor: pointer; font-family: inherit;
+      padding: 6px 0; text-decoration: underline; text-underline-offset: 3px;
+    }
+    pre.raw-json {
+      display: none;
+      background: #020609;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px;
+      font-size: 12px; color: #93c5fd;
+      overflow-x: auto; margin-top: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      line-height: 1.5;
+    }
+
+    /* ─── Divider ─── */
+    .divider {
+      border: none; border-top: 1px solid var(--border);
+      margin: 20px 0;
+    }
+
+    /* ─── Footer ─── */
+    .page-footer {
+      width: 100%; max-width: 720px;
+      text-align: center;
+      margin-top: 28px;
+      font-size: 12px; color: var(--text-3);
+      line-height: 1.8;
+    }
+    .page-footer a { color: var(--sky); text-decoration: none; }
+    .page-footer a:hover { text-decoration: underline; }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 540px) {
+      .main-card { padding: 22px 18px; }
+      .data-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 380px) {
+      .data-grid { grid-template-columns: 1fr; }
+      .actions-row { flex-direction: column; }
+      .action-btn { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+  <div class="page-wrap">
+
+    <!-- ─── Header ─── -->
+    <header class="page-header">
+      <div class="logo-chip">
+        <i class="bi bi-headset"></i>
+        SRiSHTi 2k26 · Support
+      </div>
+      <h1 class="page-title">
+        Check Your <span>Registration Details</span>
+      </h1>
+      <p class="page-sub">
+        Enter your mobile number, SRiSHTi ID, or email to instantly verify your payment status,
+        enrolled events, workshops, and official EMS records.
+      </p>
+    </header>
+
+    <!-- ─── Main Card ─── -->
+    <div class="main-card">
+
+      <!-- Search Form -->
+      <div class="section-label">Find Your Record</div>
+      <form id="supportForm" onsubmit="event.preventDefault(); doLookup();" autocomplete="off">
+
+        <div style="position:relative;">
+          <i class="bi bi-search input-icon" id="searchIcon"></i>
+          <input
+            type="text"
+            id="identifierInput"
+            class="main-input"
+            placeholder="Mobile number, SRiSHTi ID, or Email..."
+            required autofocus
+            autocomplete="off"
+          />
+        </div>
+
+
+
+        <button type="submit" class="btn-lookup" id="lookupBtn">
+          <div class="spinner"></div>
+          <i class="bi bi-search btn-icon"></i>
+          Look Up My Details
+        </button>
+      </form>
+
+      <!-- Error Box -->
+      <div class="error-box" id="errorBox"></div>
+
+      <!-- ─── Results ─── -->
+      <div class="result-section" id="resultSection">
+
+        <!-- Status Row -->
+        <div class="status-row" id="statusRow"></div>
+
+        <!-- ── Profile ── -->
+        <div class="info-card highlight" id="profileCard" style="display:none;">
+          <div class="card-title">
+            <i class="bi bi-person-circle"></i> Attendee Profile
+          </div>
+
+          <!-- SRiSHTi ID chip -->
+          <div style="margin-bottom: 18px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+            <div class="srishti-id-chip" id="srishtiIdChip" onclick="copyId()">
+              <span id="srishtiIdText">—</span>
+              <i class="bi bi-clipboard copy-icon"></i>
+            </div>
+            <span class="copy-toast" id="copyToast">Copied!</span>
+          </div>
+
+          <div class="data-grid" id="profileGrid"></div>
+        </div>
+
+        <!-- ── General Fee & EMS ── -->
+        <div class="info-card" id="feeCard" style="display:none;">
+          <div class="card-title">
+            <i class="bi bi-credit-card-2-front"></i> General Registration & Payment
+          </div>
+          <div class="data-grid" id="feeGrid"></div>
+        </div>
+
+        <!-- ── Registered Events ── -->
+        <div class="info-card" id="eventsCard" style="display:none;">
+          <div class="card-title">
+            <i class="bi bi-calendar-event"></i> Registered Events
+          </div>
+          <ul class="reg-list" id="eventsList"></ul>
+        </div>
+
+        <!-- ── Workshops ── -->
+        <div class="info-card" id="wsCard" style="display:none;">
+          <div class="card-title">
+            <i class="bi bi-tools"></i> Enrolled Workshops
+          </div>
+          <ul class="reg-list" id="wsList"></ul>
+        </div>
+
+        <!-- ── Papers & Flagship ── -->
+        <div class="info-card" id="papersCard" style="display:none;">
+          <div class="card-title">
+            <i class="bi bi-file-earmark-text"></i> Papers & Flagship Events
+          </div>
+          <ul class="reg-list" id="papersList"></ul>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- ── Live EMS Verification ── -->
+        <div class="info-card" id="emsCard">
+          <div class="card-title">
+            <i class="bi bi-shield-check"></i> Official PSG EMS Verification
+            <span id="emsBadge" style="margin-left:auto;"></span>
+          </div>
+          <div id="emsRecords"></div>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- ── Quick Actions ── -->
+        <div class="info-card" style="background:transparent;border:none;padding:0;">
+          <div class="card-title" style="margin-bottom: 12px;">
+            <i class="bi bi-lightning-charge"></i> Quick Actions
+          </div>
+          <div class="actions-row">
+            <a href="/login.html" class="action-btn ab-primary">
+              <i class="bi bi-box-arrow-in-right"></i> Login to Portal
+            </a>
+            <a href="/login.html?action=reset" class="action-btn ab-amber">
+              <i class="bi bi-key"></i> Reset Password
+            </a>
+            <a href="/home.html#contact" class="action-btn ab-green">
+              <i class="bi bi-headset"></i> Contact Help Desk
+            </a>
+          </div>
+        </div>
+
+      </div><!-- /result-section -->
+    </div><!-- /main-card -->
+
+    <!-- Footer -->
+    <footer class="page-footer">
+      <p>
+        Having trouble? Reach the Help Desk at the venue or contact
+        <a href="mailto:srishti@psgtech.ac.in">srishti@psgtech.ac.in</a>
+      </p>
+      <p style="margin-top:6px;">
+        <a href="/">← Back to SRiSHTi 2k26</a> &nbsp;·&nbsp;
+        <a href="/login.html">Login</a> &nbsp;·&nbsp;
+        <a href="/register.html">Register</a>
+      </p>
+    </footer>
+
+  </div><!-- /page-wrap -->
+
+  <script>
+    let currentIdentifier = '';
+    let lastData = null;
+
+    function copyId() {
+      const id = document.getElementById('srishtiIdText').textContent;
+      if (!id || id === '—') return;
+      navigator.clipboard.writeText(id).then(() => {
+        const t = document.getElementById('copyToast');
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2000);
+      });
+    }
+
+    function feeStatus(status) {
+      if (status === 'paid') return '<span class="fee-status fee-paid"><i class="bi bi-check-circle-fill"></i> Paid</span>';
+      return '<span class="fee-status fee-unpaid"><i class="bi bi-exclamation-circle-fill"></i> Unpaid / Pending</span>';
+    }
+
+    function formatDate(ds) {
+      if (!ds) return '—';
+      try { return new Date(ds).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }); }
+      catch { return ds; }
+    }
+
+    function dataItem(label, val) {
+      return `<div class="data-item"><div class="data-label">${label}</div><div class="data-val">${val || '—'}</div></div>`;
+    }
+
+    async function doLookup() {
+      const identifier = document.getElementById('identifierInput').value.trim();
+      const btn = document.getElementById('lookupBtn');
+      const errorBox = document.getElementById('errorBox');
+      const resultSection = document.getElementById('resultSection');
+
+      if (!identifier) return;
+      currentIdentifier = identifier;
+
+      // Reset UI
+      btn.disabled = true; btn.classList.add('loading');
+      errorBox.style.display = 'none';
+      resultSection.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/support/lookup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'same-origin',
+          body: JSON.stringify({ identifier, eventId: 187 })
+        });
+        const data = await res.json();
+        lastData = data;
+        renderResult(data);
+      } catch (err) {
+        errorBox.innerHTML = `<i class="bi bi-exclamation-triangle-fill" style="margin-right:6px;"></i><strong>Connection error.</strong> Please make sure you are connected to the SRiSHTi portal.`;
+        errorBox.style.display = 'block';
+      } finally {
+        btn.disabled = false; btn.classList.remove('loading');
+      }
+    }
+
+    function renderResult(data) {
+      const resultSection = document.getElementById('resultSection');
+      const errorBox = document.getElementById('errorBox');
+      const statusRow = document.getElementById('statusRow');
+
+      // Raw JSON
+
+
+
+      if (data.status === 'not_found' || data.status === 'error') {
+        errorBox.innerHTML = `<i class="bi bi-person-x-fill" style="margin-right:8px;"></i>` +
+          `<strong>${data.message || 'No record found.'}</strong><br>` +
+          `<span style="font-size:12px;opacity:0.8;">Make sure you enter the same mobile number used during registration on EMS / the portal.</span>`;
+        errorBox.style.display = 'block';
+
+        // Still show EMS records if any
+        if (data.emsData) {
+          resultSection.style.display = 'block';
+          statusRow.innerHTML = `<span class="status-badge badge-notfound"><i class="bi bi-question-circle"></i> Not in Portal DB</span>`;
+          renderEms(data.emsData);
+          hideProfileCards();
+        }
+        return;
+      }
+
+      resultSection.style.display = 'block';
+      const p = data.profile;
+      const emsOk = data.emsData && data.emsData.StatusCode === 1;
+      const isPaid = p && p.genfee === 'paid';
+
+      // ── Status Badges ──
+      statusRow.innerHTML = '';
+      if (p) {
+        statusRow.innerHTML += isPaid
+          ? `<span class="status-badge badge-paid"><i class="bi bi-check-circle-fill"></i> Paid & Confirmed</span>`
+          : `<span class="status-badge badge-unpaid"><i class="bi bi-exclamation-circle-fill"></i> General Fee Unpaid</span>`;
+      }
+      if (emsOk) {
+        statusRow.innerHTML += `<span class="status-badge badge-ems"><i class="bi bi-shield-check"></i> EMS Verified</span>`;
+      }
+
+      // ── Profile Card ──
+      if (p) {
+        document.getElementById('srishtiIdText').textContent = p.srishtiId || '—';
+        document.getElementById('profileGrid').innerHTML =
+          dataItem('Name', escHtml(p.name)) +
+          dataItem('Mobile', p.mobile) +
+          dataItem('Email', escHtml(p.email)) +
+          dataItem('College', escHtml(p.college)) +
+          dataItem('Department', escHtml(p.department)) +
+          dataItem('Accommodation', p.accommodation || 'No');
+        document.getElementById('profileCard').style.display = 'block';
+
+        // ── Fee Card ──
+        const feeGrid = document.getElementById('feeGrid');
+        feeGrid.innerHTML =
+          `<div class="data-item"><div class="data-label">General Fee</div><div class="data-val">${feeStatus(p.genfee)}</div></div>` +
+          dataItem('EMS Reg ID', p.emsRegId || '—') +
+          dataItem('Amount Paid', p.emsTxnAmount ? `₹${p.emsTxnAmount}` : '—') +
+          dataItem('Reg Date', formatDate(p.emsRegDate)) +
+          dataItem('Participant Type', escHtml(p.emsParticipantType) || '—');
+        document.getElementById('feeCard').style.display = 'block';
+      } else {
+        document.getElementById('profileCard').style.display = 'none';
+        document.getElementById('feeCard').style.display = 'none';
+      }
+
+      // ── Events ──
+      const regs = data.registrations || {};
+      if (regs.events && regs.events.length > 0) {
+        const ul = document.getElementById('eventsList');
+        ul.innerHTML = regs.events.map(name =>
+          `<li class="reg-item">
+            <span class="reg-item-name">${escHtml(name)}</span>
+            <span class="reg-status rs-free">Registered</span>
+          </li>`
+        ).join('');
+        document.getElementById('eventsCard').style.display = 'block';
+      } else {
+        document.getElementById('eventsCard').style.display = 'none';
+      }
+
+      // ── Workshops ──
+      if (regs.workshops && regs.workshops.length > 0) {
+        const ul = document.getElementById('wsList');
+        ul.innerHTML = regs.workshops.map(ws => {
+          const st = ws.status;
+          const cls = st === 'paid' ? 'rs-paid' : (st === 'free' ? 'rs-free' : 'rs-pending');
+          const lbl = st === 'paid' ? 'Paid' : (st === 'free' ? 'Free' : 'Pending');
+          return `<li class="reg-item">
+            <span class="reg-item-name">${escHtml(ws.name)}</span>
+            <span class="reg-status ${cls}">${lbl}</span>
+          </li>`;
+        }).join('');
+        document.getElementById('wsCard').style.display = 'block';
+      } else {
+        document.getElementById('wsCard').style.display = 'none';
+      }
+
+      // ── Papers & Flagship ──
+      const otherItems = [
+        ...(regs.papers || []).map(n => ({ name: n, type: 'Paper' })),
+        ...(regs.flagship || []).map(n => ({ name: n, type: 'Flagship' }))
+      ];
+      if (otherItems.length > 0) {
+        const ul = document.getElementById('papersList');
+        ul.innerHTML = otherItems.map(i =>
+          `<li class="reg-item">
+            <span class="reg-item-name">${escHtml(i.name)}</span>
+            <span class="reg-status rs-free">${i.type}</span>
+          </li>`
+        ).join('');
+        document.getElementById('papersCard').style.display = 'block';
+      } else {
+        document.getElementById('papersCard').style.display = 'none';
+      }
+
+      // ── EMS ──
+      renderEms(data.emsData);
+    }
+
+    function renderEms(emsData) {
+      const emsRecords = document.getElementById('emsRecords');
+      const emsBadge   = document.getElementById('emsBadge');
+
+      if (!emsData) {
+        emsRecords.innerHTML = `<div class="empty-state">EMS data unavailable (API timeout or not queried).</div>`;
+        emsBadge.innerHTML = '';
+        return;
+      }
+
+      if (emsData.StatusCode === -1 || !Array.isArray(emsData.Data) || emsData.Data.length === 0) {
+        emsBadge.innerHTML = `<span class="status-badge badge-notfound" style="font-size:11px;">Not Found on EMS</span>`;
+        emsRecords.innerHTML = `<div class="empty-state">No completed registration found on PSG EMS for this number.</div>`;
+        return;
+      }
+
+      const isPaid = emsData.Data.some(r => String(r.Paid_status) === '1');
+      emsBadge.innerHTML = isPaid
+        ? `<span class="status-badge badge-paid" style="font-size:11px;"><i class="bi bi-check-circle-fill"></i> EMS Paid</span>`
+        : `<span class="status-badge badge-unpaid" style="font-size:11px;"><i class="bi bi-exclamation-circle"></i> EMS Unpaid</span>`;
+
+      emsRecords.innerHTML = emsData.Data.map((rec, i) => {
+        const paid = String(rec.Paid_status) === '1';
+        return `<div class="ems-record">
+          <div class="ems-record-header">
+            <span class="ems-rec-name">#${i+1} — ${escHtml(rec.Name || 'Unknown')}</span>
+            <span class="reg-status ${paid ? 'rs-paid' : 'rs-pending'}">${paid ? 'Paid' : 'Unpaid'}</span>
+          </div>
+          <div class="data-grid" style="font-size:13px;">
+            <div class="data-item"><div class="data-label">Reg ID</div><div class="data-val mono">${rec.Reg_Id || '—'}</div></div>
+            <div class="data-item"><div class="data-label">Participant Type</div><div class="data-val">${escHtml(rec.Participant_Type_Name || '—')}</div></div>
+            <div class="data-item"><div class="data-label">Amount</div><div class="data-val">₹${rec.TxnAmount ?? '—'}</div></div>
+            <div class="data-item"><div class="data-label">Reg Date</div><div class="data-val">${formatDate(rec.Reg_date)}</div></div>
+            <div class="data-item"><div class="data-label">Phone</div><div class="data-val mono">${rec.Phone || '—'}</div></div>
+            <div class="data-item"><div class="data-label">Email</div><div class="data-val">${escHtml(rec.Email || '—')}</div></div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function hideProfileCards() {
+      ['profileCard','feeCard','eventsCard','wsCard','papersCard'].forEach(id => {
+        document.getElementById(id).style.display = 'none';
+      });
+    }
+
+
+
+    function escHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    // Auto-search if URL has ?id= or ?q=
+    (function() {
+      const params = new URLSearchParams(location.search);
+      const id = params.get('id') || params.get('q') || params.get('mobile');
+      if (id) {
+        document.getElementById('identifierInput').value = id;
+        doLookup();
+      }
+    })();
+  </script>
+</body>
+</html>

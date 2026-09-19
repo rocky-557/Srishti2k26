@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PSG EMS Status Lookup</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: #0f172a; color: #e2e8f0; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 32px 16px; }
+    .card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; width: 100%; max-width: 680px; padding: 28px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+    h1 { font-size: 22px; font-weight: 700; color: #f8fafc; margin-bottom: 6px; }
+    p.sub { font-size: 13px; color: #94a3b8; margin-bottom: 24px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+    label { font-size: 13px; font-weight: 600; color: #cbd5e1; }
+    .input-row { display: flex; gap: 10px; }
+    input[type="text"], input[type="number"] {
+      flex: 1; background: #0f172a; border: 1px solid #475569; border-radius: 8px; color: #fff;
+      padding: 12px 14px; font-size: 15px; outline: none; transition: border-color 0.2s;
+    }
+    input:focus { border-color: #38bdf8; }
+    .event-pills { display: flex; gap: 8px; margin-top: 6px; }
+    .pill { background: #334155; border: 1px solid #475569; border-radius: 6px; color: #cbd5e1; font-size: 12px; padding: 4px 10px; cursor: pointer; }
+    .pill.active { background: #0284c7; border-color: #38bdf8; color: #fff; font-weight: 600; }
+    button.submit {
+      width: 100%; background: #0284c7; color: #fff; border: none; border-radius: 8px;
+      padding: 12px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s;
+      margin-top: 8px;
+    }
+    button.submit:hover { background: #0369a1; }
+    button.submit:disabled { opacity: 0.6; cursor: not-allowed; }
+    .loading { display: none; text-align: center; color: #38bdf8; font-size: 14px; margin: 18px 0; }
+    .error-box { display: none; background: #450a0a; border: 1px solid #991b1b; color: #fca5a5; border-radius: 8px; padding: 12px 14px; font-size: 13px; margin-top: 18px; line-height: 1.5; }
+    .result-section { display: none; margin-top: 24px; border-top: 1px solid #334155; pt: 20px; padding-top: 20px; }
+    .status-badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 14px; }
+    .status-paid { background: #064e3b; color: #6ee7b7; border: 1px solid #059669; }
+    .status-unpaid { background: #7c2d12; color: #fdba74; border: 1px solid #ea580c; }
+    .status-notfound { background: #3f3f46; color: #d4d4d8; border: 1px solid #71717a; }
+    .record-card { background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+    .record-card h3 { font-size: 16px; color: #f1f5f9; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+    .data-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+    .data-item { font-size: 13px; }
+    .data-label { color: #64748b; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .data-val { color: #e2e8f0; font-weight: 500; word-break: break-all; margin-top: 2px; }
+    .raw-toggle { font-size: 12px; color: #38bdf8; background: none; border: none; cursor: pointer; margin-top: 14px; padding: 0; text-decoration: underline; }
+    pre.raw-json { display: none; background: #090d16; border: 1px solid #334155; border-radius: 6px; padding: 12px; font-size: 12px; color: #93c5fd; overflow-x: auto; margin-top: 8px; }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h1>PSG EMS Query</h1>
+    <p class="sub">Query registration and payment status via PSG Institutions EMS API</p>
+
+    <form id="emsForm" onsubmit="event.preventDefault(); queryEMS();">
+      <div class="form-group">
+        <label for="phone">Mobile Number (10 digits)</label>
+        <div class="input-row">
+          <input type="text" id="phone" placeholder="e.g. 9952129353" maxlength="10" required autofocus />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="eventId">Event ID</label>
+        <div class="input-row">
+          <input type="number" id="eventId" value="187" required />
+        </div>
+        <div class="event-pills">
+          <span class="pill active" onclick="setEventId(187, this)">Event 187 (Srishti 2k26)</span>
+          <span class="pill" onclick="setEventId(106, this)">Event 106</span>
+        </div>
+      </div>
+
+      <button type="submit" class="submit" id="submitBtn">Query Status</button>
+    </form>
+
+    <div class="loading" id="loading">Querying EMS API...</div>
+    <div class="error-box" id="errorBox"></div>
+
+    <div class="result-section" id="resultSection">
+      <div id="badgeContainer"></div>
+      <div id="recordsContainer"></div>
+      <button type="button" class="raw-toggle" onclick="toggleRaw()">Show Raw JSON</button>
+      <pre class="raw-json" id="rawJson"></pre>
+    </div>
+  </div>
+
+  <script>
+    function setEventId(id, el) {
+      document.getElementById('eventId').value = id;
+      document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    function toggleRaw() {
+      const el = document.getElementById('rawJson');
+      el.style.display = el.style.display === 'block' ? 'none' : 'block';
+    }
+
+    async function queryEMS() {
+      const phoneInput = document.getElementById('phone').value.trim().replace(/\D/g, '').slice(-10);
+      const eventId = document.getElementById('eventId').value.trim() || '187';
+      const loading = document.getElementById('loading');
+      const errorBox = document.getElementById('errorBox');
+      const resultSection = document.getElementById('resultSection');
+      const badgeContainer = document.getElementById('badgeContainer');
+      const recordsContainer = document.getElementById('recordsContainer');
+      const rawJson = document.getElementById('rawJson');
+      const btn = document.getElementById('submitBtn');
+
+      if (phoneInput.length !== 10) {
+        alert('Please enter a valid 10-digit mobile number');
+        return;
+      }
+
+      loading.style.display = 'block';
+      errorBox.style.display = 'none';
+      resultSection.style.display = 'none';
+      rawJson.style.display = 'none';
+      btn.disabled = true;
+
+      const targetUrl = `https://events.psginstitutions.in/EMSAPI/api/Event/RegistrationStatus?eventId=${encodeURIComponent(eventId)}&phone=${encodeURIComponent(phoneInput)}`;
+
+      let data = null;
+      let usedProxy = false;
+
+      try {
+        // Direct fetch
+        const res = await fetch(targetUrl);
+        data = await res.json();
+      } catch (err) {
+        // Fallback or explain CORS
+        errorBox.innerHTML = `<strong>Direct request failed (${err.message})</strong><br><br>` +
+          `Browsers block cross-origin calls to the EMS server when opened directly from <code>file://</code>.<br>` +
+          `To run without CORS restrictions:<br>` +
+          `• Open via a local server (e.g. <code>npx serve .</code> or your Node app), OR<br>` +
+          `• Run Chrome with <code>google-chrome --disable-web-security --user-data-dir=/tmp/chrome_dev</code>, OR<br>` +
+          `• Use a browser CORS extension (e.g. <em>Allow CORS: Access-Control-Allow-Origin</em>).`;
+        errorBox.style.display = 'block';
+        loading.style.display = 'none';
+        btn.disabled = false;
+        return;
+      }
+
+      loading.style.display = 'none';
+      btn.disabled = false;
+      resultSection.style.display = 'block';
+      rawJson.textContent = JSON.stringify(data, null, 2);
+
+      if (!data || data.StatusCode === -1) {
+        badgeContainer.innerHTML = `<span class="status-badge status-notfound">Not Found (StatusCode: -1)</span>`;
+        recordsContainer.innerHTML = `<div class="record-card"><p style="color:#94a3b8; font-size:14px;">No registration or completed payment found for mobile <strong>${phoneInput}</strong> on Event ID <strong>${eventId}</strong>.</p></div>`;
+        return;
+      }
+
+      const records = Array.isArray(data.Data) ? data.Data : [];
+      const isPaid = records.some(r => String(r.Paid_status) === '1');
+
+      badgeContainer.innerHTML = `
+        <span class="status-badge ${isPaid ? 'status-paid' : 'status-unpaid'}">
+          ${isPaid ? '✓ Paid' : '⚠ Unpaid'} (${records.length} record${records.length > 1 ? 's' : ''})
+        </span>
+      `;
+
+      if (records.length === 0) {
+        recordsContainer.innerHTML = `<div class="record-card"><p style="color:#94a3b8;">StatusCode was ${data.StatusCode}, but no Data records returned.</p></div>`;
+        return;
+      }
+
+      recordsContainer.innerHTML = records.map((rec, i) => `
+        <div class="record-card">
+          <h3>
+            <span>#${i + 1} — ${rec.Name || 'Unknown'}</span>
+            <span style="font-size:12px; color:${String(rec.Paid_status) === '1' ? '#6ee7b7' : '#fdba74'};">
+              ${String(rec.Paid_status) === '1' ? 'Paid' : 'Unpaid'}
+            </span>
+          </h3>
+          <div class="data-grid">
+            <div class="data-item"><div class="data-label">Reg ID</div><div class="data-val">${rec.Reg_Id || '-'}</div></div>
+            <div class="data-item"><div class="data-label">Phone</div><div class="data-val">${rec.Phone || '-'}</div></div>
+            <div class="data-item"><div class="data-label">Email</div><div class="data-val">${rec.Email || '-'}</div></div>
+            <div class="data-item"><div class="data-label">Participant Type</div><div class="data-val">${rec.Participant_Type_Name || '-'}</div></div>
+            <div class="data-item"><div class="data-label">Amount (₹)</div><div class="data-val">${rec.TxnAmount !== undefined ? rec.TxnAmount : '-'}</div></div>
+            <div class="data-item"><div class="data-label">Reg Date</div><div class="data-val">${rec.Reg_date ? new Date(rec.Reg_date).toLocaleString() : '-'}</div></div>
+          </div>
+        </div>
+      `).join('');
+    }
+  </script>
+</body>
+</html>

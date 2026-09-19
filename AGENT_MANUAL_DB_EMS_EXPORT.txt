@@ -1,0 +1,83 @@
+================================================================================
+SRISHTI 2k26: MANUAL DB EXPORT & EMS LOOKUP CHEATSHEET FOR AI AGENTS / ADMINS
+================================================================================
+
+SERVER TARGET: https://srishti.psgtech.ac.in
+EMS TARGET:    https://events.psginstitutions.in/EMSAPI/api/Event/RegistrationStatus
+
+--------------------------------------------------------------------------------
+1. AUTHENTICATION (GET ADMIN SESSION COOKIE)
+--------------------------------------------------------------------------------
+Command:
+curl -k -s -c cookies.txt -X POST "https://srishti.psgtech.ac.in/api/admin/login" \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"Admin@123"}'
+
+Result:
+Generates `cookies.txt` with authenticated session `connect.sid`.
+
+--------------------------------------------------------------------------------
+2. EXPORT ENTIRE LIVE DATABASE (ALL USERS, NO 100-ROW LIMIT)
+--------------------------------------------------------------------------------
+Command (JSON):
+curl -k -s -b cookies.txt -X POST "https://srishti.psgtech.ac.in/api/admin/members/search" \
+  -H "Content-Type: application/json" \
+  -d '{"query": ".*", "format": "json"}' > full_database.json
+
+Command (Node.js one-liner to generate CSV):
+node -e '
+const fs = require("fs");
+const data = JSON.parse(fs.readFileSync("full_database.json"));
+const esc = v => "\"" + String(v||"").replace(/"/g, "\"\"") + "\"";
+const headers = ["S-ID","Member ID","Name","Email","Mobile","College","Department","Gen Fee","Created At"];
+let csv = headers.join(",") + "\n";
+data.forEach(u => {
+  csv += [
+    esc("SRiSHTi25" + u.memberId),
+    esc(u.memberId),
+    esc(u.name),
+    esc(u.email),
+    esc(u.mobile),
+    esc(u.collegeName),
+    esc(u.department),
+    esc(u.genfee || "unpaid"),
+    esc(u.createdAt)
+  ].join(",") + "\n";
+});
+fs.writeFileSync("full_database.csv", csv);
+console.log("Exported", data.length, "users to full_database.csv");
+'
+
+--------------------------------------------------------------------------------
+3. LOOK UP INDIVIDUAL ATTENDEE BY S-ID OR MOBILE
+--------------------------------------------------------------------------------
+Format: S-ID is "SRiSHTi25" + <numeric_memberId> (e.g., S-ID 2538 => memberId 38).
+
+Command:
+curl -k -s -b cookies.txt -X POST "https://srishti.psgtech.ac.in/api/admin/user/lookup" \
+  -H "Content-Type: application/json" \
+  -d '{"identifier": "SRiSHTi2538"}'
+
+Returns:
+- User info (Name, Mobile, Email, College, genfee)
+- Registered events, workshops, flagships
+
+--------------------------------------------------------------------------------
+4. VERIFY OFFICIAL PAYMENT STATUS ON PSG EMS API
+--------------------------------------------------------------------------------
+Event IDs:
+- Event 187: SRiSHTi 2k26 General Registration & Workshops
+- Event 106: SRiSHTi General Registration (Legacy)
+
+Command:
+curl -s "https://events.psginstitutions.in/EMSAPI/api/Event/RegistrationStatus?eventId=187&phone=<10_DIGIT_PHONE>"
+
+Interpretation:
+- StatusCode = 1: Paid/Registered on EMS (Paid_status = "1" -> ₹300 paid).
+- StatusCode = -1: Not registered / payment not completed via EMS.
+
+--------------------------------------------------------------------------------
+5. CLEANUP
+--------------------------------------------------------------------------------
+rm -f cookies.txt
+================================================================================

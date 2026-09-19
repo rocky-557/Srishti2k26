@@ -32,6 +32,7 @@ const userRoutes = require('./routes/user');
 const contactRoutes = require('./routes/contact');
 const adminRoutes = require('./routes/admin');
 const { confirmPayment } = require('./controllers/paymentController');
+const supportRoutes = require('./routes/support');
 
 const app = express();
 const PORT = process.env.PORT || 8526;
@@ -94,6 +95,7 @@ app.use('/api/payment', paymentRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/support', supportRoutes);
 
 // Payment Gateway Callback
 app.get('/payconfirm', confirmPayment);
@@ -144,6 +146,11 @@ app.get(['/event_stats.html', '/event-stats.html', '/event-stats', '/stats', '/s
 
 app.get(['/event_stats1.html', '/event-stats1.html', '/stats/terminal', '/stats-terminal'], (req, res) => {
   res.sendFile(path.join(STATIC_DIR, 'admin', 'event_stats1.html'));
+});
+
+// Support / Self-Service Lookup Page
+app.get(['/support', '/support.html', '/lookup', '/lookup.html', '/ems_lookup.html'], (req, res) => {
+  res.sendFile(path.join(STATIC_DIR, 'support.html'));
 });
 
 app.all('/api/stats', require('./controllers/adminController').getStats);

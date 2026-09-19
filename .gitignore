@@ -5,3 +5,9 @@ data/
 .commandcode/
 
 website correction.docx
+
+# Local DB export dumps (contain PII — never commit)
+SRiSHTi2k26_Full_Database.*
+SRiSHTi2k26_All_Members_*.xlsx
+full_database.*
+cookies.txt
