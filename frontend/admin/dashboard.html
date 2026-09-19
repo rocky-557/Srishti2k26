@@ -734,7 +734,7 @@
 
                 if (data.status === 'success') {
                     let msg = `✅ Bulk EMS sync done.\n\nScanned: ${data.scanned} (${data.onlyUnpaid ? 'unpaid only' : 'all'})\n`;
-                    msg += `Paid after sync: ${data.syncedPaid}\nWith paid workshops: ${data.workshopsSynced}\n`;
+                    msg += `Paid after sync: ${data.syncedPaid} (general)\nWith paid workshops: ${data.workshopsSynced} (of which workshop-only, no general fee: ${data.workshopOnly || 0})\n`;
                     msg += `No EMS record: ${data.noEmsRecord}\nErrors: ${data.errors}\n\n`;
                     msg += `Fresh totals — Signups: ${data.totals.totalSignups}, Paid: ${data.totals.totalPaid}, Workshop(Paid): ${data.totals.totalWorkshopPaid}`;
                     if (data.unmappedEmsTypes && data.unmappedEmsTypes.length > 0) {

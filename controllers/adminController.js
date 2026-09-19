@@ -1216,6 +1216,7 @@ async function syncAllEms(req, res) {
 
     let syncedPaid = 0;
     let workshopsSynced = 0;
+    let workshopOnly = 0;
     let alreadyPaid = 0;
     let noEmsRecord = 0;
     let errors = 0;
@@ -1235,6 +1236,7 @@ async function syncAllEms(req, res) {
             const wsCount = await Registration.countDocuments({ email: r.user.email, type: 'workshop', fees: 'paid' });
             if (wsCount > 0) workshopsSynced++;
             if ((r.user.genfee || '') === 'paid') syncedPaid++;
+            else if (wsCount > 0) workshopOnly++;
             for (const t of (r.unmappedTypes || [])) {
               unmappedTypes[t] = (unmappedTypes[t] || 0) + 1;
             }
@@ -1266,11 +1268,12 @@ async function syncAllEms(req, res) {
 
     return res.json({
       status: 'success',
-      message: `Synced ${users.length} signup(s) against EMS (${syncedPaid} paid, ${workshopsSynced} with paid workshops).`,
+      message: `Synced ${users.length} signup(s) against EMS (${syncedPaid} general-paid, ${workshopsSynced} with paid workshops).`,
       scanned: users.length,
       onlyUnpaid,
       syncedPaid,
       workshopsSynced,
+      workshopOnly,
       alreadyPaidOrPending: alreadyPaid,
       noEmsRecord,
       errors,

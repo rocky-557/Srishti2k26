@@ -88,8 +88,15 @@ async function syncOrProvisionFromEms(phoneOrEmail) {
       return { success: false, message: 'Registration exists on EMS but payment is pending.' };
     }
 
-    // Use attendee details from the first paid entry
-    const emsUser = paidItems[0];
+    // Separate tracks: general fee and workshops are independent purchases.
+    // Workshop-only buyers must NOT be marked genfee paid.
+    const generalItems = paidItems.filter(i =>
+      GENERAL_REG_TYPES.includes((i.Participant_Type_Name || '').trim().toLowerCase())
+    );
+    const isGeneralPaid = generalItems.length > 0;
+
+    // Attendee details: prefer the general entry, fall back to first paid item
+    const emsUser = isGeneralPaid ? generalItems[0] : paidItems[0];
     const emsName = (emsUser.Name || 'Attendee').trim();
     const emsEmail = (emsUser.Email || '').trim().toLowerCase();
     const emsPhone = String(emsUser.Phone || phone).replace(/\D/g, '').slice(-10);
@@ -126,7 +133,7 @@ async function syncOrProvisionFromEms(phoneOrEmail) {
         department: 'General',
         collegeName: 'PSG College of Technology',
         accommodation: 'No',
-        genfee: 'paid',
+        genfee: isGeneralPaid ? 'paid' : '',
         emsRegId,
         emsTxnAmount,
         emsParticipantType: emsUser.Participant_Type_Name || 'Student',
@@ -135,15 +142,21 @@ async function syncOrProvisionFromEms(phoneOrEmail) {
 
       await user.save();
       isNewUser = true;
-      console.log(`✨ [EMS Auto-Provision] Created account for ${emsName} (${emsEmail} / ${emsPhone}) -> SRiSHTi25${memberId}`);
+      console.log(`✨ [EMS Auto-Provision] Created account for ${emsName} (${emsEmail} / ${emsPhone}) -> SRiSHTi25${memberId} genfee=${isGeneralPaid ? 'paid' : 'unpaid'}`);
     } else {
-      // User exists, ensure general fee is marked paid
-      user.genfee = 'paid';
-      user.emsRegId = emsRegId;
-      user.emsTxnAmount = emsTxnAmount;
+      // Upgrade general fee only when EMS shows a general purchase.
+      // Never downgrade an already-paid genfee, and never mark it paid
+      // for workshop-only buyers.
+      if (isGeneralPaid && user.genfee !== 'paid') {
+        user.genfee = 'paid';
+        console.log(`✨ [EMS Auto-Sync] Updated fee status to PAID for ${user.email}`);
+      }
+      if (isGeneralPaid) {
+        user.emsRegId = emsRegId;
+        user.emsTxnAmount = emsTxnAmount;
+      }
       if (!user.name || user.name === 'Attendee') user.name = emsName;
       await user.save();
-      console.log(`✨ [EMS Auto-Sync] Updated fee status to PAID for ${user.email}`);
     }
 
     // 3. Process any workshop registrations from EMS.
@@ -173,6 +186,7 @@ async function syncOrProvisionFromEms(phoneOrEmail) {
       success: true,
       user,
       isNewUser,
+      isGeneralPaid,
       defaultPassword,
       emsUser,
       unmappedTypes
