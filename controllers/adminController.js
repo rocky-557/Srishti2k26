@@ -609,12 +609,12 @@ async function getStats(req, res) {
       'AI-Powered Digital Twins: Modeling, Simulation & Intelligent Systems'
     ];
 
-    // Helper to get counts (case-insensitive)
+    // Helper to get counts (whitespace-tolerant, case-insensitive)
+    const { tolerantNameRegex } = require('../utils/names');
     async function getCounts(type, names) {
       const counts = {};
       for (const name of names) {
-        const regex = new RegExp(`^${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i');
-        counts[name] = await Registration.countDocuments({ type, name: regex });
+        counts[name] = await Registration.countDocuments({ type, name: tolerantNameRegex(name) });
       }
       return counts;
     }
@@ -622,8 +622,7 @@ async function getStats(req, res) {
     async function getPaidWorkshopCounts(names) {
       const counts = {};
       for (const name of names) {
-        const regex = new RegExp(`^${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i');
-        counts[name] = await Registration.countDocuments({ type: 'workshop', name: regex, fees: 'paid' });
+        counts[name] = await Registration.countDocuments({ type: 'workshop', name: tolerantNameRegex(name), fees: 'paid' });
       }
       return counts;
     }
@@ -1285,6 +1284,39 @@ async function syncAllEms(req, res) {
   }
 }
 
+/**
+ * POST /api/admin/db-repair/normalize-names
+ * One-shot repair: rewrite every Registration name via canonicalizeName()
+ * (whitespace collapse + generic fuzzy match to canonical, all types).
+ * Reports how many docs changed with before/after samples.
+ */
+async function normalizeNames(req, res) {
+  try {
+    const { canonicalizeName } = require('../utils/names');
+    const all = await Registration.find({}).select('email type name fees').lean();
+    let changed = 0;
+    const samples = [];
+    for (const r of all) {
+      const fixed = canonicalizeName(r.name);
+      if (fixed !== r.name) {
+        await Registration.updateOne({ _id: r._id }, { name: fixed });
+        changed++;
+        if (samples.length < 20) samples.push({ email: r.email, type: r.type, before: r.name, after: fixed });
+      }
+    }
+    return res.json({
+      status: 'success',
+      message: `Normalized ${changed} of ${all.length} registration names.`,
+      scanned: all.length,
+      changed,
+      samples
+    });
+  } catch (err) {
+    console.error('Normalize names error:', err);
+    return res.status(500).json({ status: 'error', message: 'Repair failed: ' + err.message });
+  }
+}
+
 module.exports = {
   adminLogin,
   adminLogout,
@@ -1307,5 +1339,6 @@ module.exports = {
    getDuplicates,
    getEmsPreview,
    pushEmsCopy,
-   syncAllEms
+   syncAllEms,
+   normalizeNames
 };

@@ -183,10 +183,13 @@ async function confirmPayment(req, res) {
           wsname = WORKSHOP_CODE_MAP[type];
         }
 
-        // Update workshop fee status if applicable
+        // Update workshop fee status if applicable.
+        // Tolerant match: stored rows may carry whitespace variants of the
+        // canonical name (frontend card titles). updateMany fixes all copies.
         if (wsname) {
-          await Registration.updateOne(
-            { email, type: 'workshop', name: wsname },
+          const { tolerantNameRegex } = require('../utils/names');
+          await Registration.updateMany(
+            { email, type: 'workshop', name: tolerantNameRegex(wsname) },
             { fees: 'paid' }
           );
         }

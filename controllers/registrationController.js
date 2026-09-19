@@ -8,6 +8,7 @@
  *   ppregistered.php   → registerPaper()
  */
 const Registration = require('../models/Registration');
+const { canonicalizeName } = require('../utils/names');
 
 /**
  * POST /api/register/event
@@ -20,7 +21,7 @@ const Registration = require('../models/Registration');
 async function registerEvent(req, res) {
   try {
     const email = req.session.email;
-    const evname = req.body.evname || req.body.name || req.body.eventName;
+    const evname = canonicalizeName(req.body.evname || req.body.name || req.body.eventName);
 
     if (!evname) {
       return res.send('false');
@@ -63,7 +64,7 @@ async function registerEvent(req, res) {
 async function registerWorkshop(req, res) {
   try {
     const email = req.session.email;
-    const wsname = req.body.wsname || req.body.name || req.body.workshopName;
+    const wsname = canonicalizeName(req.body.wsname || req.body.name || req.body.workshopName);
 
     if (!email) {
       return res.send('false');
@@ -129,7 +130,7 @@ async function registerWorkshop(req, res) {
 async function registerFlagship(req, res) {
   try {
     const email = req.session.email;
-    const fsname = req.body.fsname || req.body.flname || req.body.name || req.body.flagshipName;
+    const fsname = canonicalizeName(req.body.fsname || req.body.flname || req.body.name || req.body.flagshipName);
 
     if (!fsname) {
       return res.send('false');
@@ -171,7 +172,7 @@ async function registerFlagship(req, res) {
 async function registerPaper(req, res) {
   try {
     const email = req.session.email;
-    const ppname = req.body.ppname || req.body.name || req.body.paperName;
+    const ppname = canonicalizeName(req.body.ppname || req.body.name || req.body.paperName);
 
     if (!ppname) {
       return res.send('false');

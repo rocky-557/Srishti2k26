@@ -84,8 +84,12 @@ window.SrishtiApp = (() => {
     };
 
     // ===================== REGISTRATION MODULE =====================
+    // Collapse card-title whitespace (newlines/indentation) so stored names
+    // match canonical server names for counts and payment updates.
+    const cleanName = (n) => String(n || '').replace(/\s+/g, ' ').trim();
     const Reg = {
         async registerEvent(eventName) {
+            eventName = cleanName(eventName);
             try {
                 const res = await fetch(API.eventReg, {
                     method: 'POST',
@@ -106,6 +110,7 @@ window.SrishtiApp = (() => {
         },
 
         async registerWorkshop(wsName) {
+            wsName = cleanName(wsName);
             try {
                 const res = await fetch(API.workshopReg, {
                     method: 'POST',
@@ -125,6 +130,7 @@ window.SrishtiApp = (() => {
         },
 
         async registerPaper(paperName) {
+            paperName = cleanName(paperName);
             try {
                 const res = await fetch(API.paperReg, {
                     method: 'POST',
@@ -144,6 +150,7 @@ window.SrishtiApp = (() => {
         },
 
         async registerFlagship(flagshipName) {
+            flagshipName = cleanName(flagshipName);
             try {
                 const res = await fetch(API.flagshipReg, {
                     method: 'POST',
