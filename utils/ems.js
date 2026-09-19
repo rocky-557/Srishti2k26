@@ -146,17 +146,26 @@ async function syncOrProvisionFromEms(phoneOrEmail) {
       console.log(`✨ [EMS Auto-Sync] Updated fee status to PAID for ${user.email}`);
     }
 
-    // 3. Process any workshop registrations from EMS
+    // 3. Process any workshop registrations from EMS.
+    // Collect paid EMS types that match NEITHER general nor any workshop key,
+    // so bulk sync can report unmapped names instead of silently missing them.
+    const unmappedTypes = [];
     for (const item of paidItems) {
       const rawType = (item.Participant_Type_Name || '').trim().toLowerCase();
+      const isGeneral = GENERAL_REG_TYPES.includes(rawType);
+      let matchedWorkshop = false;
       for (const [key, wsCanonicalName] of Object.entries(EMS_WORKSHOP_MAP)) {
         if (rawType.includes(key) || key.includes(rawType)) {
+          matchedWorkshop = true;
           await Registration.findOneAndUpdate(
             { email: user.email, type: 'workshop', name: wsCanonicalName },
             { email: user.email, type: 'workshop', name: wsCanonicalName, fees: 'paid' },
             { upsert: true, new: true }
           );
         }
+      }
+      if (!isGeneral && !matchedWorkshop && item.Participant_Type_Name) {
+        unmappedTypes.push(String(item.Participant_Type_Name).trim());
       }
     }
 
@@ -165,7 +174,8 @@ async function syncOrProvisionFromEms(phoneOrEmail) {
       user,
       isNewUser,
       defaultPassword,
-      emsUser
+      emsUser,
+      unmappedTypes
     };
   } catch (err) {
     console.error('EMS Provisioning Error:', err);

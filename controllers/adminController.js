@@ -1236,6 +1236,9 @@ async function syncAllEms(req, res) {
             const wsCount = await Registration.countDocuments({ email: r.user.email, type: 'workshop', fees: 'paid' });
             if (wsCount > 0) workshopsSynced++;
             if ((r.user.genfee || '') === 'paid') syncedPaid++;
+            for (const t of (r.unmappedTypes || [])) {
+              unmappedTypes[t] = (unmappedTypes[t] || 0) + 1;
+            }
             details.push({ srishtiId: `SRiSHTi25${r.user.memberId}`, email: r.user.email, isNew: !!r.isNewUser, workshops: wsCount });
           } else {
             if (r && /pending/i.test(r.message || '')) alreadyPaid++;
@@ -1255,13 +1258,12 @@ async function syncAllEms(req, res) {
       Registration.countDocuments({ type: 'workshop', fees: 'paid' })
     ]);
 
-    // Collect EMS participant-type strings that didn't map (for admin to report new names)
-    try {
-      const { fetchEmsStatus } = require('../utils/ems');
-      // Only sample first 20 synced users to avoid extra load — details already show who synced
-      void fetchEmsStatus;
-      void unmappedTypes;
-    } catch (e) { /* non-fatal */ }
+    // Paid EMS participant-type strings that matched neither general nor workshop maps.
+    // Non-empty = real undercount risk: tell us these names so we can add mappings.
+    const unmappedList = Object.entries(unmappedTypes)
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 20);
 
     return res.json({
       status: 'success',
@@ -1274,6 +1276,7 @@ async function syncAllEms(req, res) {
       noEmsRecord,
       errors,
       totals: { totalSignups, totalPaid, totalWorkshopPaid },
+      unmappedEmsTypes: unmappedList,
       details: details.slice(0, 100)
     });
   } catch (err) {

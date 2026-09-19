@@ -737,6 +737,10 @@
                     msg += `Paid after sync: ${data.syncedPaid}\nWith paid workshops: ${data.workshopsSynced}\n`;
                     msg += `No EMS record: ${data.noEmsRecord}\nErrors: ${data.errors}\n\n`;
                     msg += `Fresh totals — Signups: ${data.totals.totalSignups}, Paid: ${data.totals.totalPaid}, Workshop(Paid): ${data.totals.totalWorkshopPaid}`;
+                    if (data.unmappedEmsTypes && data.unmappedEmsTypes.length > 0) {
+                        msg += `\n\n⚠️ Unmapped paid EMS types (possible workshop undercount — share these names):\n`;
+                        data.unmappedEmsTypes.forEach(t => { msg += ` • ${t.name} (x${t.count})\n`; });
+                    }
                     alert(msg);
                     loadLiveMembers($('#member_search').val());
                     loadLiveDashboardStats();
