@@ -142,6 +142,20 @@
         //   paid → REGISTERED | registered-unpaid → REGISTERED ✓ — PAY NOW | else REGISTER NOW
         const cleanTitle = (t) => String(t || '').replace(/\s+/g, ' ').trim();
         const EMS_REGISTER_URL = 'https://events.psginstitutions.in/EMS/register/696AE7EB187';
+        // Insert a dedicated PAY NOW anchor after the register button.
+        // A plain link needs no JS to navigate, so blockers can't eat it.
+        function ensurePayNowLink(card, regBtn) {
+            if (!card || !regBtn) return;
+            if (card.querySelector('.btn-pay-now-link')) return;
+            const a = document.createElement('a');
+            a.href = EMS_REGISTER_URL;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.className = 'btn-pay-now-link';
+            a.textContent = 'PAY NOW →';
+            a.style.cssText = 'display:inline-block;margin-top:10px;padding:10px 22px;font-weight:700;border-radius:6px;background:linear-gradient(135deg,#f0c040,#e23636);color:#0a0d18;text-decoration:none;';
+            regBtn.insertAdjacentElement('afterend', a);
+        }
         function updateCardRegistrationStatus(user) {
             if (!user) return;
             const paidWorkshops = user.paidWorkshops || [];
@@ -163,13 +177,15 @@
                     if (isPaid) {
                         regBtn.textContent = 'REGISTERED';
                         regBtn.classList.add('btn-registered');
-                        regBtn.classList.remove('btn-pay-now');
+                        const stale = card.querySelector('.btn-pay-now-link');
+                        if (stale) stale.remove();
                     } else {
                         const myWorkshops = user.workshops || [];
                         const isRegistered = myWorkshops.some(w => cleanTitle(w.name || w).toLowerCase() === normTitle);
                         if (isRegistered) {
-                            regBtn.textContent = 'REGISTERED ✓ — PAY NOW';
-                            regBtn.classList.add('btn-registered', 'btn-pay-now');
+                            regBtn.textContent = 'REGISTERED ✓';
+                            regBtn.classList.add('btn-registered');
+                            ensurePayNowLink(card, regBtn);
                         }
                     }
                 } else if (category.includes('PAPER')) {
@@ -240,12 +256,8 @@
                 }
 
                 // 3. WORKSHOPS: pay-later supported — register instantly, pay now or later
+                // Payment uses a dedicated PAY NOW link (plain anchor, no JS navigation).
                 if (category.includes('WORKSHOP') || (!category.includes('PAPER') && !category.includes('FLAGSHIP'))) {
-                    // Already registered but unpaid → this click means PAY NOW on EMS
-                    if (regBtn.classList.contains('btn-pay-now')) {
-                        window.open(EMS_REGISTER_URL, '_blank');
-                        return;
-                    }
                     regBtn.disabled = true;
                     regBtn.textContent = 'REGISTERING...';
                     try {
@@ -254,15 +266,15 @@
                             : { success: false, message: 'Registration module unavailable.' };
                         if (result.success) {
                             regBtn.disabled = false;
-                            regBtn.textContent = 'REGISTERED ✓ — PAY NOW';
-                            regBtn.classList.add('btn-registered', 'btn-pay-now');
+                            regBtn.textContent = 'REGISTERED ✓';
+                            regBtn.classList.add('btn-registered');
+                            ensurePayNowLink(card, regBtn);
                             alert(`Registered for "${cleanTitle(title)}"!\n\nTap PAY NOW to pay on the EMS Portal, or pay later anytime from your Profile page.`);
                         } else if (result.already) {
                             // Backend reports fees already paid for this workshop
                             regBtn.disabled = false;
                             regBtn.textContent = 'REGISTERED';
                             regBtn.classList.add('btn-registered');
-                            regBtn.classList.remove('btn-pay-now');
                             alert('You are already registered and confirmed for ' + cleanTitle(title) + '!');
                         } else if (result.needLogin) {
                             alert(result.message);
