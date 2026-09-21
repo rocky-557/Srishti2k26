@@ -67,7 +67,7 @@
                 <div class="stat-card">
                     <div class="icon bg-primary-light"><i class="bi bi-tools"></i></div>
                     <div>
-                        <div class="stat-title">Workshop Registrations (Paid)</div>
+                        <div class="stat-title">Workshops (Paid / Registered)</div>
                         <div class="stat-value" id="stat-workshop-paid">--</div>
                     </div>
                 </div>
@@ -182,7 +182,8 @@
 
             document.getElementById('stat-total-signups').textContent = data.totalSignups ?? 0;
             document.getElementById('stat-total-paid').textContent = data.totalPaid ?? 0;
-            document.getElementById('stat-workshop-paid').textContent = data.totalWorkshopPaid ?? 0;
+            document.getElementById('stat-workshop-paid').textContent =
+                `${data.totalWorkshopPaid ?? 0} paid / ${data.totalWorkshopInterest ?? 0} reg`;
 
             const container = document.getElementById('stats-cards-container');
             container.innerHTML = '';
@@ -194,7 +195,7 @@
                 { title: 'Gaming Esports', icon: 'bi-controller', color: 'danger', data: data.gaming },
                 { title: 'Paper Presentations', icon: 'bi-file-earmark-text', color: 'info', data: data.papers },
                 { title: 'Flagship Events', icon: 'bi-trophy', color: 'gold', data: data.flagship },
-                { title: 'Workshops (Paid)', icon: 'bi-tools', color: 'success', data: data.workshops }
+                { title: 'Workshops (Paid / Registered)', icon: 'bi-tools', color: 'success', data: data.workshops }
             ];
 
             sections.forEach(sec => {
@@ -202,10 +203,16 @@
                 let rowsHtml = '';
                 sec.data.events.forEach(evt => {
                     const count = sec.data.counts[evt] ?? 0;
+                    let badge = `<span class="badge text-bg-${sec.color === 'gold' ? 'warning' : sec.color}">${count}</span>`;
+                    // Workshops: show paid vs total interest (registered, pay-later allowed)
+                    if (sec.data.interest && sec.data.interest[evt] !== undefined) {
+                        const total = sec.data.interest[evt] ?? 0;
+                        badge = `<span class="badge text-bg-${sec.color === 'gold' ? 'warning' : sec.color}">${count} paid</span> <span class="badge text-bg-secondary">${total} reg</span>`;
+                    }
                     rowsHtml += `
                         <tr>
                             <td class="fw-semibold">${evt}</td>
-                            <td class="text-end"><span class="badge text-bg-${sec.color === 'gold' ? 'warning' : sec.color}">${count}</span></td>
+                            <td class="text-end">${badge}</td>
                         </tr>
                     `;
                 });

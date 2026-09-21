@@ -627,6 +627,14 @@ async function getStats(req, res) {
       return counts;
     }
 
+    async function getWorkshopInterestCounts(names) {
+      const counts = {};
+      for (const name of names) {
+        counts[name] = await Registration.countDocuments({ type: 'workshop', name: tolerantNameRegex(name) });
+      }
+      return counts;
+    }
+
     const [
       technicalCounts,
       nonTechnicalCounts,
@@ -635,9 +643,11 @@ async function getStats(req, res) {
       gamingCounts,
       paperCounts,
       workshopCounts,
+      workshopInterest,
       totalSignups,
       totalPaid,
-      totalWorkshopPaid
+      totalWorkshopPaid,
+      totalWorkshopInterest
     ] = await Promise.all([
       getCounts('event', technicalEvents),
       getCounts('event', nonTechnicalEvents),
@@ -646,9 +656,11 @@ async function getStats(req, res) {
       getCounts('event', gamingEvents),
       getCounts('paper', paperPresentations),
       getPaidWorkshopCounts(workshopNames),
+      getWorkshopInterestCounts(workshopNames),
       User.countDocuments(),
       User.countDocuments({ genfee: 'paid' }),
-      Registration.countDocuments({ type: 'workshop', fees: 'paid' })
+      Registration.countDocuments({ type: 'workshop', fees: 'paid' }),
+      Registration.countDocuments({ type: 'workshop' })
     ]);
 
     return res.json({
@@ -656,13 +668,14 @@ async function getStats(req, res) {
       totalSignups,
       totalPaid,
       totalWorkshopPaid,
+      totalWorkshopInterest,
       technical: { events: technicalEvents, counts: technicalCounts },
       nonTechnical: { events: nonTechnicalEvents, counts: nonTechnicalCounts },
       flagship: { events: flagshipEvents, counts: flagshipCounts },
       bots: { events: botEvents, counts: botCounts },
       gaming: { events: gamingEvents, counts: gamingCounts },
       papers: { events: paperPresentations, counts: paperCounts },
-      workshops: { events: workshopNames, counts: workshopCounts }
+      workshops: { events: workshopNames, counts: workshopCounts, interest: workshopInterest }
     });
   } catch (err) {
     console.error('Stats error:', err);

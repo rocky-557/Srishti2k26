@@ -138,6 +138,10 @@
         });
 
         // Update status on all cards based on user session
+        // Three states for workshops (pay-later supported):
+        //   paid → REGISTERED | registered-unpaid → REGISTERED ✓ — PAY NOW | else REGISTER NOW
+        const cleanTitle = (t) => String(t || '').replace(/\s+/g, ' ').trim();
+        const EMS_REGISTER_URL = 'https://events.psginstitutions.in/EMS/register/696AE7EB187';
         function updateCardRegistrationStatus(user) {
             if (!user) return;
             const paidWorkshops = user.paidWorkshops || [];
@@ -154,10 +158,19 @@
 
                 // Check if workshop is paid/confirmed
                 if (category.includes('WORKSHOP') || (!category.includes('PAPER') && !category.includes('FLAGSHIP'))) {
-                    const isPaid = allConfirmed.some(w => w.toLowerCase() === title.toLowerCase());
+                    const normTitle = cleanTitle(title).toLowerCase();
+                    const isPaid = allConfirmed.some(w => cleanTitle(w).toLowerCase() === normTitle);
                     if (isPaid) {
                         regBtn.textContent = 'REGISTERED';
                         regBtn.classList.add('btn-registered');
+                        regBtn.classList.remove('btn-pay-now');
+                    } else {
+                        const myWorkshops = user.workshops || [];
+                        const isRegistered = myWorkshops.some(w => cleanTitle(w.name || w).toLowerCase() === normTitle);
+                        if (isRegistered) {
+                            regBtn.textContent = 'REGISTERED ✓ — PAY NOW';
+                            regBtn.classList.add('btn-registered', 'btn-pay-now');
+                        }
                     }
                 } else if (category.includes('PAPER')) {
                     const papers = user.papers || [];
@@ -219,22 +232,50 @@
 
                 // 2. CHECK IF ALREADY REGISTERED & PAID
                 const paidWorkshops = user.paidWorkshops || [];
-                const isAlreadyPaid = paidWorkshops.some(w => w.toLowerCase() === title.toLowerCase());
-                if (isAlreadyPaid || regBtn.classList.contains('btn-registered')) {
+                const normTitle = cleanTitle(title).toLowerCase();
+                const isAlreadyPaid = paidWorkshops.some(w => cleanTitle(w).toLowerCase() === normTitle);
+                if (isAlreadyPaid) {
                     alert('You are already registered and confirmed for ' + title + '!');
                     return;
                 }
 
-                // 3. WORKSHOPS: Leads directly to Payment Gateway (PSG EMS)
+                // 3. WORKSHOPS: pay-later supported — register instantly, pay now or later
                 if (category.includes('WORKSHOP') || (!category.includes('PAPER') && !category.includes('FLAGSHIP'))) {
-                    const proceed = confirm(`Workshop: "${title}"\n\nRegistration for this workshop requires payment on the PSG EMS Portal.\n\nWould you like to proceed to the EMS Payment Gateway now?`);
-                    if (proceed) {
-                        // Record pending workshop in MongoDB
-                        if (window.SrishtiApp && SrishtiApp.Reg) {
-                            SrishtiApp.Reg.registerWorkshop(title).catch(() => {});
+                    // Already registered but unpaid → this click means PAY NOW on EMS
+                    if (regBtn.classList.contains('btn-pay-now')) {
+                        window.open(EMS_REGISTER_URL, '_blank');
+                        return;
+                    }
+                    regBtn.disabled = true;
+                    regBtn.textContent = 'REGISTERING...';
+                    try {
+                        const result = window.SrishtiApp && SrishtiApp.Reg
+                            ? await SrishtiApp.Reg.registerWorkshop(cleanTitle(title))
+                            : { success: false, message: 'Registration module unavailable.' };
+                        if (result.success) {
+                            regBtn.disabled = false;
+                            regBtn.textContent = 'REGISTERED ✓ — PAY NOW';
+                            regBtn.classList.add('btn-registered', 'btn-pay-now');
+                            alert(`Registered for "${cleanTitle(title)}"!\n\nTap PAY NOW to pay on the EMS Portal, or pay later anytime from your Profile page.`);
+                        } else if (result.already) {
+                            // Backend reports fees already paid for this workshop
+                            regBtn.disabled = false;
+                            regBtn.textContent = 'REGISTERED';
+                            regBtn.classList.add('btn-registered');
+                            regBtn.classList.remove('btn-pay-now');
+                            alert('You are already registered and confirmed for ' + cleanTitle(title) + '!');
+                        } else if (result.needLogin) {
+                            alert(result.message);
+                            window.location.href = 'login.html?redirect=' + encodeURIComponent(window.location.pathname);
+                        } else {
+                            alert(result.message || 'Workshop registration failed.');
+                            regBtn.disabled = false;
+                            regBtn.textContent = 'REGISTER NOW';
                         }
-                        // Open EMS Payment Gateway
-                        window.open('https://events.psginstitutions.in/EMS/register/696AE7EB187', '_blank');
+                    } catch (err) {
+                        alert('Network error. Please try again.');
+                        regBtn.disabled = false;
+                        regBtn.textContent = 'REGISTER NOW';
                     }
                     return;
                 }

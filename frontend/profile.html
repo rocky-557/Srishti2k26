@@ -485,6 +485,11 @@
                 const itemName = typeof item === 'string' ? item : (item.name || 'Track');
                 const itemStatus = (typeof item === 'object' && item.status) ? item.status : 'Registered';
                 const isPaidStatus = itemStatus.toLowerCase() === 'paid';
+                // Pay-later hub: unpaid workshops get a direct EMS pay link + sync hint
+                const payBtn = (activeTab === 'workshops' && !isPaidStatus)
+                    ? `<a href="https://events.psginstitutions.in/EMS/register/696AE7EB187" target="_blank" class="btn-gold" style="margin-top:8px; display:inline-block; padding:4px 12px; font-size:0.8rem;"><i class="bi bi-credit-card"></i> Pay Now</a>
+                       <div style="font-size:0.72rem; color:#94a3b8; margin-top:4px;">Paid already? Tap “Update Details” above to sync.</div>`
+                    : '';
 
                 return `
                     <div class="item-box">
@@ -493,6 +498,7 @@
                             <span class="${isPaidStatus ? 'badge-paid' : ''}" style="${!isPaidStatus ? 'color:#4ade80; font-size:0.85rem; font-weight:600;' : ''}">
                                 <i class="bi bi-check-circle-fill"></i> ${itemStatus}
                             </span>
+                            ${payBtn}
                         </div>
                     </div>
                 `;

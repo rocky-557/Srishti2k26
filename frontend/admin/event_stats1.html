@@ -395,12 +395,14 @@
                 // Workshops
                 if (data.workshops && data.workshops.events) {
                     printLine('==========================================================', 'separator');
-                    printLine('Executing query: GET_WORKSHOP_BREAKDOWN_PAID', 'prompt');
-                    printLine('// WORKSHOPS (PAID)', 'output-green');
+                    printLine('Executing query: GET_WORKSHOP_BREAKDOWN_PAID_VS_REGISTERED', 'prompt');
+                    printLine('// WORKSHOPS (PAID / REGISTERED)', 'output-green');
                     data.workshops.events.forEach(name => {
                         const count = data.workshops.counts[name] ?? 0;
-                        const dots = '.'.repeat(Math.max(3, 35 - name.length));
-                        printLine(`   ${name} ${dots} <span class="output-highlight">${count}</span>`, 'output');
+                        const reg = (data.workshops.interest && data.workshops.interest[name] !== undefined) ? data.workshops.interest[name] : null;
+                        const dots = '.'.repeat(Math.max(3, 28 - name.length));
+                        const extra = reg !== null ? ` / <span class="output-highlight">${reg} reg</span>` : '';
+                        printLine(`   ${name} ${dots} <span class="output-highlight">${count} paid</span>${extra}`, 'output');
                     });
                 }
 
