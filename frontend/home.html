@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&family=Syncopate:wght@700&family=Anton&family=Poppins:wght@300;400;600;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&family=Syncopate:wght@700&family=Anton&family=Poppins:wght@300;400;600;800&family=Chakra+Petch:wght@400;600;700&display=swap"
         rel="stylesheet">
 
     <!-- AOS CSS -->
@@ -1561,6 +1561,8 @@
             }
         }
     </style>
+    <!-- STARK HUD Minimalist Style Transfer Layer (Loaded last to take priority) -->
+    <link rel="stylesheet" href="css/hud-minimal.css?v=topfix1">
 </head>
 
 <body data-avengers-theme>
@@ -1711,12 +1713,18 @@
             </svg>
         </div>
 
+
+
         <div class="hero-title-container">
             <h1 class="hero-title" id="srishti-text">SRISHTI 2K26</h1>
+
         </div>
 
         <div class="hud-wrapper">
-            <div class="hud-header">MISSION TIMER</div>
+            <div class="hud-header">
+                <span>MISSION COUNTDOWN </span>
+             
+            </div>
             <div class="hud-timer">
                 <div class="hud-box">
                     <div class="hud-val" id="t-days">53</div>
@@ -1737,12 +1745,6 @@
             </div>
         </div>
 
-        <div class="hud-status-banner" id="hud-status-banner">
-            <span class="hud-status-dot"></span>
-            <span class="hud-status-text">The Registerations Opened...</span>
-        </div>
-
-
 
 
     </section>
@@ -1753,6 +1755,7 @@
     <section class="content-section cinematic-bg" id="about">
         <div class="container">
             <div class="section-header" data-aos="fade-up">
+         
                 <h2 class="section-title">THE INITIATIVE</h2>
             </div>
             <div class="about-grid">
@@ -1773,6 +1776,8 @@
                     <img src="assets/psg.webp" alt="PSG Tech" class="about-img">
                 </div>
             </div>
+
+          
         </div>
     </section>
 
@@ -1780,6 +1785,7 @@
     <section class="content-section cinematic-bg" id="workshops">
         <div class="container">
             <div class="section-header" data-aos="fade-up">
+                
                 <h2 class="section-title">HANDS-ON WORKSHOPS</h2>
             </div>
 
@@ -1795,7 +1801,8 @@
                     </div>
                 </div>
                 <div class="ws-pillar" onclick="openPillar(this)">
-                    <div class="ws-pillar-bg"><img src="assets/WORKSHOP26/workshop-2.jpg" alt="Powering Future Mobility">
+                    <div class="ws-pillar-bg"><img src="assets/WORKSHOP26/workshop-2.jpg"
+                            alt="Powering Future Mobility">
                     </div>
                     <span class="ws-pillar-vtitle">Powering Future Mobility</span>
                     <div class="ws-pillar-content">
@@ -1850,12 +1857,14 @@
     <section class="content-section cinematic-bg" id="events">
         <div class="container">
             <div class="section-header" data-aos="fade-up">
+                <span class="section-tagline" style="color: var(--hud-gold);">SECTORS OF ENGAGEMENT</span>
                 <h2 class="section-title">EXPLORE EVENT ARENAS</h2>
             </div>
 
             <div class="arena-pillars" data-aos="fade-up" id="arenaPillars">
                 <div class="arena-pillar active" onclick="openArenaPillar(this)">
-                    <div class="arena-pillar-bg"><img src="assets/Icons_Srishti24_img/ICONS/Technical/Tech_1.png" alt="TECH NEXUS"></div>
+                    <div class="arena-pillar-bg"><img src="assets/Icons_Srishti24_img/ICONS/Technical/Tech_1.png"
+                            alt="TECH NEXUS"></div>
                     <span class="arena-pillar-vtitle">TECHNICAL</span>
                     <div class="arena-pillar-content">
                         <h3>TECH NEXUS</h3>
@@ -1864,7 +1873,9 @@
                     </div>
                 </div>
                 <div class="arena-pillar" onclick="openArenaPillar(this)">
-                    <div class="arena-pillar-bg"><img src="assets/Icons_Srishti24_img/ICONS FOR WEBSITE SRiSHTi/Non Technical/1.jpeg" alt="CASE ZERO : THE FINAL VERDICT">
+                    <div class="arena-pillar-bg"><img
+                            src="assets/Icons_Srishti24_img/ICONS FOR WEBSITE SRiSHTi/Non Technical/1.jpeg"
+                            alt="CASE ZERO : THE FINAL VERDICT">
                     </div>
                     <span class="arena-pillar-vtitle">NON-TECH</span>
                     <div class="arena-pillar-content">
@@ -1874,7 +1885,9 @@
                     </div>
                 </div>
                 <div class="arena-pillar" onclick="openArenaPillar(this)">
-                    <div class="arena-pillar-bg"><img src="assets/Icons_Srishti24_img/ICONS FOR WEBSITE SRiSHTi/Gaming/marvel_royale.jpg" alt="MARVEL ROYALE"></div>
+                    <div class="arena-pillar-bg"><img
+                            src="assets/Icons_Srishti24_img/ICONS FOR WEBSITE SRiSHTi/Gaming/marvel_royale.jpg"
+                            alt="MARVEL ROYALE"></div>
                     <span class="arena-pillar-vtitle">GAMING</span>
                     <div class="arena-pillar-content">
                         <h3>MARVEL ROYALE</h3>
@@ -1893,7 +1906,8 @@
                     </div>
                 </div>
                 <div class="arena-pillar" onclick="openArenaPillar(this)">
-                    <div class="arena-pillar-bg"><img src="assets/Events_img/paper_presentation.jpg" alt="VoltIQ 2026"></div>
+                    <div class="arena-pillar-bg"><img src="assets/Events_img/paper_presentation.jpg" alt="VoltIQ 2026">
+                    </div>
                     <span class="arena-pillar-vtitle">PAPER PRESENTATION</span>
                     <div class="arena-pillar-content">
                         <h3>VoltIQ 2026</h3>
@@ -1920,6 +1934,7 @@
     <section class="content-section cinematic-bg" id="faq">
         <div class="container">
             <div class="section-header" data-aos="fade-up">
+                <span class="section-tagline">OPERATIONAL BRIEFINGS & GUIDELINES</span>
                 <h2 class="section-title">FREQUENTLY ASKED QUESTIONS</h2>
             </div>
             <div class="glass-panel" data-aos="fade-up">
@@ -1954,6 +1969,7 @@
     <section class="content-section cinematic-bg" id="contact-section">
         <div class="container">
             <div class="section-header" id="contact" data-aos="fade-up">
+                <span class="section-tagline">COMMAND CADRE // 24/7 SUPPORT DISPATCH</span>
                 <h2 class="section-title">CONTACTS</h2>
             </div>
             <div class="contact-grid" data-aos="fade-up">
@@ -1987,17 +2003,28 @@
         </div>
     </section>
 
-    <!-- Footer (Hulk) -->
+    <!-- Footer -->
     <footer class="footer cinematic-bg">
-        <div class="footer-map">
+        <div
+            style="display: flex; justify-content: space-between; align-items: center; max-width: 1100px; margin: 0 auto 14px auto; font-family: var(--font-tech); font-size: 0.8rem; letter-spacing: 2px; flex-wrap: wrap; gap: 8px;">
+            <div style="color: #cbd5e1; display: flex; align-items: center; gap: 8px;">
+                <span class="hud-status-dot"
+                    style="background-color: var(--hud-crimson); box-shadow: 0 0 10px var(--hud-crimson);"></span>
+                <span style="font-family: var(--font-hud); color: #ffffff; font-weight: 700;">GPS TARGET: PSG TECH //
+                    11.0242° N, 77.0002° E</span>
+            </div>
+            <a href="https://3d-test-sepia.vercel.app/" target="_blank"
+                style="color: var(--hud-cyan); text-decoration: none; display: flex; align-items: center; gap: 4px; font-weight: 700;">
+                <span>LAUNCH 3D CAMPUS RADAR ❯</span>
+            </a>
+        </div>
+        <div class="footer-map hud-bracket">
             <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7771.192506841461!2d77.00024787500976!3d11.024254389139978!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba8582f1435fa59%3A0x137d95bfd8909293!2sPSG%20College%20Of%20Technology!5e1!3m2!1sen!2sin!4v1751117995355!5m2!1sen!2sin"
                 allowfullscreen="" loading="lazy"></iframe>
         </div>
         <div class="footer-content">
-
-            <p style="color: #444; font-size: 0.9rem;">&copy; IEEE SC 12951 | PSG College of Technology. Earth's
-                Mightiest Tech Fest SRiSHTi 2K26.</p>
+            <p>&copy; 2026 IEEE SC 12951 | PSG College of Technology. Earth's Mightiest Tech Fest SRiSHTi 2K26.</p>
         </div>
     </footer>
 
@@ -2046,22 +2073,6 @@
         }
         renderParallax();
 
-        /* HUD Countdown */
-        let lastSec = -1;
-        function updateHUD() {
-            const diff = new Date("August 11, 2026 15:35:00").getTime() - new Date().getTime();
-            if (diff <= 0) return;
-            const d = String(Math.floor(diff / (1000 * 60 * 60 * 24))).padStart(2, '0');
-            const h = String(Math.floor((diff / (1000 * 60 * 60)) % 24)).padStart(2, '0');
-            const m = String(Math.floor((diff / 1000 / 60) % 60)).padStart(2, '0');
-            const s = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
-            document.getElementById("t-days").textContent = d; document.getElementById("t-hours").textContent = h; document.getElementById("t-mins").textContent = m;
-            if (s !== lastSec) {
-                const sEl = document.getElementById("t-secs"); sEl.textContent = s;
-                sEl.classList.remove('tick-pulse'); void sEl.offsetWidth; sEl.classList.add('tick-pulse'); lastSec = s;
-            }
-        }
-        setInterval(updateHUD, 1000); updateHUD();
 
         /* Typewriter */
         /* const textTarget = "IEEE SC 12951 // EARTH'S MIGHTIEST TECH FEST"; const typeEl = document.getElementById('typewriter');

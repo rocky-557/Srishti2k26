@@ -1,0 +1,531 @@
+/* ==========================================================================
+   SRiSHTi 2K26 — STARK HUD MINIMALIST STYLE TRANSFER SYSTEM
+   Ported directly from stitch_minimalist_avengers_dashboard/code.html
+   Zero Content Mutation — Complete Visual & Aesthetic Elevation
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   0. FONTS & COLOR TOKENS
+   -------------------------------------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap');
+
+:root {
+  --hud-bg: #030712;
+  --hud-panel: rgba(9, 14, 28, 0.75);
+  --hud-panel-hover: rgba(12, 22, 42, 0.88);
+  --hud-border: rgba(0, 240, 255, 0.22);
+  --hud-border-bright: rgba(0, 240, 255, 0.55);
+  --hud-cyan: #00f0ff;
+  --hud-cyan-dim: rgba(0, 240, 255, 0.12);
+  --hud-gold: #ffb703;
+  --hud-gold-dim: rgba(255, 183, 3, 0.15);
+  --hud-crimson: #e63946;
+  --hud-purple: #9d4edd;
+  --hud-emerald: #2ec4b6;
+  --glow-cyan: 0 0 25px -4px rgba(0, 240, 255, 0.4);
+  --glow-gold: 0 0 25px -4px rgba(255, 183, 3, 0.35);
+  --glow-crimson: 0 0 25px -4px rgba(230, 57, 70, 0.45);
+  --font-hud: 'Orbitron', monospace, sans-serif;
+  --font-tech: 'Chakra Petch', sans-serif;
+  --font-body: 'Rajdhani', sans-serif;
+}
+
+/* --------------------------------------------------------------------------
+
+/* NOTE: top of page (nav/hero/countdown) intentionally left on the original theme. */
+
+::selection {
+  background: var(--hud-cyan) !important;
+  color: #030712 !important;
+}
+
+/* --------------------------------------------------------------------------
+   2. TACTICAL HUD PRIMITIVES & UTILITIES
+   -------------------------------------------------------------------------- */
+/* Tactical L-Bracket corners */
+.hud-bracket {
+  position: relative;
+}
+
+.hud-bracket::before,
+.hud-bracket::after {
+  content: '' !important;
+  position: absolute !important;
+  width: 12px !important;
+  height: 12px !important;
+  pointer-events: none !important;
+  border-color: var(--hud-cyan) !important;
+  z-index: 10 !important;
+}
+
+.hud-bracket::before {
+  top: -1px !important;
+  left: -1px !important;
+  border-top: 2px solid var(--hud-cyan) !important;
+  border-left: 2px solid var(--hud-cyan) !important;
+}
+
+.hud-bracket::after {
+  bottom: -1px !important;
+  right: -1px !important;
+  border-bottom: 2px solid var(--hud-cyan) !important;
+  border-right: 2px solid var(--hud-cyan) !important;
+}
+
+/* Angled cut clip-paths */
+.clip-corner {
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px)) !important;
+}
+
+.clip-tag {
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%) !important;
+}
+
+.clip-hud-badge {
+  clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%) !important;
+}
+
+/* Frosted HUD Glass */
+.hud-glass {
+  background: var(--hud-panel) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1px solid var(--hud-border) !important;
+  box-shadow: var(--glow-cyan) !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.hud-glass:hover {
+  border-color: var(--hud-border-bright) !important;
+  background: var(--hud-panel-hover) !important;
+}
+
+/* Glow classes */
+.glow-cyan {
+  box-shadow: var(--glow-cyan) !important;
+}
+
+.glow-gold {
+  box-shadow: var(--glow-gold) !important;
+}
+
+.glow-crimson {
+  box-shadow: var(--glow-crimson) !important;
+}
+
+
+/* --------------------------------------------------------------------------
+   6. SECTION SYSTEM (THE INITIATIVE, WORKSHOPS, ARENAS, FAQ, CONTACTS)
+   -------------------------------------------------------------------------- */
+.content-section,
+.cinematic-bg {
+  position: relative !important;
+  background-color: var(--hud-bg) !important;
+  padding: 90px 24px !important;
+  border-top: 1px solid rgba(0, 240, 255, 0.18) !important;
+}
+
+/* Remove heavy distracting raster backgrounds for minimalist clarity */
+.cinematic-bg::before,
+.section-bg::before {
+  background: radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.06) 0%, transparent 70%) !important;
+}
+
+.cinematic-bg::after,
+.section-bg::after {
+  background: linear-gradient(to bottom, #030712 0%, transparent 120px, transparent calc(100% - 120px), #030712 100%) !important;
+}
+
+/* Section Header Bar */
+.section-header {
+  margin-bottom: 45px !important;
+  text-align: left !important;
+  border-bottom: 1px solid rgba(0, 240, 255, 0.18) !important;
+  padding-bottom: 16px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+}
+
+.section-tagline {
+  font-family: var(--font-tech), sans-serif !important;
+  font-size: 0.75rem !important;
+  letter-spacing: 4px !important;
+  text-transform: uppercase !important;
+  color: var(--hud-cyan) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.section-tagline::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--hud-cyan);
+  display: inline-block;
+}
+
+.section-title {
+  font-family: var(--font-hud), monospace !important;
+  font-weight: 900 !important;
+  font-size: clamp(2rem, 4.5vw, 3.2rem) !important;
+  letter-spacing: 3px !important;
+  color: #ffffff !important;
+  text-transform: uppercase !important;
+  text-shadow: 0 0 25px rgba(0, 240, 255, 0.3) !important;
+  margin: 0 !important;
+}
+
+/* --------------------------------------------------------------------------
+   7. ABOUT / THE INITIATIVE
+   -------------------------------------------------------------------------- */
+.about-grid {
+  display: grid !important;
+  grid-template-columns: 1.2fr 0.8fr !important;
+  gap: 40px !important;
+  align-items: center !important;
+}
+
+@media (max-width: 900px) {
+  .about-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.about-text {
+  font-family: var(--font-body), sans-serif !important;
+  font-size: 1.15rem !important;
+  line-height: 1.75 !important;
+  color: #cbd5e1 !important;
+  margin-bottom: 20px !important;
+}
+
+.about-text .highlight {
+  color: var(--hud-gold) !important;
+  font-weight: 700 !important;
+  text-shadow: 0 0 8px rgba(255, 183, 3, 0.4) !important;
+}
+
+.about-img {
+  border-radius: 12px !important;
+  border: 1px solid var(--hud-border) !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), var(--glow-cyan) !important;
+  width: 100% !important;
+  max-width: 480px !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+/* Telemetry stat metrics row under About */
+.about-stats-strip {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important;
+  gap: 16px !important;
+  margin-top: 36px !important;
+}
+
+.about-stat-box {
+  background: rgba(3, 7, 18, 0.7) !important;
+  border: 1px solid rgba(0, 240, 255, 0.2) !important;
+  padding: 16px !important;
+  text-align: center !important;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%) !important;
+}
+
+.about-stat-number {
+  font-family: var(--font-hud), monospace !important;
+  font-size: 1.8rem !important;
+  font-weight: 900 !important;
+  color: var(--hud-cyan) !important;
+}
+
+.about-stat-label {
+  font-family: var(--font-tech), sans-serif !important;
+  font-size: 0.75rem !important;
+  letter-spacing: 2px !important;
+  color: #94a3b8 !important;
+  text-transform: uppercase !important;
+  margin-top: 4px !important;
+}
+
+/* --------------------------------------------------------------------------
+   8. WORKSHOPS & EVENT ARENAS (HUD GLASS PILLARS / CARDS)
+   -------------------------------------------------------------------------- */
+.ws-pillars,
+.arena-pillars {
+  display: flex !important;
+  gap: 14px !important;
+  overflow: hidden !important;
+}
+
+.ws-pillar,
+.arena-pillar {
+  border: 1px solid var(--hud-border) !important;
+  border-radius: 10px !important;
+  background: var(--hud-panel) !important;
+  backdrop-filter: blur(14px) !important;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  position: relative !important;
+}
+
+.ws-pillar.active,
+.arena-pillar.active {
+  border-color: var(--hud-border-bright) !important;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.8), var(--glow-cyan) !important;
+}
+
+.ws-pillar-vtitle,
+.arena-pillar-vtitle {
+  font-family: var(--font-hud), monospace !important;
+  letter-spacing: 3px !important;
+  color: var(--hud-cyan) !important;
+  font-weight: 700 !important;
+}
+
+.ws-pillar-content h3,
+.arena-pillar-content h3 {
+  font-family: var(--font-hud), monospace !important;
+  font-size: 1.45rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 1.5px !important;
+  color: #ffffff !important;
+}
+
+.ws-pillar-content p,
+.arena-pillar-content p {
+  font-family: var(--font-body), sans-serif !important;
+  font-size: 1.05rem !important;
+  color: #cbd5e1 !important;
+  line-height: 1.5 !important;
+}
+
+/* Stark clip-tag buttons for workshop & arena CTAs */
+.ws-pillar-btn,
+.arena-pillar-btn {
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%) !important;
+  background: rgba(0, 240, 255, 0.12) !important;
+  border: 1px solid var(--hud-cyan) !important;
+  color: var(--hud-cyan) !important;
+  font-family: var(--font-hud), monospace !important;
+  font-size: 0.8rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 2px !important;
+  text-transform: uppercase !important;
+  padding: 10px 22px !important;
+  border-radius: 0 !important;
+  display: inline-block !important;
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.25) !important;
+  transition: all 0.25s ease !important;
+}
+
+.ws-pillar-btn:hover,
+.arena-pillar-btn:hover {
+  background: var(--hud-cyan) !important;
+  color: #030712 !important;
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.8) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* --------------------------------------------------------------------------
+   9. FREQUENTLY ASKED QUESTIONS (HUD ACCORDION)
+   -------------------------------------------------------------------------- */
+.glass-panel {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  max-width: 900px !important;
+  margin: 0 auto !important;
+}
+
+.faq-item {
+  background: var(--hud-panel) !important;
+  border: 1px solid var(--hud-border) !important;
+  border-radius: 8px !important;
+  margin-bottom: 14px !important;
+  padding: 20px 24px !important;
+  backdrop-filter: blur(14px) !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.faq-item:hover,
+.faq-item.active {
+  border-color: var(--hud-cyan) !important;
+  box-shadow: var(--glow-cyan) !important;
+  background: var(--hud-panel-hover) !important;
+}
+
+.faq-question {
+  font-family: var(--font-hud), monospace !important;
+  font-size: 1.05rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 1px !important;
+  color: #ffffff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.faq-answer {
+  font-family: var(--font-body), sans-serif !important;
+  font-size: 1.05rem !important;
+  line-height: 1.6 !important;
+  color: #94a3b8 !important;
+  border-top: 1px solid rgba(0, 240, 255, 0.15) !important;
+  margin-top: 12px !important;
+  padding-top: 12px !important;
+}
+
+/* --------------------------------------------------------------------------
+   10. CONTACTS & COORDINATORS
+   -------------------------------------------------------------------------- */
+.contact-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
+  gap: 20px !important;
+  max-width: 1100px !important;
+  margin: 0 auto !important;
+}
+
+.contact-card {
+  background: var(--hud-panel) !important;
+  border: 1px solid var(--hud-border) !important;
+  border-top: 3px solid var(--hud-cyan) !important;
+  border-radius: 8px !important;
+  padding: 24px 20px !important;
+  text-align: center !important;
+  backdrop-filter: blur(14px) !important;
+  transition: all 0.3s ease !important;
+}
+
+.contact-card:hover {
+  transform: translateY(-4px) !important;
+  border-color: var(--hud-cyan) !important;
+  box-shadow: var(--glow-cyan) !important;
+}
+
+.contact-card h4 {
+  font-family: var(--font-hud), monospace !important;
+  font-size: 1.1rem !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  margin-bottom: 8px !important;
+}
+
+.contact-card a {
+  font-family: var(--font-tech), monospace !important;
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 2px !important;
+  color: var(--hud-gold) !important;
+  text-decoration: none !important;
+  display: inline-block !important;
+  transition: all 0.2s ease !important;
+}
+
+.contact-card a:hover {
+  color: #ffffff !important;
+  text-shadow: 0 0 10px rgba(255, 183, 3, 0.8) !important;
+}
+
+/* --------------------------------------------------------------------------
+   11. CAMPUS MAP & CYBERNETIC GPS FRAME
+   -------------------------------------------------------------------------- */
+.footer-map {
+  max-width: 1100px !important;
+  margin: 0 auto 30px auto !important;
+  border: 1px solid var(--hud-border) !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), var(--glow-cyan) !important;
+  position: relative !important;
+}
+
+.footer-map iframe {
+  width: 100% !important;
+  height: 380px !important;
+  border: none !important;
+  filter: invert(90%) hue-rotate(180deg) contrast(120%) !important;
+  display: block !important;
+}
+
+/* --------------------------------------------------------------------------
+   12. FOOTER (STARK PROTOCOL SIGN-OFF)
+   -------------------------------------------------------------------------- */
+.footer {
+  background: #000000 !important;
+  border-top: 1px solid rgba(0, 240, 255, 0.2) !important;
+  padding: 40px 20px !important;
+  text-align: center !important;
+}
+
+.footer-content p {
+  font-family: var(--font-tech), monospace !important;
+  font-size: 0.88rem !important;
+  letter-spacing: 2px !important;
+  color: #94a3b8 !important;
+  text-transform: uppercase !important;
+}
+
+/* --------------------------------------------------------------------------
+   13. CUSTOM HUD SCROLLBAR
+   -------------------------------------------------------------------------- */
+::-webkit-scrollbar {
+  width: 6px !important;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--hud-bg) !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--hud-cyan) !important;
+  border-radius: 3px !important;
+}
+
+/* --------------------------------------------------------------------------
+
+/* --------------------------------------------------------------------------
+   14. MOBILE: stack pillars, compact sections (top of page untouched)
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  html,
+  body {
+    overflow-x: hidden !important;
+  }
+  .section-title {
+    font-size: 1.7rem !important;
+    letter-spacing: 2px !important;
+  }
+  .ws-pillars,
+  .arena-pillars {
+    flex-direction: column !important;
+    height: auto !important;
+    gap: 10px !important;
+  }
+  .ws-pillar,
+  .arena-pillar {
+    min-height: 76px !important;
+  }
+  .ws-pillar.active,
+  .arena-pillar.active {
+    min-height: 360px !important;
+    flex: none !important;
+  }
+  .ws-pillar-vtitle,
+  .arena-pillar-vtitle {
+    writing-mode: horizontal-tb !important;
+    font-size: 0.8rem !important;
+    padding: 0 16px !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+  }
+  .about-stats-strip {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+@media (max-width: 480px) {
+  .about-stats-strip {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
