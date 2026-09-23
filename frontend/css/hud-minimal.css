@@ -669,13 +669,5 @@
 }
 
 /* --------------------------------------------------------------------------
-   17. INFINITY GAUNTLET CURSOR (Google easter-egg gauntlet, fine pointers)
+   17. GAUNTLET CURSOR moved to css/gauntlet-cursor.css (site-wide layer)
    -------------------------------------------------------------------------- */
-@media (pointer: fine) {
-  body {
-    cursor: url('../assets/gauntlet.png') 12 8, auto !important;
-  }
-  a, button, .btn-stark, .ws-pillar, .arena-pillar, .faq-item {
-    cursor: url('../assets/gauntlet.png') 12 8, pointer !important;
-  }
-}

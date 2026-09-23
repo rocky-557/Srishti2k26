@@ -1,0 +1,18 @@
+/* ==========================================================================
+   SRiSHTi 2K26 — INFINITY GAUNTLET CURSOR (site-wide, standalone layer)
+   Google easter-egg gauntlet (assets/gauntlet.png). Fine pointers only.
+   No other visuals — safe to link from every page.
+   ========================================================================== */
+@media (pointer: fine) {
+  body {
+    cursor: url('../assets/gauntlet.png') 12 8, auto !important;
+  }
+  a,
+  button,
+  input[type='submit'],
+  input[type='button'],
+  .btn,
+  .btn-stark {
+    cursor: url('../assets/gauntlet.png') 12 8, pointer !important;
+  }
+}
