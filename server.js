@@ -127,6 +127,13 @@ app.get(['/admin/db-repair.html', '/admin/db-repair', '/db-repair'], (req, res) 
 });
 
 // Clean Page Aliases
+app.get('/home', (req, res) => {
+  res.sendFile(path.join(STATIC_DIR, 'home.html'));
+});
+app.get('/home.html', (req, res) => {
+  res.sendFile(path.join(STATIC_DIR, 'home.html'));
+});
+
 app.get(['/signup.html', '/signup'], (req, res) => {
   res.sendFile(path.join(STATIC_DIR, 'register.html'));
 });
@@ -137,6 +144,17 @@ app.get(['/forgot-password.html', '/forgot-password'], (req, res) => {
 
 app.get('/events.html', (req, res) => {
   res.sendFile(path.join(STATIC_DIR, 'event.html'));
+});
+
+// Event / Workshop details visible only to logged-in users (others go to signup)
+app.get(['/event.html', '/event', '/events'], (req, res) => {
+  if (!req.session || !req.session.email) return res.redirect('/register.html');
+  res.sendFile(path.join(STATIC_DIR, 'event.html'));
+});
+
+app.get(['/workshop.html', '/workshop', '/workshops'], (req, res) => {
+  if (!req.session || !req.session.email) return res.redirect('/register.html');
+  res.sendFile(path.join(STATIC_DIR, 'workshop.html'));
 });
 
 // Live Stats Routes (accessible with 4-digit passkey 2026 or admin)
@@ -175,7 +193,17 @@ app.use((req, res, next) => {
   }
   next();
 });
-app.use(express.static(STATIC_DIR, { maxAge: '7d', etag: true }));
+
+const isProd = process.env.NODE_ENV === 'production';
+app.use(express.static(STATIC_DIR, {
+  maxAge: isProd ? '1d' : 0,
+  etag: true,
+  setHeaders: (res, filePath) => {
+    if (!isProd || filePath.endsWith('.html') || filePath.endsWith('.css')) {
+      res.setHeader('Cache-Control', 'no-cache');
+    }
+  }
+}));
 
 // ============ API STATUS CHECK ============
 app.get('/api/status', (req, res) => {

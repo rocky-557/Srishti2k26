@@ -2297,9 +2297,8 @@
             position: fixed;
             width: 80px;
             height: 80px;
-            margin-left: -72px;
-            margin-top: -72px;
-            transform: scale(1.8);
+            margin-left: -12px;
+            margin-top: -8px;
             pointer-events: none;
             z-index: 10001;
             display: none;
@@ -2406,62 +2405,73 @@
                 }
             }
 
-            function playSnapSound(strong) {
-                try {
-                    var AC = window.AudioContext || window.webkitAudioContext;
-                    if (!AC) return;
-                    var ac = new AC();
-                    var dur = strong ? 0.2 : 0.12;
-                    var buf = ac.createBuffer(1, ac.sampleRate * dur, ac.sampleRate);
-                    var d = buf.getChannelData(0);
-                    for (var i = 0; i < d.length; i++) {
-                        d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 3);
-                    }
-                    var src = ac.createBufferSource();
-                    src.buffer = buf;
-                    var f = ac.createBiquadFilter();
-                    f.type = 'highpass';
-                    f.frequency.value = 2200;
-                    var g = ac.createGain();
-                    g.gain.value = strong ? 0.45 : 0.22;
-                    src.connect(f); f.connect(g); g.connect(ac.destination);
-                    src.start();
-                } catch (e) { /* audio unavailable */ }
-            }
-
             var pop = document.getElementById('snap-gauntlet-pop');
             var clickCount = 0;
             var popTimer = null;
 
             function doGauntletSnap(x, y) {
                 if (reduceMotion || !pop) return;
-                // the cursor IS the gauntlet: hide it, play the snap exactly there
+                // the cursor IS the gauntlet: hide it, sprite follows the mouse till snap ends
                 document.body.classList.add('snap-hide-cursor');
                 pop.classList.remove('show');
                 void pop.offsetWidth;
                 pop.style.left = x + 'px';
                 pop.style.top = y + 'px';
                 pop.classList.add('show');
+                var follow = function (mv) {
+                    if (!pop.classList.contains('show')) {
+                        document.removeEventListener('mousemove', follow);
+                        return;
+                    }
+                    pop.style.left = mv.clientX + 'px';
+                    pop.style.top = mv.clientY + 'px';
+                };
+                document.addEventListener('mousemove', follow);
                 if (popTimer) clearTimeout(popTimer);
                 popTimer = setTimeout(function () {
                     pop.classList.remove('show');
                     document.body.classList.remove('snap-hide-cursor');
+                    document.removeEventListener('mousemove', follow);
                 }, 1600);
             }
 
             document.addEventListener('click', function (ev) {
                 clickCount++;
                 if (clickCount % 2 === 0) {
-                    // every 2nd click: full easter-egg snap — gauntlet pops in, shakes, snaps
+                    // every 2nd click: full easter-egg snap visual at the cursor
                     doGauntletSnap(ev.clientX, ev.clientY);
                     snapAt(ev.clientX, ev.clientY);
-                    playSnapSound(true);
                 } else {
                     // odd clicks: small spark tick only
                     snapAt(ev.clientX, ev.clientY);
-                    playSnapSound(false);
                 }
             });
+        })();
+    </script>
+
+    <!-- AUTH GATE: logged-out users hitting action CTAs go to signup (register.html) -->
+    <script>
+        (function () {
+            var loggedIn = null; /* null = session unknown yet */
+            var CTA_SEL = 'a.ws-pillar-btn, a.arena-pillar-btn';
+
+            document.addEventListener('click', function (ev) {
+                if (loggedIn !== false) return; /* only block once confirmed logged-out */
+                var t = ev.target && ev.target.closest ? ev.target.closest(CTA_SEL) : null;
+                if (t) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    window.location.href = 'register.html';
+                }
+            }, true);
+
+            function sync(user) { loggedIn = !!user; }
+            document.addEventListener('srishti:session', function (ev) { sync(ev.detail); });
+            try {
+                if (window.SrishtiApp && SrishtiApp.Auth && typeof SrishtiApp.Auth.getUser === 'function') {
+                    sync(SrishtiApp.Auth.getUser());
+                }
+            } catch (e) { /* app module not ready yet; event listener covers it */ }
         })();
     </script>
 </body>
