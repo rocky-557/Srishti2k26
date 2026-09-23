@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="metalBevel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="30%" stop-color="#94a3b8"/>
+      <stop offset="70%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="handleLeather" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#593315"/>
+      <stop offset="50%" stop-color="#8c532b"/>
+      <stop offset="100%" stop-color="#361a06"/>
+    </linearGradient>
+    <filter id="lightningGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="0" stdDeviation="10" flood-color="#38bdf8" flood-opacity="0.9"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="24" flood-color="#0284c7" flood-opacity="0.6"/>
+    </filter>
+    <linearGradient id="runeGlow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7dd3fc"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" rx="30" fill="#090d16"/>
+  
+  <!-- Electric lightning arcs in background -->
+  <g filter="url(#lightningGlow)" opacity="0.9">
+    <path d="M 60,110 L 120,150 L 105,180 L 170,220" stroke="#bae6fd" stroke-width="3" fill="none"/>
+    <path d="M 330,80 L 270,140 L 285,160 L 230,190" stroke="#bae6fd" stroke-width="3.5" fill="none"/>
+    <path d="M 120,320 L 160,260 L 140,245 L 180,210" stroke="#7dd3fc" stroke-width="2.5" fill="none"/>
+    <path d="M 290,290 L 250,240 L 265,220 L 220,180" stroke="#7dd3fc" stroke-width="2.5" fill="none"/>
+  </g>
+
+  <!-- Mjolnir Hammer tilted -->
+  <g transform="rotate(-28 200 200)">
+    <!-- Leather Strap at bottom -->
+    <path d="M 195,300 C 180,340 220,360 205,330 C 195,315 205,300 205,300" stroke="#451a03" stroke-width="5" fill="none" stroke-linecap="round"/>
+    
+    <!-- Handle -->
+    <rect x="193" y="150" width="14" height="150" rx="4" fill="url(#handleLeather)"/>
+    <!-- Handle Silver Rings -->
+    <line x1="192" y1="180" x2="208" y2="180" stroke="#cbd5e1" stroke-width="3"/>
+    <line x1="192" y1="210" x2="208" y2="210" stroke="#cbd5e1" stroke-width="3"/>
+    <line x1="192" y1="240" x2="208" y2="240" stroke="#cbd5e1" stroke-width="3"/>
+    <line x1="192" y1="270" x2="208" y2="270" stroke="#cbd5e1" stroke-width="3"/>
+    
+    <!-- Hammer Head 3D Beveled Geometry -->
+    <!-- Main block -->
+    <polygon points="120,95 280,95 270,165 130,165" fill="url(#metalBevel)" stroke="#64748b" stroke-width="2"/>
+    <!-- Top bevel cap -->
+    <polygon points="140,80 260,80 280,95 120,95" fill="#cbd5e1"/>
+    <!-- Bottom bevel -->
+    <polygon points="130,165 270,165 255,175 145,175" fill="#1e293b"/>
+    <!-- Left side hammer face -->
+    <polygon points="110,105 120,95 130,165 120,155" fill="#475569"/>
+    <!-- Right side hammer face -->
+    <polygon points="280,95 290,105 280,155 270,165" fill="#94a3b8"/>
+    
+    <!-- Engraved Norse Triquetra / Thor Symbol -->
+    <circle cx="200" cy="130" r="16" fill="none" stroke="url(#runeGlow)" stroke-width="3" filter="url(#lightningGlow)"/>
+    <path d="M 200,118 Q 215,130 200,142 Q 185,130 200,118 Z" fill="none" stroke="#bae6fd" stroke-width="2.5"/>
+  </g>
+</svg>

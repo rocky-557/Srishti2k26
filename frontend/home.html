@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>SRiSHTi 2K26 | Earth's Mightiest Tech Fest</title>
+    <title>SRiSHTi 2K26 | PSG College of Technology</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1857,7 +1857,6 @@
     <section class="content-section cinematic-bg" id="events">
         <div class="container">
             <div class="section-header" data-aos="fade-up">
-                <span class="section-tagline" style="color: var(--hud-gold);">SECTORS OF ENGAGEMENT</span>
                 <h2 class="section-title">EXPLORE EVENT ARENAS</h2>
             </div>
 
@@ -1934,7 +1933,6 @@
     <section class="content-section cinematic-bg" id="faq">
         <div class="container">
             <div class="section-header" data-aos="fade-up">
-                <span class="section-tagline">OPERATIONAL BRIEFINGS & GUIDELINES</span>
                 <h2 class="section-title">FREQUENTLY ASKED QUESTIONS</h2>
             </div>
             <div class="glass-panel" data-aos="fade-up">
@@ -1969,7 +1967,6 @@
     <section class="content-section cinematic-bg" id="contact-section">
         <div class="container">
             <div class="section-header" id="contact" data-aos="fade-up">
-                <span class="section-tagline">COMMAND CADRE // 24/7 SUPPORT DISPATCH</span>
                 <h2 class="section-title">CONTACTS</h2>
             </div>
             <div class="contact-grid" data-aos="fade-up">
@@ -2024,7 +2021,7 @@
                 allowfullscreen="" loading="lazy"></iframe>
         </div>
         <div class="footer-content">
-            <p>&copy; 2026 IEEE SC 12951 | PSG College of Technology. Earth's Mightiest Tech Fest SRiSHTi 2K26.</p>
+            <p>&copy; 2026 IEEE SC 12951 | PSG College of Technology. SRiSHTi 2K26.</p>
         </div>
     </footer>
 
@@ -2075,7 +2072,7 @@
 
 
         /* Typewriter */
-        /* const textTarget = "IEEE SC 12951 // EARTH'S MIGHTIEST TECH FEST"; const typeEl = document.getElementById('typewriter');
+        /* const textTarget = "IEEE SC 12951 // SRISHTI TECH FEST"; const typeEl = document.getElementById('typewriter');
          function runTypewriter() {
              let i = 0; typeEl.innerHTML = "";
              const interval = setInterval(() => {
@@ -2284,6 +2281,188 @@
             updateTimer();
             setInterval(updateTimer, 1000);
         });
+    </script>
+
+    <!-- SNAP-ON-CLICK: sparks every click, full gauntlet snap anim every 2nd click -->
+    <style>
+        #snap-dust-canvas {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 10000;
+        }
+        #snap-gauntlet-pop {
+            position: fixed;
+            width: 80px;
+            height: 80px;
+            margin-left: -72px;
+            margin-top: -72px;
+            transform: scale(1.8);
+            pointer-events: none;
+            z-index: 10001;
+            display: none;
+            background: url('assets/snap_sprite.png') 0 0 no-repeat;
+            filter: drop-shadow(0 0 14px rgba(255, 183, 3, 0.8));
+        }
+        #snap-gauntlet-pop.show {
+            display: block;
+            animation: gauntlet-snap-play 1.5s steps(47) forwards;
+        }
+        @keyframes gauntlet-snap-play {
+            from { background-position: 0 0; }
+            to { background-position: -3760px 0; }
+        }
+        /* hide the cursor gauntlet while IT snaps */
+        body.snap-hide-cursor,
+        body.snap-hide-cursor a,
+        body.snap-hide-cursor button,
+        body.snap-hide-cursor .btn-stark,
+        body.snap-hide-cursor .ws-pillar,
+        body.snap-hide-cursor .arena-pillar,
+        body.snap-hide-cursor .faq-item {
+            cursor: none !important;
+        }
+    </style>
+    <canvas id="snap-dust-canvas"></canvas>
+    <div id="snap-gauntlet-pop" aria-hidden="true"></div>
+    <script>
+        (function () {
+            var canvas = document.getElementById('snap-dust-canvas');
+            var ctx = canvas.getContext('2d');
+            var parts = [];
+            var loopOn = false;
+            var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            function sizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            sizeCanvas();
+            window.addEventListener('resize', sizeCanvas);
+
+            function loop() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                var alive = false;
+                for (var j = 0; j < parts.length; j++) {
+                    var p = parts[j];
+                    if (p.life <= 0) continue;
+                    alive = true;
+                    p.age++;
+                    if (p.kind === 'ring') {
+                        p.r += 3.2;
+                        p.life -= 0.09;
+                        ctx.globalAlpha = Math.max(p.life, 0) * 0.9;
+                        ctx.strokeStyle = p.c;
+                        ctx.lineWidth = 2.5;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                        ctx.stroke();
+                    } else {
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        p.vy += 0.03;
+                        p.life -= p.decay;
+                        ctx.globalAlpha = Math.max(p.life, 0);
+                        ctx.fillStyle = p.c;
+                        ctx.fillRect(p.x, p.y, p.s, p.s);
+                    }
+                }
+                ctx.globalAlpha = 1;
+                if (alive) {
+                    requestAnimationFrame(loop);
+                } else {
+                    loopOn = false;
+                    parts = [];
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+            }
+
+            function snapAt(x, y) {
+                if (reduceMotion) return;
+                // expanding gold ring
+                parts.push({ kind: 'ring', x: x, y: y, r: 4, life: 1, age: 0, c: '#ffd76a' });
+                parts.push({ kind: 'ring', x: x, y: y, r: 1, life: 0.8, age: 0, c: '#ffffff' });
+                // spark burst
+                for (var i = 0; i < 26; i++) {
+                    var a = Math.random() * Math.PI * 2;
+                    var sp = 1 + Math.random() * 3.4;
+                    parts.push({
+                        kind: 'spark',
+                        x: x, y: y,
+                        vx: Math.cos(a) * sp,
+                        vy: Math.sin(a) * sp - 0.6,
+                        s: 1 + Math.random() * 2.6,
+                        life: 1,
+                        age: 0,
+                        decay: 0.03 + Math.random() * 0.04,
+                        c: Math.random() < 0.45 ? '#ffd76a' : (Math.random() < 0.5 ? '#ffffff' : '#ff9d2e')
+                    });
+                }
+                if (!loopOn) {
+                    loopOn = true;
+                    requestAnimationFrame(loop);
+                }
+            }
+
+            function playSnapSound(strong) {
+                try {
+                    var AC = window.AudioContext || window.webkitAudioContext;
+                    if (!AC) return;
+                    var ac = new AC();
+                    var dur = strong ? 0.2 : 0.12;
+                    var buf = ac.createBuffer(1, ac.sampleRate * dur, ac.sampleRate);
+                    var d = buf.getChannelData(0);
+                    for (var i = 0; i < d.length; i++) {
+                        d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 3);
+                    }
+                    var src = ac.createBufferSource();
+                    src.buffer = buf;
+                    var f = ac.createBiquadFilter();
+                    f.type = 'highpass';
+                    f.frequency.value = 2200;
+                    var g = ac.createGain();
+                    g.gain.value = strong ? 0.45 : 0.22;
+                    src.connect(f); f.connect(g); g.connect(ac.destination);
+                    src.start();
+                } catch (e) { /* audio unavailable */ }
+            }
+
+            var pop = document.getElementById('snap-gauntlet-pop');
+            var clickCount = 0;
+            var popTimer = null;
+
+            function doGauntletSnap(x, y) {
+                if (reduceMotion || !pop) return;
+                // the cursor IS the gauntlet: hide it, play the snap exactly there
+                document.body.classList.add('snap-hide-cursor');
+                pop.classList.remove('show');
+                void pop.offsetWidth;
+                pop.style.left = x + 'px';
+                pop.style.top = y + 'px';
+                pop.classList.add('show');
+                if (popTimer) clearTimeout(popTimer);
+                popTimer = setTimeout(function () {
+                    pop.classList.remove('show');
+                    document.body.classList.remove('snap-hide-cursor');
+                }, 1600);
+            }
+
+            document.addEventListener('click', function (ev) {
+                clickCount++;
+                if (clickCount % 2 === 0) {
+                    // every 2nd click: full easter-egg snap — gauntlet pops in, shakes, snaps
+                    doGauntletSnap(ev.clientX, ev.clientY);
+                    snapAt(ev.clientX, ev.clientY);
+                    playSnapSound(true);
+                } else {
+                    // odd clicks: small spark tick only
+                    snapAt(ev.clientX, ev.clientY);
+                    playSnapSound(false);
+                }
+            });
+        })();
     </script>
 </body>
 

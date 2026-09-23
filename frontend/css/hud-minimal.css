@@ -147,25 +147,6 @@
   gap: 6px !important;
 }
 
-.section-tagline {
-  font-family: var(--font-tech), sans-serif !important;
-  font-size: 0.75rem !important;
-  letter-spacing: 4px !important;
-  text-transform: uppercase !important;
-  color: var(--hud-cyan) !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 8px !important;
-}
-
-.section-tagline::before {
-  content: '';
-  width: 6px;
-  height: 6px;
-  background: var(--hud-cyan);
-  display: inline-block;
-}
-
 .section-title {
   font-family: var(--font-hud), monospace !important;
   font-weight: 900 !important;
@@ -527,5 +508,174 @@
 @media (max-width: 480px) {
   .about-stats-strip {
     grid-template-columns: 1fr 1fr !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   15. SECTION BACKDROPS (CSS-only) — strong neon bloom, no images
+   -------------------------------------------------------------------------- */
+#about,
+#workshops,
+#events,
+#faq,
+#contact-section {
+  background-color: #030712 !important;
+  background-image:
+    /* blueprint grid 48px */
+    linear-gradient(rgba(0, 240, 255, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.09) 1px, transparent 1px),
+    /* fine grid 12px */
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    /* diagonal tech streaks */
+    repeating-linear-gradient(
+      135deg,
+      transparent 0 90px,
+      rgba(0, 240, 255, 0.07) 90px 92px
+    ),
+    /* PRIMARY accent bloom (top) — strong */
+    radial-gradient(ellipse 70% 55% at 50% -5%, rgba(0, 240, 255, 0.42) 0%, rgba(0, 240, 255, 0.14) 45%, transparent 70%),
+    /* secondary corner bloom — strong */
+    radial-gradient(ellipse 55% 45% at 100% 100%, rgba(157, 78, 221, 0.3) 0%, transparent 60%),
+    /* center halo behind cards */
+    radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0, 240, 255, 0.12) 0%, transparent 65%),
+    /* soft vignette — light, must not kill glow */
+    radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(3, 7, 18, 0.55) 100%) !important;
+  background-size:
+    48px 48px,
+    48px 48px,
+    12px 12px,
+    12px 12px,
+    auto,
+    auto,
+    auto,
+    auto,
+    auto !important;
+  background-repeat: repeat, repeat, repeat, repeat, repeat, no-repeat, no-repeat, no-repeat, no-repeat !important;
+  box-shadow:
+    inset 0 60px 80px -50px rgba(0, 240, 255, 0.55),
+    inset 0 -60px 80px -50px rgba(157, 78, 221, 0.35) !important;
+}
+
+/* THE INITIATIVE — cyan Stark bloom top + violet base */
+#about {
+  background-image:
+    linear-gradient(rgba(0, 240, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    repeating-linear-gradient(135deg, transparent 0 90px, rgba(0, 240, 255, 0.07) 90px 92px),
+    radial-gradient(ellipse 75% 60% at 50% -8%, rgba(0, 240, 255, 0.5) 0%, rgba(0, 240, 255, 0.16) 45%, transparent 72%),
+    radial-gradient(ellipse 50% 45% at 0% 100%, rgba(46, 196, 182, 0.28) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 45% at 100% 80%, rgba(157, 78, 221, 0.32) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0, 240, 255, 0.14) 0%, transparent 65%),
+    radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(3, 7, 18, 0.5) 100%) !important;
+  background-size: 48px 48px, 48px 48px, 12px 12px, 12px 12px, auto, auto, auto, auto, auto, auto !important;
+  background-repeat: repeat, repeat, repeat, repeat, repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat !important;
+  box-shadow:
+    inset 0 70px 90px -55px rgba(0, 240, 255, 0.65),
+    inset 0 -70px 90px -55px rgba(46, 196, 182, 0.4) !important;
+}
+
+/* WORKSHOPS — pure crimson/red base (Avengers red) */
+#workshops {
+  background-color: #0a0308 !important;
+  background-image:
+    linear-gradient(rgba(230, 57, 70, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(230, 57, 70, 0.12) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    repeating-linear-gradient(135deg, transparent 0 90px, rgba(230, 57, 70, 0.1) 90px 92px),
+    radial-gradient(ellipse 75% 60% at 50% -5%, rgba(230, 57, 70, 0.55) 0%, rgba(214, 40, 40, 0.2) 45%, transparent 72%),
+    radial-gradient(ellipse 60% 50% at 100% 100%, rgba(178, 24, 48, 0.45) 0%, transparent 62%),
+    radial-gradient(ellipse 60% 50% at 0% 90%, rgba(255, 60, 60, 0.35) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 60% at 50% 50%, rgba(230, 57, 70, 0.14) 0%, transparent 65%),
+    radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(10, 3, 8, 0.6) 100%) !important;
+  background-size: 48px 48px, 48px 48px, 12px 12px, 12px 12px, auto, auto, auto, auto, auto, auto !important;
+  background-repeat: repeat, repeat, repeat, repeat, repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat !important;
+  box-shadow:
+    inset 0 80px 100px -55px rgba(230, 57, 70, 0.75),
+    inset 0 -80px 100px -55px rgba(178, 24, 48, 0.6) !important;
+}
+
+/* EVENTS — violet (Wanda/portal) top-left + crimson right */
+#events {
+  background-image:
+    linear-gradient(rgba(157, 78, 221, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(157, 78, 221, 0.1) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    repeating-linear-gradient(135deg, transparent 0 90px, rgba(157, 78, 221, 0.08) 90px 92px),
+    radial-gradient(ellipse 70% 55% at 15% 0%, rgba(157, 78, 221, 0.52) 0%, rgba(157, 78, 221, 0.16) 45%, transparent 70%),
+    radial-gradient(ellipse 55% 45% at 100% 70%, rgba(230, 57, 70, 0.35) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 40% at 50% 50%, rgba(0, 240, 255, 0.1) 0%, transparent 60%),
+    radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(3, 7, 18, 0.5) 100%) !important;
+  background-size: 48px 48px, 48px 48px, 12px 12px, 12px 12px, auto, auto, auto, auto, auto !important;
+  background-repeat: repeat, repeat, repeat, repeat, repeat, no-repeat, no-repeat, no-repeat, no-repeat !important;
+  box-shadow:
+    inset 0 70px 90px -55px rgba(157, 78, 221, 0.65),
+    inset 0 -70px 90px -55px rgba(230, 57, 70, 0.4) !important;
+}
+
+/* FAQ — crimson (Widow) top center + cyan sides */
+#faq {
+  background-image:
+    linear-gradient(rgba(230, 57, 70, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(230, 57, 70, 0.09) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    repeating-linear-gradient(135deg, transparent 0 90px, rgba(230, 57, 70, 0.07) 90px 92px),
+    radial-gradient(ellipse 70% 55% at 50% -5%, rgba(230, 57, 70, 0.45) 0%, rgba(230, 57, 70, 0.15) 45%, transparent 70%),
+    radial-gradient(ellipse 50% 45% at 0% 80%, rgba(0, 240, 255, 0.3) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 45% at 100% 80%, rgba(0, 240, 255, 0.3) 0%, transparent 60%),
+    radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(3, 7, 18, 0.5) 100%) !important;
+  background-size: 48px 48px, 48px 48px, 12px 12px, 12px 12px, auto, auto, auto, auto, auto !important;
+  background-repeat: repeat, repeat, repeat, repeat, repeat, no-repeat, no-repeat, no-repeat, no-repeat !important;
+  box-shadow:
+    inset 0 70px 90px -55px rgba(230, 57, 70, 0.6),
+    inset 0 -70px 90px -55px rgba(0, 240, 255, 0.4) !important;
+}
+
+/* CONTACTS — teal (Tesseract) bottom bloom + cyan top */
+#contact-section {
+  background-image:
+    linear-gradient(rgba(46, 196, 182, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(46, 196, 182, 0.1) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    repeating-linear-gradient(135deg, transparent 0 90px, rgba(46, 196, 182, 0.07) 90px 92px),
+    radial-gradient(ellipse 75% 60% at 50% 105%, rgba(46, 196, 182, 0.48) 0%, rgba(46, 196, 182, 0.16) 45%, transparent 72%),
+    radial-gradient(ellipse 55% 45% at 100% 0%, rgba(0, 240, 255, 0.35) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 45% at 0% 0%, rgba(157, 78, 221, 0.3) 0%, transparent 60%),
+    radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(3, 7, 18, 0.5) 100%) !important;
+  background-size: 48px 48px, 48px 48px, 12px 12px, 12px 12px, auto, auto, auto, auto, auto !important;
+  background-repeat: repeat, repeat, repeat, repeat, repeat, no-repeat, no-repeat, no-repeat, no-repeat !important;
+  box-shadow:
+    inset 0 70px 90px -55px rgba(0, 240, 255, 0.55),
+    inset 0 -70px 90px -55px rgba(46, 196, 182, 0.65) !important;
+}
+
+/* FOOTER / GPS TARGET — glow rises from bottom-up */
+.footer {
+  background-image:
+    linear-gradient(rgba(0, 240, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.08) 1px, transparent 1px),
+    radial-gradient(ellipse 85% 75% at 50% 100%, rgba(0, 240, 255, 0.45) 0%, rgba(0, 240, 255, 0.15) 45%, transparent 70%),
+    radial-gradient(ellipse 70% 55% at 50% 115%, rgba(157, 78, 221, 0.3) 0%, transparent 65%) !important;
+  background-color: #000000 !important;
+  background-size: 48px 48px, 48px 48px, auto, auto !important;
+  background-repeat: repeat, repeat, no-repeat, no-repeat !important;
+  box-shadow: inset 0 -50px 80px -40px rgba(0, 240, 255, 0.6) !important;
+}
+
+/* --------------------------------------------------------------------------
+   17. INFINITY GAUNTLET CURSOR (Google easter-egg gauntlet, fine pointers)
+   -------------------------------------------------------------------------- */
+@media (pointer: fine) {
+  body {
+    cursor: url('../assets/gauntlet.png') 12 8, auto !important;
+  }
+  a, button, .btn-stark, .ws-pillar, .arena-pillar, .faq-item {
+    cursor: url('../assets/gauntlet.png') 12 8, pointer !important;
   }
 }
