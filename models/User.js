@@ -14,9 +14,12 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     maxlength: 100
   },
+  // Passwordless: kept only for legacy records created before passwordless auth.
+  // Login uses SRiSHTi ID (memberId) + mobile number instead.
   password: {
     type: String,
-    required: true,
+    required: false,
+    default: '',
     maxlength: 250
   },
   mobile: {
