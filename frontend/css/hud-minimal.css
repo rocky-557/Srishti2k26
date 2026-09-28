@@ -7,7 +7,7 @@
 /* --------------------------------------------------------------------------
    0. FONTS & COLOR TOKENS
    -------------------------------------------------------------------------- */
-@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap');
 
 :root {
   --hud-bg: #030712;
@@ -25,9 +25,15 @@
   --glow-cyan: 0 0 25px -4px rgba(0, 240, 255, 0.4);
   --glow-gold: 0 0 25px -4px rgba(255, 183, 3, 0.35);
   --glow-crimson: 0 0 25px -4px rgba(230, 57, 70, 0.45);
-  --font-hud: 'Orbitron', monospace, sans-serif;
-  --font-tech: 'Chakra Petch', sans-serif;
-  --font-body: 'Rajdhani', sans-serif;
+  /* FONT SYSTEM v2 (Option A) — REVERT IN 3 PLACES:
+     1) --font-body : 'Exo 2'      -> back to 'Rajdhani'
+     2) --font-card : 'Chakra Petch' (new token) -> delete and set the card rules to --font-hud
+     3) the "FONT v2" block at the end of this file -> delete it
+     Orbitron is now reserved for section titles only. */
+  --font-hud: 'Orbitron', monospace, sans-serif;   /* section titles + stat numbers */
+  --font-tech: 'Chakra Petch', sans-serif;         /* micro-labels, footer, contact links */
+  --font-card: 'Chakra Petch', sans-serif;         /* card titles, FAQ questions, buttons */
+  --font-body: 'Exo 2', sans-serif;                /* readable body copy */
 }
 
 /* --------------------------------------------------------------------------
@@ -671,3 +677,54 @@
 /* --------------------------------------------------------------------------
    17. GAUNTLET CURSOR moved to css/gauntlet-cursor.css (site-wide layer)
    -------------------------------------------------------------------------- */
+
+/* --------------------------------------------------------------------------
+   FONT v2 (Option A) — Orbitron reserved for section titles + stat numbers.
+   Everything below The Initiative that was Orbitron moves to Chakra Petch.
+   DELETE THIS WHOLE BLOCK TO REVERT (plus --font-body in :root).
+   -------------------------------------------------------------------------- */
+.ws-pillar-vtitle,
+.arena-pillar-vtitle,
+.ws-pillar-content h3,
+.arena-pillar-content h3,
+.faq-question,
+.contact-card h4,
+.ws-pillar-btn,
+.arena-pillar-btn {
+  font-family: var(--font-card), sans-serif !important;
+}
+
+/* Chakra Petch reads a touch light at display sizes — firm it up */
+.ws-pillar-content h3,
+.arena-pillar-content h3,
+.faq-question,
+.contact-card h4 {
+  font-weight: 700 !important;
+}
+
+/* Buttons: Orbitron-style tracking kept, but on the narrower face */
+.ws-pillar-btn,
+.arena-pillar-btn {
+  font-weight: 700 !important;
+  letter-spacing: 1.5px !important;
+}
+
+/* Exo 2 is shorter than Rajdhani at the same size — nudge size up slightly */
+.about-text,
+.ws-pillar-content p,
+.arena-pillar-content p,
+.faq-answer {
+  font-family: var(--font-body), sans-serif !important;
+  letter-spacing: 0 !important;
+}
+
+.about-text {
+  font-size: 1.12rem !important;
+}
+
+.ws-pillar-content p,
+.arena-pillar-content p,
+.faq-answer {
+  font-size: 1.02rem !important;
+  line-height: 1.65 !important;
+}

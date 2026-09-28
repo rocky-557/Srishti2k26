@@ -426,15 +426,19 @@ async function downloadEventwise(req, res) {
       const payments = await Payment.find({ paymentStatus: 'success' }).sort({ addedOn: -1 });
 
       if (isCsv) {
-        let csv = 'SRiSHTi ID,Name,Email,Mobile,College,Transaction ID,Amount,Date\n';
+        // Canonical export columns only
+        let csv = EXPORT_HEADERS + '\n';
         for (const p of payments) {
           const user = await User.findOne({ memberId: p.memberId });
-          const name = user ? user.name : p.name;
-          const email = user ? user.email : '';
-          const mobile = user ? user.mobile : '';
-          const college = user ? user.collegeName : '';
-          const dateStr = p.addedOn ? p.addedOn.toISOString().replace('T', ' ').substring(0, 19) : '';
-          csv += `"${p.memberId}","${csvEsc(name)}","${csvEsc(email)}","${csvEsc(mobile)}","${csvEsc(college)}","${csvEsc(p.transactionId)}","${p.amount}","${dateStr}"\n`;
+          csv += exportCsvRow(user || {
+            memberId: p.memberId,
+            name: p.name,
+            email: '',
+            mobile: '',
+            collegeName: '',
+            department: '',
+            accommodation: ''
+          });
         }
         res.setHeader('Content-Type', 'text/csv; charset=utf-8');
         res.setHeader('Content-Disposition', 'attachment; filename="SRiSHTi2k26_Paid_Users.csv"');
@@ -493,9 +497,10 @@ async function downloadEventwise(req, res) {
     const members = await User.find({ email: { $in: emails } });
 
     if (isCsv) {
-      let csv = 'SRiSHTi ID,Name,Email,Mobile,College,General Fee,Accommodation\n';
+      // Canonical export columns only
+      let csv = EXPORT_HEADERS + '\n';
       for (const m of members) {
-        csv += `"${m.memberId || ''}","${csvEsc(m.name)}","${csvEsc(m.email)}","${csvEsc(m.mobile)}","${csvEsc(m.collegeName)}","${csvEsc(m.genfee || '')}","${csvEsc(m.accommodation || '')}"\n`;
+        csv += exportCsvRow(m);
       }
       const safeName = eventName.replace(/[^a-zA-Z0-9]/g, '_');
       res.setHeader('Content-Type', 'text/csv; charset=utf-8');
@@ -529,6 +534,37 @@ async function downloadEventwise(req, res) {
 function csvEsc(str) {
   if (!str) return '';
   return String(str).replace(/"/g, '""');
+}
+
+/**
+ * Canonical export fields — every CSV/JSON export uses exactly these columns.
+ * These mirror the signup form (name, email, mobile, college, department,
+ * accommodation). Everything else (gender, genfee, workshop lists, txn
+ * ids, timestamps, EMS ids) is intentionally excluded as redundant.
+ */
+const EXPORT_HEADERS = 'SRiSHTi ID,Name,Email,Mobile,College,Department,Accommodation';
+
+function exportFields(user) {
+  return {
+    srishtiId: user.memberId ? `SRiSHTi25${user.memberId}` : '',
+    name: user.name || '',
+    email: user.email || '',
+    mobile: user.mobile || '',
+    college: user.collegeName || '',
+    department: user.department || '',
+    accommodation: user.accommodation || ''
+  };
+}
+
+/** Flat object with the same 7 fields, for JSON exports. */
+function pickExportFields(user) {
+  return exportFields(user);
+}
+
+/** One CSV row (quoted, trailing newline) in canonical column order. */
+function exportCsvRow(user) {
+  const f = exportFields(user);
+  return `"${csvEsc(f.srishtiId)}","${csvEsc(f.name)}","${csvEsc(f.email)}","${csvEsc(f.mobile)}","${csvEsc(f.college)}","${csvEsc(f.department)}","${csvEsc(f.accommodation)}"\n`;
 }
 
 /**
@@ -740,16 +776,18 @@ async function downloadSignups(req, res) {
     }
 
     if (format === 'json') {
-      return res.json({ status: 'success', filter, count: users.length, users });
+      return res.json({
+        status: 'success',
+        filter,
+        count: users.length,
+        users: users.map(pickExportFields)
+      });
     }
 
-    // Default: CSV download
-    let csv = 'SRiSHTi ID,Name,Email,Mobile,College,Department,Gender,General Fee,Workshop Paid Count,Workshop Names,Accommodation,Registered On\n';
+    // Default: CSV download — canonical export columns only
+    let csv = EXPORT_HEADERS + '\n';
     for (const m of users) {
-      const sId = m.memberId ? `SRiSHTi25${m.memberId}` : '';
-      const dateStr = m.createdAt ? new Date(m.createdAt).toISOString().replace('T', ' ').substring(0, 19) : '';
-      const wsNames = (m.workshopsPaid || []).join('; ');
-      csv += `"${sId}","${csvEsc(m.name)}","${csvEsc(m.email)}","${csvEsc(m.mobile)}","${csvEsc(m.collegeName)}","${csvEsc(m.department)}","${csvEsc(m.gender)}","${csvEsc(m.genfee || 'unpaid')}","${(m.workshopsPaid || []).length}","${csvEsc(wsNames)}","${csvEsc(m.accommodation || '')}","${dateStr}"\n`;
+      csv += exportCsvRow(m);
     }
     res.setHeader('Content-Type', 'text/csv; charset=utf-8');
     res.setHeader('Content-Disposition', `attachment; filename="SRiSHTi2k26_Signups_${filter}_${users.length}.csv"`);

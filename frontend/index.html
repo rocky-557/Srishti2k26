@@ -1680,7 +1680,7 @@
                 </div>
 
                 <!-- Explore Button -->
-                <a href="home.html" class="explore-btn-container">
+                <a href="home.html" class="explore-btn-container" id="exploreBtn">
                     <div class="explore-icon">
                         <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor"
                             stroke-width="2">
@@ -1698,6 +1698,38 @@
             </div>
         </div><!-- /stage -->
     </div><!-- /cinematic-reveal -->
+
+    <script>
+        /* ================================================================
+           EXPLORE BUTTON — logged-out visitors are sent to the login page
+        ================================================================ */
+        (function gateExplore() {
+            const btn = document.getElementById('exploreBtn');
+            if (!btn) return;
+
+            let known = null; // null = unknown, true/false = logged in/out
+
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const goHome = () => { window.location.href = 'home.html'; };
+                const goLogin = () => { window.location.href = 'login.html?redirect=home.html'; };
+
+                if (known === true) return goHome();
+
+                fetch('/api/auth/session', { credentials: 'same-origin' })
+                    .then(r => r.json())
+                    .then(d => {
+                        known = !!(d && d.loggedIn);
+                        known ? goHome() : goLogin();
+                    })
+                    .catch(() => {
+                        // Session check failed — never block the user on a network hiccup
+                        goHome();
+                    });
+            });
+        })();
+    </script>
 
     <script>
         /* ================================================================

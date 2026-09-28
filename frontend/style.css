@@ -967,8 +967,14 @@ input:checked+.slider::before {
     padding: 2rem 1.6rem;
   }
 
+  /* Logos at 0.6x on mobile (register + login form header) */
   .form-top-logo {
-    width: 240px;
+    width: 144px;
+  }
+
+  .form-logo-wrap .psg-college-logo {
+    height: 63px !important;
+    max-width: 144px;
   }
 }
 
@@ -1035,11 +1041,6 @@ input:checked+.slider::before {
   font-style: italic;
   letter-spacing: 0.01em;
   transition: color 0.2s ease;
-}
-
-/* Slightly brighten hint when sibling input is focused */
-#referenceId:focus~.field-hint {
-  color: rgba(201, 162, 39, 0.75);
 }
 
 /* Highlighted Email Submission Box */

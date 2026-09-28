@@ -1,12 +1,11 @@
 /**
  * Auth Controller — handles signup, login, logout.
- * 
- * Ports:
- *   modules/add_user.php → signup()
- *   pcheck.php           → login()
- *   logout.php           → logout()
+ *
+ * Passwordless by design:
+ *   - signup  → collects identity details only (no password)
+ *   - login   → SRiSHTi ID (memberId) + registered mobile number
+ *   - OTP / password-reset flows were removed
  */
-const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const User = require('../models/User');
 const { getNextSequence } = require('../models/Counter');
@@ -14,17 +13,14 @@ const { syncOrProvisionFromEms } = require('../utils/ems');
 
 /**
  * POST /api/auth/signup
- * 
- * Mirrors modules/add_user.php exactly:
- * - Same validation rules (password complexity, phone length, college name)
- * - Same bcrypt cost factor (12)
- * - Same plain-text response format for frontend compatibility
+ *
+ * Validates identity details (name, email, 10-digit mobile, college).
+ * Plain-text responses kept for frontend compatibility.
  */
 async function signup(req, res) {
   try {
     let { 
       name, firstName, lastName, email, 
-      createpassword, confirmpassword, password, confirmPassword, 
       phone, mobile, 
       depart, department, 
       cgname, college, 
@@ -32,11 +28,9 @@ async function signup(req, res) {
       accomodation, accommodation 
     } = req.body;
 
-    // Normalize field names
+    // Normalize field names (password is no longer collected or required)
     name = name || ((firstName || '') + (lastName ? ' ' + lastName : '')).trim();
     phone = phone || mobile;
-    createpassword = createpassword || password || ('Srishti@' + (phone && phone.length >= 4 ? phone.slice(-4) : '2026') + '!');
-    confirmpassword = confirmpassword || confirmPassword || createpassword;
     depart = depart || department || 'General';
     cgname = (cgname === 'others' || college === 'others') ? (req.body.otherCollege || 'Other College') : (cgname || college);
     gcheck = gcheck || gender || '';
@@ -58,58 +52,56 @@ async function signup(req, res) {
       return res.send('Mobile Number must be 10 digits.');
     }
 
-    // Password match
-    if (createpassword !== confirmpassword) {
-      return res.send('Password Mismatch');
-    }
-
     // College name length
     if (!cgname || cgname.length <= 4) {
       return res.send('Enter your college name (as per ID card).');
     }
 
-    // Password complexity (same rules as PHP)
-    if (!createpassword || createpassword.length <= 8) {
-      return res.send('Password must be at least 8 characters.');
-    }
-    if (!/[0-9]/.test(createpassword)) {
-      return res.send('Your Password Must Contain At Least 1 Number!');
-    }
-    if (!/[A-Z]/.test(createpassword)) {
-      return res.send('Your Password Must Contain At Least 1 Capital Letter!');
-    }
-    if (!/[a-z]/.test(createpassword)) {
-      return res.send('Your Password Must Contain At Least 1 Lowercase Letter!');
-    }
-    if (!/['^£$%&*()}{@#~?><>,|=_+¬-]/.test(createpassword)) {
-      return res.send('Your Password Must Contain At Least 1 special character!');
+    // --- Duplicate handling: never create a second or conflicting record ---
+    // Mobile is the primary identifier (matches the login pair: S-ID + mobile).
+    const existingByMobile = await User.findOne({ mobile: phone });
+    if (existingByMobile) {
+      // Same person re-attempting signup: hand back their S-ID instead of an error,
+      // so the frontend can route them straight to a working login.
+      return res.send('ALREADY_REGISTERED|SRiSHTi25' + existingByMobile.memberId);
     }
 
-    // Check for existing user by mobile (primary identifier)
-    const existingUser = await User.findOne({ mobile: phone });
-    if (existingUser) {
-      return res.send('Mobile number already in system! Try to Login');
+    // Email already taken by a different account (different mobile) — never overwrite.
+    const existingByEmail = await User.findOne({ email: email.toLowerCase() });
+    if (existingByEmail) {
+      return res.send('EMAIL_TAKEN');
     }
-
-    // Hash password with bcrypt cost 12 (same as PHP PASSWORD_BCRYPT with cost 12)
-    const hashedPassword = await bcrypt.hash(createpassword, 12);
 
     // Get next sequential ID (for payment gateway compatibility)
     const memberId = await getNextSequence('userId');
 
     // Create user document (merges old eusers + members inserts)
-    const user = await User.create({
-      name,
-      email: email.toLowerCase(),
-      password: hashedPassword,
-      mobile: phone,
-      department: depart,
-      collegeName: cgname,
-      gender: gcheck || '',
-      accommodation: accomodation || 'No',
-      genfee: '',
-      memberId
-    });
+    let user;
+    try {
+      user = await User.create({
+        name,
+        email: email.toLowerCase(),
+        mobile: phone,
+        department: depart,
+        collegeName: cgname,
+        gender: gcheck || '',
+        accommodation: accomodation || 'No',
+        genfee: '',
+        memberId
+      });
+    } catch (createErr) {
+      // Duplicate-key (unique index on mobile/email) means a concurrent signup won the
+      // race. Return that account's S-ID instead of failing or creating a duplicate.
+      if (createErr && createErr.code === 11000) {
+        const winner = await User.findOne({
+          $or: [{ mobile: phone }, { email: email.toLowerCase() }]
+        });
+        if (winner) {
+          return res.send('ALREADY_REGISTERED|SRiSHTi25' + winner.memberId);
+        }
+      }
+      throw createErr;
+    }
 
     // Asynchronously dispatch "Thank You for Registering" email (non-blocking)
     sendWelcomeEmail({ name, email: email.toLowerCase(), memberId, cgname, depart });
@@ -174,47 +166,104 @@ function buildUserLookupQuery(input) {
 
 /**
  * POST /api/auth/login
- * 
- * Supports login via:
- * 1. Email Address (case-insensitive, trimmed)
- * 2. SRiSHTi ID (e.g. SRiSHTi251024, SRISHTI1024, or 1024)
- * 3. Mobile Number (10 digits)
- * 
- * Returns 'true', 'pass', or 'false' as plain text for frontend compatibility
+ *
+ * Passwordless login. Two fields, both must match the same account:
+ *   1. SRiSHTi ID  — SRiSHTi251024, SRiSHTi26xxx, SR1024, or bare 1024
+ *      OR  Email   — the registered email address
+ *   2. Mobile number — the registered 10-digit number
+ *
+ * - Tolerates prefixes/spacing in the S-ID and +91/0/spaces in the mobile
+ * - Never fails on anything except a genuine identifier+mobile mismatch
+ * - Returns 'true' or 'false' as plain text for frontend compatibility
  */
 async function login(req, res) {
   try {
-    const { email, username, loginId, identifier, password } = req.body;
-    const loginIdentifier = email || username || loginId || identifier;
+    const {
+      srishtiId, srishtid, id_num, sId, memberId, email, username, identifier,
+      phone, mobile, mobileNumber, mob
+    } = req.body;
 
-    if (!loginIdentifier || !password) {
+    const rawId = (srishtiId || srishtid || id_num || sId || memberId || email || username || identifier || '')
+      .toString().trim();
+    const rawPhone = (phone || mobile || mobileNumber || mob || '').toString().trim();
+
+    if (!rawId || !rawPhone) {
       return res.send('false');
     }
 
-    const query = buildUserLookupQuery(loginIdentifier);
-    if (!query) {
+    // --- Parse mobile: keep last 10 digits so +91/0/spaces all work ---
+    const phoneDigits = rawPhone.replace(/\D/g, '');
+    if (phoneDigits.length < 10) {
       return res.send('false');
     }
+    const mobile10 = phoneDigits.slice(-10);
 
-    // Find user by Email / Mobile / SRiSHTi ID
-    let user = await User.findOne(query);
-    if (!user) {
-      // Check if user is registered & paid on EMS (auto-provision)
-      const emsResult = await syncOrProvisionFromEms(loginIdentifier);
-      if (emsResult && emsResult.success && emsResult.user) {
-        user = emsResult.user;
-      } else {
+    // --- Decide whether the identifier is an email or an S-ID ---
+    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(rawId);
+
+    let candidates = [];
+    if (isEmail) {
+      // Email path
+      candidates = await User.find({ email: rawId.toLowerCase() }).limit(5);
+    } else {
+      // S-ID path -> numeric memberId
+      let numericId = null;
+      const prefixMatch = rawId.match(/^(?:srishti|sri|s)?\s*-?\s*(?:2[456])?\s*(\d+)$/i);
+      if (prefixMatch && prefixMatch[1]) {
+        const n = parseInt(prefixMatch[1], 10);
+        if (!isNaN(n) && n > 0) numericId = n;
+      }
+      if (numericId === null) {
+        const digitsOnly = rawId.replace(/\D/g, '');
+        if (digitsOnly && digitsOnly.length <= 8) {
+          const n = parseInt(digitsOnly, 10);
+          if (!isNaN(n) && n > 0) numericId = n;
+        }
+      }
+      if (numericId === null) {
         return res.send('false');
+      }
+      candidates = await User.find({ memberId: numericId }).limit(5);
+    }
+
+    // --- Both fields must match the same account ---
+    let user = candidates.find(u => {
+      const d = String(u.mobile || '').replace(/\D/g, '');
+      return d.length >= 10 && d.slice(-10) === mobile10;
+    });
+
+    if (!user && candidates.length === 1 && !candidates[0].mobile) {
+      // Legacy record with no mobile on file: trust the identifier alone rather than fail
+      user = candidates[0];
+    }
+
+    if (!user) {
+      // Last resort: EMS-provision the account (paid on EMS but never registered here).
+      // Only accept it if the mobile genuinely matches what the user typed — a mismatch
+      // means the identifier is wrong, so we refuse rather than log them into another account.
+      try {
+        const emsResult = await syncOrProvisionFromEms(mobile10);
+        if (emsResult && emsResult.success && emsResult.user) {
+          const provisioned = emsResult.user;
+          const pMobile = String(provisioned.mobile || '').replace(/\D/g, '');
+          const mobileMatches = pMobile.length >= 10 && pMobile.slice(-10) === mobile10;
+          const idMatches = isEmail
+            ? String(provisioned.email || '').toLowerCase() === rawId.toLowerCase()
+            : Number(provisioned.memberId) === candidates[0]?.memberId;
+          if (mobileMatches && (idMatches || provisioned.memberId == null)) {
+            user = provisioned;
+          }
+        }
+      } catch (e) {
+        console.error('EMS provision during login failed:', e.message);
       }
     }
 
-    // Verify password (bcryptjs handles PHP's $2y$ prefix transparently)
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.send('pass');
+    if (!user) {
+      return res.send('false');
     }
 
-    // Populate session (same keys as PHP's pcheck.php)
+    // --- Populate session (same keys as PHP's pcheck.php) ---
     req.session.login = user.memberId;
     req.session.id_num = user.memberId;
     req.session.name = user.name;
@@ -332,299 +381,15 @@ async function sendWelcomeEmail({ name, email, memberId, cgname, depart }) {
   }
 }
 
-/**
- * POST /api/auth/send-otp
- * Generates and sends a 6-digit OTP to the user's email address.
- */
-async function sendOtp(req, res) {
-  try {
-    const { emailOrPhone } = req.body;
-    if (!emailOrPhone) {
-      return res.json({ status: 'error', message: 'Please enter your registered email or phone number.' });
-    }
-
-    const query = buildUserLookupQuery(emailOrPhone);
-    if (!query) {
-      return res.json({ status: 'error', message: 'Please enter your registered email, SRiSHTi ID, or phone number.' });
-    }
-
-    let user = await User.findOne(query);
-
-    if (!user) {
-      // Check EMS fallback
-      const emsResult = await syncOrProvisionFromEms(emailOrPhone);
-      if (emsResult && emsResult.success && emsResult.user) {
-        user = emsResult.user;
-      } else {
-        return res.json({ status: 'error', message: 'No registered account found with this email, SRiSHTi ID, or mobile number.' });
-      }
-    }
-
-    // Generate 6-digit OTP
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const expires = Date.now() + 5 * 60 * 1000; // 5 minutes
-
-    req.session.otpData = {
-      email: user.email,
-      otp,
-      expires,
-      verified: false
-    };
-
-    // Log OTP to server console for testing/development
-    console.log(`\n==============================================`);
-    console.log(`🔑 SRiSHTi 2k26 OTP for ${user.email}: [ ${otp} ]`);
-    console.log(`==============================================\n`);
-
-    // Asynchronously attempt email dispatch (non-blocking)
-    try {
-      const transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 587,
-        secure: false,
-        auth: {
-          user: process.env.EMAIL_USER || 'atommailer1@gmail.com',
-          pass: process.env.EMAIL_PASS || 'dksg gljy slwt lgtj'
-        }
-      });
-
-      transporter.sendMail({
-        from: `"SRiSHTi 2k26" <${process.env.EMAIL_USER || 'atommailer1@gmail.com'}>`,
-        to: user.email,
-        subject: '🔑 Your SRiSHTi 2k26 Password Reset Verification Code',
-        html: `
-          <div style="font-family: Arial, sans-serif; background: #050810; color: #ffffff; padding: 30px; border-radius: 12px; max-width: 500px; margin: 0 auto; border: 1px solid rgba(201, 162, 39, 0.3);">
-            <h2 style="color: #f0c040; text-align: center;">SRiSHTi 2k26</h2>
-            <h4 style="text-align: center; color: #e0e0e0;">Password Reset Verification Code</h4>
-            <p style="color: #b0bec5; font-size: 14px;">Hello <strong>${user.name}</strong>,</p>
-            <p style="color: #b0bec5; font-size: 14px;">You requested a password reset for your SRiSHTi 2k26 account. Use the 6-digit code below to complete your password reset:</p>
-            <div style="background: rgba(201, 162, 39, 0.1); border: 2px dashed #f0c040; border-radius: 10px; padding: 18px; text-align: center; margin: 25px 0;">
-              <span style="font-size: 34px; font-weight: 800; letter-spacing: 8px; color: #5EFF7A; font-family: monospace;">${otp}</span>
-            </div>
-            <p style="color: #ff6b6b; font-size: 12px; text-align: center;">⚠️ This code is valid for 5 minutes. Do not share it with anyone.</p>
-          </div>
-        `
-      }).then(() => {
-        console.log(`✅ OTP email delivered to ${user.email}`);
-      }).catch(mailErr => {
-        console.warn(`⚠️ SMTP unreachable. OTP code logged to terminal: ${otp}`);
-      });
-    } catch (e) {
-      console.warn(`⚠️ SMTP init error:`, e.message);
-    }
-
-    req.session.save((err) => {
-      if (err) console.error('OTP session save error:', err);
-      return res.json({ status: 'success', message: `Verification code sent to ${user.email}.` });
-    });
-  } catch (err) {
-    console.error('Send OTP error:', err);
-    return res.json({ status: 'error', message: 'Failed to send OTP code. Please try again.' });
-  }
-}
 
 /**
- * POST /api/auth/verify-otp
- * Verifies the 6-digit OTP code entered by the user.
+ * Passwordless auth surface.
+ * OTP / password-reset flows were removed together with the password mechanism.
  */
-async function verifyOtp(req, res) {
-  try {
-    const { otp } = req.body;
-    const otpData = req.session.otpData;
-
-    if (!otpData) {
-      return res.json({ status: 'error', message: 'No active OTP session found. Please request a new code.' });
-    }
-
-    if (Date.now() > otpData.expires) {
-      req.session.otpData = null;
-      return res.json({ status: 'error', message: 'OTP code has expired. Please request a new code.' });
-    }
-
-    if (otpData.otp !== String(otp).trim()) {
-      return res.json({ status: 'error', message: 'Incorrect 6-digit OTP code.' });
-    }
-
-    otpData.verified = true;
-    req.session.save((err) => {
-      if (err) console.error('Verify OTP session save error:', err);
-      return res.json({ status: 'success', message: 'OTP verified successfully.' });
-    });
-  } catch (err) {
-    console.error('Verify OTP error:', err);
-    return res.json({ status: 'error', message: 'Failed to verify OTP code.' });
-  }
-}
-
-/**
- * POST /api/auth/reset-password
- * Resets user password after successful OTP verification.
- */
-async function resetPassword(req, res) {
-  try {
-    const { password, confirmPassword } = req.body;
-    const otpData = req.session.otpData;
-
-    if (!otpData || !otpData.verified) {
-      return res.json({ status: 'error', message: 'Unauthorized. Please verify your OTP code first.' });
-    }
-
-    if (!password || password.length < 8) {
-      return res.json({ status: 'error', message: 'Password must be at least 8 characters long.' });
-    }
-
-    if (confirmPassword && password !== confirmPassword) {
-      return res.json({ status: 'error', message: 'Passwords do not match.' });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 12);
-    await User.updateOne({ email: otpData.email }, { password: hashedPassword });
-
-    req.session.otpData = null;
-    req.session.save((err) => {
-      if (err) console.error('Reset password session save error:', err);
-      return res.json({ status: 'success', message: 'Password reset successfully! You can now log in.' });
-    });
-  } catch (err) {
-    console.error('Reset password error:', err);
-    return res.json({ status: 'error', message: 'Failed to reset password.' });
-  }
-}
-
-/**
- * POST /api/auth/quick-reset-password
- * Automated OTP-less 2-Field Identity Verification (Email/SRiSHTi ID + Registered Phone)
- */
-async function quickResetPassword(req, res) {
-  try {
-    const { identifier, email, srishtiId, mobile, phone, newPassword, confirmPassword } = req.body;
-    const userIdentifier = (identifier || email || srishtiId || '').trim();
-    const userPhone = (mobile || phone || '').trim();
-
-    if (!userIdentifier || !userPhone) {
-      return res.json({ 
-        status: 'error', 
-        message: 'Please provide both your Email / SRiSHTi ID and your registered 10-digit mobile number.' 
-      });
-    }
-
-    const query = buildUserLookupQuery(userIdentifier);
-    if (!query) {
-      return res.json({ status: 'error', message: 'Invalid identifier provided.' });
-    }
-
-    // Must match the identifier AND the registered mobile number
-    let user = await User.findOne({
-      $and: [
-        query,
-        { mobile: userPhone }
-      ]
-    });
-
-    if (!user) {
-      // Check EMS fallback
-      const emsResult = await syncOrProvisionFromEms(userPhone);
-      if (emsResult && emsResult.success && emsResult.user) {
-        user = emsResult.user;
-      } else {
-        return res.json({ 
-          status: 'error', 
-          message: 'Verification failed. The Email/SRiSHTi ID and Phone Number do not match any registered account.' 
-        });
-      }
-    }
-
-    // Determine password to set
-    let passwordToSet = (newPassword || '').trim();
-    let isDefault = false;
-
-    if (!passwordToSet) {
-      const last4 = user.mobile && user.mobile.length >= 4 ? user.mobile.slice(-4) : '2026';
-      passwordToSet = `Srishti@${last4}!`;
-      isDefault = true;
-    } else {
-      if (passwordToSet.length < 8) {
-        return res.json({ status: 'error', message: 'Password must be at least 8 characters long.' });
-      }
-      if (confirmPassword && passwordToSet !== confirmPassword.trim()) {
-        return res.json({ status: 'error', message: 'Passwords do not match.' });
-      }
-    }
-
-    const hashedPassword = await bcrypt.hash(passwordToSet, 12);
-    await User.updateOne({ _id: user._id }, { password: hashedPassword });
-
-    return res.json({ 
-      status: 'success', 
-      message: isDefault 
-        ? `Password reset to default: ${passwordToSet}` 
-        : 'Password updated successfully! You can now log in.',
-      password: isDefault ? passwordToSet : undefined
-    });
-  } catch (err) {
-    console.error('Quick reset password error:', err);
-    return res.json({ status: 'error', message: 'Failed to reset password. Please try again.' });
-  }
-}
-
-/**
- * POST /api/auth/verify-identity
- * Verifies Email/SRiSHTi ID + Mobile number before presenting new password form
- */
-async function verifyIdentity(req, res) {
-  try {
-    const { identifier, mobile, phone } = req.body;
-    const userIdentifier = (identifier || '').trim();
-    const userPhone = (mobile || phone || '').trim();
-
-    if (!userIdentifier || !userPhone) {
-      return res.json({ status: 'error', message: 'Please enter your Email / SRiSHTi ID and Phone Number.' });
-    }
-
-    const query = buildUserLookupQuery(userIdentifier);
-    if (!query) {
-      return res.json({ status: 'error', message: 'Invalid identifier.' });
-    }
-
-    let user = await User.findOne({
-      $and: [query, { mobile: userPhone }]
-    });
-
-    if (!user) {
-      // Check EMS fallback
-      const emsResult = await syncOrProvisionFromEms(userPhone);
-      if (emsResult && emsResult.success && emsResult.user) {
-        user = emsResult.user;
-      } else {
-        return res.json({ status: 'error', message: 'Account not found matching this Email/ID and Phone Number.' });
-      }
-    }
-
-    const last4 = user.mobile && user.mobile.length >= 4 ? user.mobile.slice(-4) : '2026';
-    const defaultSuggestion = `Srishti@${last4}!`;
-
-    return res.json({
-      status: 'success',
-      name: user.name,
-      email: user.email,
-      srishtiId: `SRiSHTi25${user.memberId}`,
-      defaultSuggestion
-    });
-  } catch (err) {
-    console.error('Verify identity error:', err);
-    return res.json({ status: 'error', message: 'Verification error.' });
-  }
-}
-
-module.exports = { 
-  signup, 
-  login, 
-  logout, 
-  sendWelcomeEmail, 
-  sendOtp, 
-  verifyOtp, 
-  resetPassword, 
-  quickResetPassword,
-  verifyIdentity,
-  buildUserLookupQuery 
+module.exports = {
+  signup,
+  login,
+  logout,
+  sendWelcomeEmail,
+  buildUserLookupQuery
 };

@@ -89,14 +89,6 @@
             <span class="error-message">Enter a valid 10-digit number</span>
           </div>
 
-          <div class="form-group" id="group-rollNo">
-            <label for="rollNo">
-              Roll Number
-              <span class="optional-badge">Optional</span>
-            </label>
-            <input type="text" id="rollNo" name="rollNo" placeholder="e.g. 23MX102">
-          </div>
-
           <div class="form-group full-width" id="group-college">
             <label for="college">College <span>*</span></label>
             <select id="college" name="college" required>
@@ -144,42 +136,6 @@
             <label for="otherDepartment">Specify Department <span>*</span></label>
             <input type="text" id="otherDepartment" name="otherDepartment" placeholder="Enter your department name">
             <span class="error-message">Please specify your department name</span>
-          </div>
-
-          <div class="form-group full-width" id="group-yearOfStudy">
-            <label for="yearOfStudy">Year of Study <span>*</span></label>
-            <select id="yearOfStudy" name="yearOfStudy" required>
-              <option value="" disabled selected>Select Year</option>
-              <option value="1">1st Year</option>
-              <option value="2">2nd Year</option>
-              <option value="3">3rd Year</option>
-              <option value="4">4th Year</option>
-              <option value="5">5th Year (Integrated / M.Sc.)</option>
-            </select>
-            <span class="error-message">Please select your year of study</span>
-          </div>
-
-          <div class="form-group" id="group-createpassword">
-            <label for="createpassword">Password <span>*</span></label>
-            <input type="password" id="createpassword" name="createpassword" placeholder="Min 8 chars, 1 upper, 1 lower, 1 number, 1 special" required>
-            <span class="error-message">Password must be 8+ chars with upper, lower, number & special</span>
-          </div>
-
-          <div class="form-group" id="group-confirmpassword">
-            <label for="confirmpassword">Confirm Password <span>*</span></label>
-            <input type="password" id="confirmpassword" name="confirmpassword" placeholder="Re-enter password" required>
-            <span class="error-message">Passwords do not match</span>
-          </div>
-
-          <div class="form-group full-width" id="group-referenceId">
-            <label for="referenceId">
-              Reference ID
-              <span class="optional-badge">Optional</span>
-            </label>
-            <input type="text" id="referenceId" name="referenceId" placeholder="e.g. REF-2026-ABCD" autocomplete="off">
-            <span class="field-hint">
-              💡 If you were referred by someone or have a special invite code, enter it here.
-            </span>
           </div>
 
           <div class="form-group full-width">
@@ -309,8 +265,6 @@
             department = document.getElementById('otherDepartment')?.value.trim() || 'General';
           }
           const accommodation = document.getElementById('accommodation')?.checked ? 'Yes' : 'No';
-          const createpassword = document.getElementById('createpassword')?.value || '';
-          const confirmpassword = document.getElementById('confirmpassword')?.value || '';
 
           const registerBtn = document.getElementById('registerBtn');
           const originalText = registerBtn ? registerBtn.innerHTML : 'Register Now';
@@ -330,9 +284,7 @@
                 phone,
                 college,
                 department,
-                accommodation,
-                createpassword,
-                confirmpassword
+                accommodation
               })
             });
 
@@ -347,6 +299,14 @@
               } else {
                 window.location.href = 'profile.html';
               }
+            } else if (text.startsWith('ALREADY_REGISTERED|')) {
+              // This mobile is already on file. Don't dead-end on an error —
+              // hand the S-ID back and send them to a working login.
+              const srishtiId = text.split('|')[1] || '';
+              alert('You are already registered with this mobile number.\n\nYour SRiSHTi ID is ' + srishtiId + '\n\nTaking you to the login page...');
+              window.location.href = 'login.html?srishtiId=' + encodeURIComponent(srishtiId) + '&phone=' + encodeURIComponent(phone);
+            } else if (text === 'EMAIL_TAKEN') {
+              alert('This email is already registered with a different mobile number.\n\nPlease sign in using the mobile number you originally registered with, or contact support if you have changed your number.');
             } else {
               alert(text || 'Registration failed. Please check your inputs.');
             }

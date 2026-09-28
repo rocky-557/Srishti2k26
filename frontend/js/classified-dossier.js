@@ -141,7 +141,7 @@
         // Three states for workshops (pay-later supported):
         //   paid → REGISTERED | registered-unpaid → REGISTERED ✓ — PAY NOW | else REGISTER NOW
         const cleanTitle = (t) => String(t || '').replace(/\s+/g, ' ').trim();
-        const EMS_REGISTER_URL = 'https://events.psginstitutions.in/EMS/register/696AE7EB187';
+        const EMS_REGISTER_URL = 'instn.html';   // instructions page -> payment portal
         // Insert a dedicated PAY NOW anchor after the register button.
         // A plain link needs no JS to navigate, so blockers can't eat it.
         function ensurePayNowLink(card, regBtn) {
@@ -304,9 +304,9 @@
                             regBtn.textContent = 'REGISTERED';
                             regBtn.classList.add('btn-registered');
                         } else if (result.genfee) {
-                            const goToEms = confirm("General Registration is required to register for Paper Presentation / Project Expo.\n\nWould you like to proceed to the EMS Payment Portal now?");
+                            const goToEms = confirm("General Registration is required to register for Paper Presentation / Project Expo.\n\nWould you like to view the payment instructions and continue?");
                             if (goToEms) {
-                                window.open('https://events.psginstitutions.in/EMS/register/696AE7EB187', '_blank');
+                                window.location.href = 'instn.html';
                             }
                             regBtn.disabled = false;
                             regBtn.textContent = 'REGISTER NOW';
@@ -333,9 +333,9 @@
                             regBtn.textContent = 'REGISTERED';
                             regBtn.classList.add('btn-registered');
                         } else if (result.genfee) {
-                            const goToEms = confirm("General Registration is required to participate in Flagship events.\n\nWould you like to proceed to the EMS Payment Portal now?");
+                            const goToEms = confirm("General Registration is required to participate in Flagship events.\n\nWould you like to view the payment instructions and continue?");
                             if (goToEms) {
-                                window.open('https://events.psginstitutions.in/EMS/register/696AE7EB187', '_blank');
+                                window.location.href = 'instn.html';
                             }
                             regBtn.disabled = false;
                             regBtn.textContent = 'REGISTER NOW';

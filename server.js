@@ -127,10 +127,13 @@ app.get(['/admin/db-repair.html', '/admin/db-repair', '/db-repair'], (req, res) 
 });
 
 // Clean Page Aliases
+// Home is visible only to logged-in users (same pattern as event/workshop below).
 app.get('/home', (req, res) => {
+  if (!req.session || !req.session.email) return res.redirect('/login.html?redirect=home.html');
   res.sendFile(path.join(STATIC_DIR, 'home.html'));
 });
 app.get('/home.html', (req, res) => {
+  if (!req.session || !req.session.email) return res.redirect('/login.html?redirect=home.html');
   res.sendFile(path.join(STATIC_DIR, 'home.html'));
 });
 
@@ -138,8 +141,10 @@ app.get(['/signup.html', '/signup'], (req, res) => {
   res.sendFile(path.join(STATIC_DIR, 'register.html'));
 });
 
-app.get(['/forgot-password.html', '/forgot-password'], (req, res) => {
-  res.redirect('/login.html?action=reset');
+
+// How-to-pay instructions (public — reachable before login)
+app.get(['/instn.html', '/instructions', '/how-to-pay', '/pay'], (req, res) => {
+  res.sendFile(path.join(STATIC_DIR, 'instn.html'));
 });
 
 app.get('/events.html', (req, res) => {

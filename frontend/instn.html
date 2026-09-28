@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Step-by-step instructions for SRiSHTi 2k26 registration and fee payment on the PSG EMS portal.">
+  <title>SRiSHTi 2k26 — Payment & Registration Guide</title>
+
+  <!-- Google Fonts used in Home Page -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Rajdhani:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap"
+    rel="stylesheet">
+
+  <style>
+    @font-face {
+      font-family: 'Aquire';
+      src: url('assets/fonts/AquireBold.otf') format('opentype');
+      font-weight: 700;
+      font-style: normal;
+    }
+
+    :root {
+      --bg: #070a10;
+      --card-bg: #0d121c;
+      --border: #1d2739;
+      --border-accent: #2e3e5c;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --heading: #f8fafc;
+      --primary: #38bdf8;
+      --primary-hover: #0284c7;
+      --accent: #f59e0b;
+      --accent-soft: rgba(245, 158, 11, 0.12);
+      --danger: #ef4444;
+      --danger-soft: rgba(239, 68, 68, 0.12);
+      --success: #10b981;
+      --success-soft: rgba(16, 185, 129, 0.12);
+      --code-bg: #141c2c;
+
+      /* Typography matching home page */
+      --font-title: 'Aquire', 'Orbitron', sans-serif;
+      --font-hud: 'Orbitron', sans-serif;
+      --font-body: 'Rajdhani', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      letter-spacing: 0.3px;
+      line-height: 1.6;
+      padding: max(20px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(32px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 800px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 38px 32px;
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55);
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 22px;
+      margin-bottom: 24px;
+    }
+
+    .badge {
+      display: inline-block;
+      font-family: var(--font-hud);
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--primary);
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 3px 12px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-family: var(--font-title);
+      font-size: clamp(1.4rem, 4vw, 1.85rem);
+      font-weight: 700;
+      color: var(--heading);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: clamp(0.95rem, 2.5vw, 1.05rem);
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    .notice-box {
+      background: var(--accent-soft);
+      border-left: 3px solid var(--accent);
+      border-radius: 6px;
+      padding: 13px 16px;
+      margin-bottom: 24px;
+      font-size: 0.96rem;
+      line-height: 1.55;
+      color: #fcd34d;
+    }
+
+    .notice-box strong {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .warning-box {
+      background: var(--danger-soft);
+      border-left: 3px solid var(--danger);
+      border-radius: 6px;
+      padding: 12px 14px;
+      margin-top: 14px;
+      font-size: 0.94rem;
+      line-height: 1.55;
+      color: #fca5a5;
+    }
+
+    .warning-box strong {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .steps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 18px 20px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.45);
+    }
+
+    .step-item.highlight-step {
+      border-color: rgba(56, 189, 248, 0.35);
+      background: rgba(15, 23, 42, 0.7);
+      box-shadow: 0 0 24px rgba(56, 189, 248, 0.05);
+    }
+
+    .step-number {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--code-bg);
+      border: 1px solid var(--border-accent);
+      color: var(--primary);
+      font-family: var(--font-hud);
+      font-weight: 800;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+    }
+
+    .step-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .step-content h2 {
+      font-family: var(--font-hud);
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      color: var(--heading);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      line-height: 1.35;
+    }
+
+    .crucial-tag {
+      font-family: var(--font-hud);
+      font-size: 0.65rem;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: rgba(245, 158, 11, 0.2);
+      border: 1px solid var(--accent);
+      color: #fbbf24;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .step-content p {
+      font-size: 0.98rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      line-height: 1.55;
+      word-break: break-word;
+    }
+
+    .step-content p:last-child {
+      margin-bottom: 0;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.8rem;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: var(--code-bg);
+      border: 1px solid var(--border-accent);
+      color: #cbd5e1;
+      font-family: var(--font-hud);
+      word-break: break-word;
+    }
+
+    .opt-tag {
+      display: inline-block;
+      font-size: 0.85rem;
+      padding: 3px 9px;
+      border-radius: 4px;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: #7dd3fc;
+      font-family: var(--font-hud);
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin: 2px 0;
+      word-break: break-word;
+    }
+
+    .sub-steps {
+      list-style-type: none;
+      margin-top: 8px;
+      padding-left: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.96rem;
+      color: var(--text-muted);
+    }
+
+    .sub-steps li {
+      position: relative;
+      padding-left: 20px;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    .sub-steps li::before {
+      content: "▸";
+      position: absolute;
+      left: 4px;
+      color: var(--primary);
+      font-size: 0.85rem;
+    }
+
+    /* Responsive Screenshot Card */
+    .screenshot-card {
+      margin: 14px 0 16px;
+      border: 1px solid var(--border-accent);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #000;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+    }
+
+    .screenshot-card a {
+      display: block;
+      text-decoration: none;
+      cursor: zoom-in;
+    }
+
+    .screenshot-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+    }
+
+    .screenshot-caption {
+      padding: 8px 12px;
+      background: #090e18;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-hud);
+      font-size: 0.72rem;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .guide-selection-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .selection-box {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px 14px;
+      background: rgba(30, 41, 59, 0.35);
+    }
+
+    .selection-box h4 {
+      font-family: var(--font-hud);
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: var(--heading);
+      margin-bottom: 4px;
+      line-height: 1.35;
+    }
+
+    .selection-box p {
+      font-size: 0.94rem;
+      margin: 0;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .cta-area {
+      margin-top: 28px;
+      padding-top: 22px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn-portal {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: var(--primary);
+      color: #04111d;
+      font-family: var(--font-hud);
+      font-weight: 800;
+      font-size: 0.95rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 14px 24px;
+      border-radius: 8px;
+      transition: background 0.15s ease, transform 0.1s ease;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      min-height: 50px;
+      box-shadow: 0 4px 18px rgba(56, 189, 248, 0.2);
+    }
+
+    .btn-portal:active {
+      transform: scale(0.98);
+    }
+
+    .btn-portal:hover {
+      background: #7dd3fc;
+    }
+
+    .nav-links {
+      font-family: var(--font-hud);
+      font-size: 0.8rem;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .nav-links a {
+      color: var(--primary);
+      text-decoration: none;
+      padding: 4px 6px;
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    /* Mobile Responsive Optimizations */
+    @media (max-width: 640px) {
+      body {
+        padding: 12px 8px 24px 8px;
+        font-size: 1rem;
+      }
+
+      .container {
+        padding: 20px 14px;
+        border-radius: 10px;
+      }
+
+      header {
+        padding-bottom: 16px;
+        margin-bottom: 18px;
+      }
+
+      .notice-box {
+        padding: 11px 12px;
+        font-size: 0.92rem;
+        margin-bottom: 18px;
+      }
+
+      .steps-list {
+        gap: 14px;
+      }
+
+      .step-item {
+        padding: 14px 12px;
+        gap: 12px;
+        border-radius: 8px;
+      }
+
+      .step-number {
+        width: 27px;
+        height: 27px;
+        font-size: 0.82rem;
+        margin-top: 1px;
+      }
+
+      .step-content h2 {
+        font-size: 0.96rem;
+        gap: 6px;
+      }
+
+      .step-content p {
+        font-size: 0.92rem;
+      }
+
+      .selection-box {
+        padding: 10px 12px;
+      }
+
+      .selection-box h4 {
+        font-size: 0.84rem;
+      }
+
+      .selection-box p {
+        font-size: 0.88rem;
+      }
+
+      .sub-steps {
+        font-size: 0.9rem;
+        gap: 5px;
+      }
+
+      .opt-tag {
+        font-size: 0.78rem;
+        padding: 2px 7px;
+      }
+
+      .warning-box {
+        padding: 10px 12px;
+        font-size: 0.88rem;
+        margin-top: 10px;
+      }
+
+      .btn-portal {
+        max-width: 100%;
+        width: 100%;
+        font-size: 0.88rem;
+        letter-spacing: 0.8px;
+        padding: 13px 16px;
+      }
+
+      .nav-links {
+        font-size: 0.75rem;
+        gap: 8px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .container {
+        padding: 16px 10px;
+      }
+
+      .step-item {
+        padding: 12px 10px;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <span class="badge">Official Guide</span>
+      <h1>How to Register &amp; Pay via PSG EMS</h1>
+      <p class="subtitle">Step-by-step procedure to complete your verification and event registration on the official portal.</p>
+    </header>
+
+    <div class="notice-box">
+      <strong>Important:</strong> Enter the exact same 10-digit mobile number and email ID you used for your SRiSHTi account so your payment automatically syncs.
+    </div>
+
+    <div class="steps-list">
+
+      <!-- Step 1 -->
+      <div class="step-item">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h2>Mobile Number &amp; OTP Verification</h2>
+          <p>Open the EMS portal. Enter your <strong>10-digit mobile number</strong> (+91) in the Contact Information section.</p>
+          <ul class="sub-steps">
+            <li>Click the blue <strong>Verify</strong> button below the input.</li>
+            <li>Enter the OTP received on your mobile phone to complete phone verification.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-item">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h2>Email Address &amp; OTP Verification</h2>
+          <p>Once your phone is verified, the Email field unlocks.</p>
+          <ul class="sub-steps">
+            <li>Enter your registered email address.</li>
+            <li>Click <strong>Verify</strong> and enter the OTP received in your inbox.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-item">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h2>Upload Photo &amp; Personal Details</h2>
+          <p>Fill out the profile details required by the institution:</p>
+          <ul class="sub-steps">
+            <li><strong>Photo:</strong> Upload your passport-size photo (<span class="tag">JPG, PNG, WEBP</span> &mdash; max 512KB).</li>
+            <li><strong>Prefix &amp; Name:</strong> Choose prefix (Mr./Ms./Dr.) and enter your full name.</li>
+            <li><strong>Gender:</strong> Select your gender from the dropdown.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Step 4 (CRUCIAL PARTICIPANT TYPE) -->
+      <div class="step-item highlight-step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <h2>
+            Professional Details &amp; Participant Type
+            <span class="crucial-tag">Crucial</span>
+          </h2>
+          <p>Under <strong>Professional Information &gt; Professional Details</strong>, select the <strong>Participant Type</strong> carefully from the search dropdown:</p>
+
+          <!-- Visual Screenshot Reference -->
+          <div class="screenshot-card">
+            <a href="assets/ems-participant-type.png" target="_blank" rel="noopener noreferrer" title="Click to view full image">
+              <img src="assets/ems-participant-type.png" alt="EMS Participant Type Selection" loading="lazy">
+            </a>
+            <div class="screenshot-caption">
+              <span>Dropdown on the PSG EMS portal</span>
+              <span>&bull;</span>
+              <a href="assets/ems-participant-type.png" target="_blank" rel="noopener noreferrer" style="color: var(--primary); text-decoration: none;">(Tap to view full)</a>
+            </div>
+          </div>
+
+          <div class="guide-selection-grid">
+            <div class="selection-box">
+              <h4>1. For General Registration (Events, Paper &amp; Flagships)</h4>
+              <p>Select the option corresponding to your college:</p>
+              <ul class="sub-steps" style="margin-top: 6px;">
+                <li><strong>PSG Tech Students:</strong> Select <span class="opt-tag">PSG CT - Student</span></li>
+                <li><strong>PSG iTech Students:</strong> Select <span class="opt-tag">PSGiTech - Student</span></li>
+                <li><strong>All Other College Students:</strong> Select <span class="opt-tag">Student</span></li>
+              </ul>
+            </div>
+
+            <div class="selection-box">
+              <h4>2. For Workshops</h4>
+              <p>Type or scroll in the dropdown to choose your specific workshop name directly:</p>
+              <ul class="sub-steps" style="margin-top: 6px;">
+                <li>Example: <span class="opt-tag">Workshop on From Pixels to Intelligence</span></li>
+                <li>Example: <span class="opt-tag">Workshop on Powering Future Mobility</span></li>
+                <li>Or your respective registered workshop title.</li>
+              </ul>
+            </div>
+
+            <div class="selection-box">
+              <h4>3. Institute Name &amp; Pincode</h4>
+              <ul class="sub-steps" style="margin-top: 0;">
+                <li><strong>Institute / Organization Name:</strong> Enter your college name (e.g. <code>PSGCT</code> or your college name).</li>
+                <li><strong>Pincode:</strong> Enter the college postal pincode (e.g. <code>641030</code>).</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="warning-box">
+            <strong>⚠️ Caution:</strong> Selecting an incorrect participant type will prevent your payment from linking with your SRiSHTi account or workshop seat.
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="step-item">
+        <div class="step-number">5</div>
+        <div class="step-content">
+          <h2>Review &amp; Complete Payment</h2>
+          <p>Click <strong>Proceed to Review</strong>, double-check your entered information, and complete the transaction on the payment gateway (UPI, Net Banking, or Cards).</p>
+          <ul class="sub-steps">
+            <li>Save a screenshot or download the payment receipt containing the transaction ID.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Step 6 -->
+      <div class="step-item">
+        <div class="step-number">6</div>
+        <div class="step-content">
+          <h2>Sync with your SRiSHTi Profile</h2>
+          <p>After completing payment on EMS, return to the SRiSHTi website:</p>
+          <ul class="sub-steps">
+            <li>Log in with your SRiSHTi ID and mobile number.</li>
+            <li>Visit your <a href="profile.html" style="color: var(--primary);">Profile</a> page.</li>
+            <li>Click <strong>Update Details</strong> (or Sync) to pull your payment status from EMS. Your fee status will change to <strong>Paid</strong>.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Call to action -->
+    <div class="cta-area">
+      <a class="btn-portal" href="https://events.psginstitutions.in/EMS/register/696AE7EB187" target="_blank" rel="noopener noreferrer">
+        Open EMS Payment Portal &nbsp;❯
+      </a>
+      <div class="nav-links">
+        <a href="home.html">Back to Home</a>
+        <span>&bull;</span>
+        <a href="profile.html">Go to Profile</a>
+        <span>&bull;</span>
+        <a href="login.html">Login</a>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -458,6 +458,75 @@
     height: 34px;
     max-height: 34px;
   }
+
+  /* Register pill in the mobile logo bar — mirrors the PC nav register button */
+  .avng-mobile-top-bar .avng-mobile-register {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    border-radius: 30px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: #fff;
+    text-decoration: none;
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+
+    /* Dark metallic green gradient (same as PC) */
+    background: linear-gradient(135deg, #1B5E20, #2E7D32, #43A047, #2E7D32, #1B5E20);
+    background-size: 300% 300%;
+    animation: hulkRegGradient 5s ease infinite;
+
+    border: 1px solid rgba(94, 255, 122, 0.2);
+    box-shadow:
+      0 0 16px rgba(94, 255, 122, 0.15),
+      0 0 32px rgba(56, 217, 108, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transition: transform 0.3s ease,
+                box-shadow 0.3s ease,
+                filter 0.3s ease,
+                border-color 0.3s ease;
+  }
+
+  .avng-mobile-top-bar .avng-mobile-register::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 120%;
+    height: 120%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(
+      circle,
+      rgba(94, 255, 122, 0.12) 0%,
+      transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .avng-mobile-top-bar .avng-mobile-register:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 6px 20px rgba(0, 0, 0, 0.45),
+      0 0 26px rgba(94, 255, 122, 0.3),
+      0 0 48px rgba(56, 217, 108, 0.15);
+    border-color: rgba(94, 255, 122, 0.4);
+  }
+
+  .avng-mobile-top-bar .avng-mobile-register:hover::before {
+    opacity: 1;
+  }
+
+  .avng-mobile-top-bar .avng-mobile-register:active {
+    transform: scale(0.95);
+  }
 }
 
 @media (max-width: 480px) {
@@ -475,5 +544,10 @@
   .avng-mobile-top-bar img[src*="100 YRS"] {
     height: 30px;
     max-height: 30px;
+  }
+
+  .avng-mobile-top-bar .avng-mobile-register {
+    padding: 5px 12px;
+    font-size: 0.72rem;
   }
 }

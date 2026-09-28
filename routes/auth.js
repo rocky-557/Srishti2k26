@@ -2,28 +2,16 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const Registration = require('../models/Registration');
-const { signup, login, logout, sendOtp, verifyOtp, resetPassword, quickResetPassword, verifyIdentity } = require('../controllers/authController');
+const { signup, login, logout } = require('../controllers/authController');
 
-// POST /api/auth/signup — user registration
+// POST /api/auth/signup — user registration (passwordless)
 router.post('/signup', signup);
 
-// POST /api/auth/login — user login
+// POST /api/auth/login — passwordless login via SRiSHTi ID + mobile number
 router.post('/login', login);
 
-// POST /api/auth/send-otp — generate & email 6-digit OTP
-router.post('/send-otp', sendOtp);
-
-// POST /api/auth/verify-otp — verify 6-digit OTP
-router.post('/verify-otp', verifyOtp);
-
-// POST /api/auth/reset-password — reset user password via OTP
-router.post('/reset-password', resetPassword);
-
-// POST /api/auth/verify-identity — verify user identity (Step 1)
-router.post('/verify-identity', verifyIdentity);
-
-// POST /api/auth/quick-reset-password — OTP-less identity verification (Email/ID + Mobile)
-router.post('/quick-reset-password', quickResetPassword);
+// Note: OTP + password-reset routes were removed with the password mechanism.
+//       Login is now SRiSHTi ID + registered mobile number.
 
 // GET /api/auth/logout & POST /api/auth/logout — user logout
 router.get('/logout', logout);

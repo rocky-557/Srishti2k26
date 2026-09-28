@@ -403,7 +403,7 @@
                 const isPaid = (data.genfee === 'paid' || data.genfee === 'Paid');
                 let badgeHtml = isPaid 
                     ? `<span class="badge-paid"><i class="bi bi-check-circle-fill"></i> Paid</span>`
-                    : `<span class="badge-unpaid">Unpaid</span> <a href="https://events.psginstitutions.in/EMS/register/696AE7EB187" target="_blank" class="btn-gold" style="margin-left:8px; padding:3px 10px; font-size:0.8rem;"><i class="bi bi-credit-card"></i> Pay via EMS</a>`;
+                    : `<span class="badge-unpaid">Unpaid</span> <a href="instn.html" class="btn-gold" style="margin-left:8px; padding:3px 10px; font-size:0.8rem;"><i class="bi bi-credit-card"></i> Pay via EMS</a>`;
 
                 if (isPaid && data.emsRegId) {
                     badgeHtml += ` <span style="font-size:0.75rem; color:#94a3b8; margin-left:4px;">(EMS #${data.emsRegId})</span>`;
@@ -492,7 +492,7 @@
                 const isPaidStatus = itemStatus.toLowerCase() === 'paid';
                 // Pay-later hub: unpaid workshops get a direct EMS pay link + sync hint
                 const payBtn = (activeTab === 'workshops' && !isPaidStatus)
-                    ? `<a href="https://events.psginstitutions.in/EMS/register/696AE7EB187" target="_blank" class="btn-gold" style="margin-top:8px; display:inline-block; padding:4px 12px; font-size:0.8rem;"><i class="bi bi-credit-card"></i> Pay Now</a>
+                    ? `<a href="instn.html" class="btn-gold" style="margin-top:8px; display:inline-block; padding:4px 12px; font-size:0.8rem;"><i class="bi bi-credit-card"></i> Pay Now</a>
                        <div style="font-size:0.72rem; color:#94a3b8; margin-top:4px;">Paid already? Tap “Update Details” above to sync.</div>`
                     : '';
 

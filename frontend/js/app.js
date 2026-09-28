@@ -39,8 +39,9 @@ window.SrishtiApp = (() => {
             }
         },
 
-        async login(email, password) {
-            if (!email || !password) {
+        // Field 1 accepts either a SRiSHTi ID or the registered email
+        async login(identifier, phone) {
+            if (!identifier || !phone) {
                 return { success: false, message: 'Please fill in all fields.' };
             }
             try {
@@ -48,19 +49,17 @@ window.SrishtiApp = (() => {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'same-origin',
-                    body: JSON.stringify({ email, password })
+                    body: JSON.stringify({
+                        srishtiId: String(identifier).trim(),
+                        phone: String(phone).replace(/\D/g, '').slice(-10)
+                    })
                 });
                 const text = await res.text();
                 if (text === 'true' || text.includes('success')) {
                     await this.checkSession();
                     return { success: true, message: 'Login successful!' };
-                } else if (text === 'pass') {
-                    return { success: false, message: 'Incorrect password.' };
-                } else if (text === 'email') {
-                    return { success: false, message: 'Email not found.' };
-                } else {
-                    return { success: false, message: text || 'Login failed.' };
                 }
+                return { success: false, message: 'No account found with this SRiSHTi ID / email + mobile number.' };
             } catch (err) {
                 return { success: false, message: 'Server connection error.' };
             }
