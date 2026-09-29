@@ -148,8 +148,8 @@ async function syncEmsDetails(req, res) {
       if (item.Paid_status === '1' || item.Paid_status === 1) {
         const rawType = (item.Participant_Type_Name || '').trim().toLowerCase();
 
-        // Check if General Registration
-        if (GENERAL_REG_TYPES.includes(rawType)) {
+        // Check if General Registration (≥ ₹250 — paper presentations are ₹150 with the same participant type)
+        if (GENERAL_REG_TYPES.includes(rawType) && Number(item.TxnAmount || 0) >= 250) {
           user.genfee = 'paid';
           user.emsRegId = String(item.Reg_Id || '');
           user.emsTxnAmount = Number(item.TxnAmount || 0);

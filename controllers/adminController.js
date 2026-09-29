@@ -543,6 +543,7 @@ function csvEsc(str) {
  * ids, timestamps, EMS ids) is intentionally excluded as redundant.
  */
 const EXPORT_HEADERS = 'SRiSHTi ID,Name,Email,Mobile,College,Department,Accommodation';
+const DUMP_HEADERS = 'Name,Mobile,College,Department,Accommodation';
 
 function exportFields(user) {
   return {
@@ -562,9 +563,19 @@ function pickExportFields(user) {
 }
 
 /** One CSV row (quoted, trailing newline) in canonical column order. */
-function exportCsvRow(user) {
+function exportCsvRow(user, includeWorkshops, dumpMode) {
   const f = exportFields(user);
-  return `"${csvEsc(f.srishtiId)}","${csvEsc(f.name)}","${csvEsc(f.email)}","${csvEsc(f.mobile)}","${csvEsc(f.college)}","${csvEsc(f.department)}","${csvEsc(f.accommodation)}"\n`;
+  let row;
+  if (dumpMode) {
+    row = `"${csvEsc(f.name)}","${csvEsc(f.mobile)}","${csvEsc(f.college)}","${csvEsc(f.department)}","${csvEsc(f.accommodation)}"`;
+  } else {
+    row = `"${csvEsc(f.srishtiId)}","${csvEsc(f.name)}","${csvEsc(f.email)}","${csvEsc(f.mobile)}","${csvEsc(f.college)}","${csvEsc(f.department)}","${csvEsc(f.accommodation)}"`;
+  }
+  if (includeWorkshops) {
+    const ws = Array.isArray(user.workshopsPaid) ? user.workshopsPaid.join('; ') : '';
+    row += `,"${csvEsc(ws)}"`;
+  }
+  return row + '\n';
 }
 
 /**
@@ -784,10 +795,13 @@ async function downloadSignups(req, res) {
       });
     }
 
-    // Default: CSV download — canonical export columns only
-    let csv = EXPORT_HEADERS + '\n';
+    // Default: CSV download — canonical export columns + workshops when filtered
+    const wsFilter = filter === 'workshop';
+    const dumpMode = filter === 'all';
+    const csvHeaders = dumpMode ? DUMP_HEADERS : (wsFilter ? EXPORT_HEADERS + ',Workshops' : EXPORT_HEADERS);
+    let csv = csvHeaders + '\n';
     for (const m of users) {
-      csv += exportCsvRow(m);
+      csv += exportCsvRow(m, wsFilter, dumpMode);
     }
     res.setHeader('Content-Type', 'text/csv; charset=utf-8');
     res.setHeader('Content-Disposition', `attachment; filename="SRiSHTi2k26_Signups_${filter}_${users.length}.csv"`);

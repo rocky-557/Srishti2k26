@@ -90,8 +90,10 @@ async function syncOrProvisionFromEms(phoneOrEmail) {
 
     // Separate tracks: general fee and workshops are independent purchases.
     // Workshop-only buyers must NOT be marked genfee paid.
+    // ≥ ₹250 = general registration; ₹150 = paper presentation (same participant type).
     const generalItems = paidItems.filter(i =>
-      GENERAL_REG_TYPES.includes((i.Participant_Type_Name || '').trim().toLowerCase())
+      GENERAL_REG_TYPES.includes((i.Participant_Type_Name || '').trim().toLowerCase()) &&
+      Number(i.TxnAmount || 0) >= 250
     );
     const isGeneralPaid = generalItems.length > 0;
 
