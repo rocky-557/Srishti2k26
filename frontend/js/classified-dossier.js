@@ -294,7 +294,7 @@
 
                 // 4. PAPER PRESENTATIONS
                 if (category.includes('PAPER')) {
-                    alert("Important Note: No payment is required for Round 1 submission. Payment (₹150) is only required if you are shortlisted for Round 2.");
+                    alert("Important: The General Registration fee must be paid to take part in Round 1 (abstract review). The paper fee is not payable now — it will be collected later from teams shortlisted for Round 2.");
                     regBtn.disabled = true;
                     regBtn.textContent = 'REGISTERING...';
                     try {
@@ -304,12 +304,10 @@
                             regBtn.textContent = 'REGISTERED';
                             regBtn.classList.add('btn-registered');
                         } else if (result.genfee) {
-                            const goToEms = confirm("General Registration is required to register for Paper Presentation / Project Expo.\n\nWould you like to view the payment instructions and continue?");
-                            if (goToEms) {
-                                window.location.href = 'instn.html';
-                            }
-                            regBtn.disabled = false;
-                            regBtn.textContent = 'REGISTER NOW';
+                            // Fold the outcome into one dialog instead of stacking a second one
+                            alert("General Registration is required to register for Paper Presentation / Project Expo.\n\nPlease pay the general fee first — view the payment instructions and continue.");
+                            window.location.href = 'instn.html';
+                            return;
                         } else {
                             alert(result.message || 'Registration failed.');
                             regBtn.disabled = false;
@@ -322,8 +320,13 @@
                     return;
                 }
 
-                // 5. FLAGSHIP EVENTS
+                // 5. FLAGSHIP EVENTS (incl. PROJECT EXPO, which carries the same Round 1 rule)
                 if (category.includes('FLAGSHIP') || category.includes('BOT')) {
+                    const domainEl = card.querySelector('.avng-meta-item');
+                    const domainText = domainEl ? domainEl.textContent.toUpperCase() : '';
+                    if (domainText.includes('PROJECT EXPO')) {
+                        alert("Important: The General Registration fee must be paid to take part in Round 1 (abstract review). The project expo fee is not payable now — it will be collected later from teams shortlisted for Round 2.");
+                    }
                     regBtn.disabled = true;
                     regBtn.textContent = 'REGISTERING...';
                     try {
