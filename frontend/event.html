@@ -240,7 +240,7 @@
         });
 
 
-        function registerEvent(evname) {
+        function registerEvent(evname, _synced) {
             $.ajax({
                 type: "POST",
                 url: "/api/register/event",
@@ -253,12 +253,26 @@
                     } else if (html == 'rem' || html == 'already') {
                         alert(`You are already registered for ${evname}.`);
                     } else if (html == 'genfee') {
-                        var val = confirm(
-                            "General Registration is required to register for this event.\n\nWould you like to proceed to the EMS Payment Portal now?"
-                        );
-                        if (val == true) {
-                            generalfee();
+                        if (_synced) {
+                            // Already tried a silent sync — they genuinely haven't paid.
+                            showGenfeePrompt(evname);
+                            return;
                         }
+                        // They may have paid on EMS but never synced — try one
+                        // silent sync + single retry before asking them to pay again.
+                        $.ajax({
+                            type: "POST",
+                            url: "/api/user/sync-ems",
+                            contentType: "application/json",
+                            data: JSON.stringify({}),
+                            xhrFields: { withCredentials: true },
+                            success: function () {
+                                registerEvent(evname, true);
+                            },
+                            error: function () {
+                                showGenfeePrompt(evname);
+                            }
+                        });
                     } else if (html == 'full') {
                         alert(
                             "Oops! We're sorry. All slots are full for this Event. Thank you for checking out."
@@ -273,6 +287,15 @@
                     window.location.href = "login.html?redirect=event.html";
                 }
             });
+        }
+
+        function showGenfeePrompt(evname) {
+            var val = confirm(
+                "General Registration is required to register for this event.\n\nWould you like to proceed to the EMS Payment Portal now?"
+            );
+            if (val == true) {
+                generalfee();
+            }
         }
 
         function generalfee() {
