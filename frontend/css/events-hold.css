@@ -5443,3 +5443,37 @@ body {
         font-size: 0.98rem;
     }
 }
+
+/* --------------------------------------------------------------------------
+   IEEE PPT template download button (Project Expo, Round 3)
+   -------------------------------------------------------------------------- */
+.avng-ppt-download-btn {
+    display: inline-block;
+    margin: 4px 0 14px 0;
+    padding: 11px 24px;
+    border: 1px solid rgba(255, 183, 3, 0.6);
+    border-radius: 4px;
+    background: rgba(255, 183, 3, 0.12);
+    color: #ffd76a;
+    font-family: var(--font-hud, 'Orbitron', monospace);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.avng-ppt-download-btn:hover {
+    background: #ffb700;
+    color: #0a0f18;
+    box-shadow: 0 0 22px rgba(255, 183, 0, 0.5);
+}
+
+@media (max-width: 576px) {
+    .avng-ppt-download-btn {
+        width: 100%;
+        text-align: center;
+        padding: 12px 16px;
+    }
+}
