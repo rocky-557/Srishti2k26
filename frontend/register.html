@@ -247,6 +247,16 @@
         });
       }
 
+      // Accommodation toggle — warn that it is not covered by the general fee
+      const accommodationInput = document.getElementById('accommodation');
+      if (accommodationInput) {
+        accommodationInput.addEventListener('change', function () {
+          if (this.checked) {
+            alert("Accomodation Fee is not Covered in General Registration fee.");
+          }
+        });
+      }
+
       if (form) {
         form.addEventListener('submit', async function (e) {
           e.preventDefault();
