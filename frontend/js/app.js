@@ -141,6 +141,7 @@ window.SrishtiApp = (() => {
                 if (text === 'true') return { success: true, message: 'Paper registered successfully!' };
                 if (text === 'rem' || text === 'already') return { success: false, already: true, message: 'You are already registered for this paper presentation.' };
                 if (text === 'genfee') return { success: false, genfee: true, message: 'General fee required.' };
+                if (text === 'full') return { success: false, full: true, message: 'Sorry, all slots are full for this event. Thank you for checking out.' };
                 if (text === 'false') return { success: false, needLogin: true, message: 'Please log in to register for ' + paperName + '.' };
                 return { success: false, message: text || 'Paper registration failed.' };
             } catch (err) {
@@ -161,6 +162,7 @@ window.SrishtiApp = (() => {
                 if (text === 'true') return { success: true, message: 'Flagship event registered successfully!' };
                 if (text === 'rem' || text === 'already') return { success: false, already: true, message: 'You are already registered for this flagship event.' };
                 if (text === 'genfee') return { success: false, genfee: true, message: 'General fee required.' };
+                if (text === 'full') return { success: false, full: true, message: 'Sorry, all slots are full for this event. Thank you for checking out.' };
                 if (text === 'false') return { success: false, needLogin: true, message: 'Please log in to register for ' + flagshipName + '.' };
                 return { success: false, message: text || 'Flagship registration failed.' };
             } catch (err) {

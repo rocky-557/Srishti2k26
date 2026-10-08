@@ -201,7 +201,28 @@
                         regBtn.classList.add('btn-registered');
                     }
                 }
+
+                // Registrations closed (max count reached) — only for cards the
+                // user has NOT already registered for; holders keep REGISTERED.
+                if (!regBtn.classList.contains('btn-registered') && isRegClosed(title)) {
+                    regBtn.textContent = 'REGISTRATIONS CLOSED';
+                    regBtn.classList.add('btn-closed');
+                    regBtn.disabled = true;
+                }
             });
+        }
+
+        // Titles with registrations closed (mirrors backend CLOSED_EVENTS).
+        function isRegClosed(title) {
+            const t = String(title || '').replace(/\s+/g, ' ').trim().toLowerCase();
+            return [
+                'devsprint',
+                'reverse engineering challenge',
+                'twintech',
+                'twintech 2026',
+                'mediverse',
+                'nextgen'
+            ].some(c => c === t);
         }
 
         // Auto-run status check if user is already loaded

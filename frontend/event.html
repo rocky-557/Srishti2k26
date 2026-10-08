@@ -201,6 +201,16 @@
 <script nomodule="" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 <script type="text/javascript">
         $(document).ready(function () {
+            // Registrations CLOSED (max count reached) — buttons greyed out.
+            // The backend also rejects these, so this is display-only.
+            ["btn_1", "btn_5"].forEach(function (id) {
+                var b = document.getElementById(id);
+                if (b) {
+                    b.disabled = true;
+                    b.innerHTML = "<b>REGISTRATIONS CLOSED</b>";
+                    b.classList.add("btn-closed");
+                }
+            });
             // Technical Events
             $("#btn_1").click(function () {
                 registerEvent("TECH NEXUS");

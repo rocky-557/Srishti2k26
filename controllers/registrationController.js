@@ -11,6 +11,31 @@ const Registration = require('../models/Registration');
 const { canonicalizeName } = require('../utils/names');
 
 /**
+ * Registrations CLOSED for these events (max count reached).
+ * Checked AFTER the already-registered check, so existing holders still
+ * see "already registered" instead of "full". To reopen an event, delete
+ * its line here and reload the server — no DB change needed.
+ */
+const CLOSED_EVENTS = new Set([
+  'TECH NEXUS',
+  'CASE ZERO : THE FINAL VERDICT',
+  'DEVSPRINT',
+  'Reverse Engineering Challenge',
+  'TwinTech 2026',
+  'Mediverse',
+  'NextGen',
+]);
+
+function isClosed(canonicalName) {
+  if (!canonicalName) return false;
+  const norm = canonicalName.trim().toLowerCase();
+  for (const closed of CLOSED_EVENTS) {
+    if (closed.trim().toLowerCase() === norm) return true;
+  }
+  return false;
+}
+
+/**
  * POST /api/register/event
  * 
  * Mirrors eregistered.php:
@@ -36,6 +61,11 @@ async function registerEvent(req, res) {
 
     if (existing) {
       return res.send('rem');
+    }
+
+    // Registrations closed for this event
+    if (isClosed(evname)) {
+      return res.send('full');
     }
 
     // Register for event
@@ -147,6 +177,11 @@ async function registerFlagship(req, res) {
       return res.send('rem');
     }
 
+    // Registrations closed for this event
+    if (isClosed(fsname)) {
+      return res.send('full');
+    }
+
     // Register
     await Registration.create({
       email,
@@ -187,6 +222,11 @@ async function registerPaper(req, res) {
 
     if (existing) {
       return res.send('rem');
+    }
+
+    // Registrations closed for this event
+    if (isClosed(ppname)) {
+      return res.send('full');
     }
 
     // Register

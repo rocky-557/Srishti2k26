@@ -5477,3 +5477,18 @@ body {
         padding: 12px 16px;
     }
 }
+
+/* --------------------------------------------------------------------------
+   REGISTRATIONS CLOSED button state (max count reached).
+   Display-only — the backend also rejects these events. Loaded last so it
+   wins over the duplicated .submitBtn rules above.
+   -------------------------------------------------------------------------- */
+.submitBtn.btn-closed,
+.submitBtn:disabled {
+  background-color: #3a3f4a !important;
+  color: #9aa1ad !important;
+  border: 2px solid #525866 !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+  transform: none !important;
+}

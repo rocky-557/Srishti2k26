@@ -1339,6 +1339,16 @@ body.avng-modal-open .ave-nav {
     pointer-events: none;
 }
 
+/* Registrations closed (max count reached) — display-only; backend also rejects */
+.btn-dossier-register.btn-closed {
+    background: #3a3f4a !important;
+    color: #9aa1ad !important;
+    border: 1px solid #525866 !important;
+    box-shadow: none !important;
+    cursor: not-allowed !important;
+    pointer-events: none;
+}
+
 .btn-dossier-close {
     font-family: 'Orbitron', sans-serif;
     font-size: 0.78rem;
