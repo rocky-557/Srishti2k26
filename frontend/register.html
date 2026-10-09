@@ -138,13 +138,7 @@
           </div>
 
           <div class="form-group full-width">
-            <div class="toggle-container">
-              <label for="accommodation" style="cursor:pointer;margin-bottom:0;">Accommodation Required</label>
-              <label class="switch">
-                <input type="checkbox" id="accommodation" name="accommodation" value="yes">
-                <span class="slider"></span>
-              </label>
-            </div>
+            <div class="accommodation-contact">For Accommodations, contact Sailesh — <a href="tel:+917708523600">+91 77085 23600</a><br>Sathya — <a href="tel:+918590819008">+91 85908 19008</a></div>
           </div>
 
           <div class="form-group full-width" id="group-terms">
@@ -247,16 +241,6 @@
         });
       }
 
-      // Accommodation toggle — warn that it is not covered by the general fee
-      const accommodationInput = document.getElementById('accommodation');
-      if (accommodationInput) {
-        accommodationInput.addEventListener('change', function () {
-          if (this.checked) {
-            alert("Accomodation Fee is not Covered in General Registration fee.");
-          }
-        });
-      }
-
       if (form) {
         form.addEventListener('submit', async function (e) {
           e.preventDefault();
@@ -273,7 +257,7 @@
           if (department === 'others') {
             department = document.getElementById('otherDepartment')?.value.trim() || 'General';
           }
-          const accommodation = document.getElementById('accommodation')?.checked ? 'Yes' : 'No';
+          const accommodation = 'No';
 
           const registerBtn = document.getElementById('registerBtn');
           const originalText = registerBtn ? registerBtn.innerHTML : 'Register Now';

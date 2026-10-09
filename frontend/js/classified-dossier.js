@@ -221,8 +221,10 @@
                 'visionx',
                 'twintech',
                 'twintech 2026',
+                'voltiq 2026',
                 'mediverse',
-                'nextgen'
+                'nextgen',
+                'nextwave'
             ].some(c => c === t);
         }
 

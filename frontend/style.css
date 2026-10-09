@@ -1074,3 +1074,25 @@ li.email-highlight-rule a {
   text-shadow: 0 0 10px rgba(94, 255, 122, 0.6) !important;
   word-break: break-all !important;
 }
+/* Accommodation contact line (replaces the Yes/No toggle) */
+.accommodation-contact {
+  padding: 12px 16px;
+  border: 1px solid rgba(201, 162, 39, 0.35);
+  border-radius: 10px;
+  background: rgba(201, 162, 39, 0.08);
+  color: #e8edf5;
+  font-size: 0.92rem;
+  letter-spacing: 0.3px;
+  text-align: center;
+}
+
+.accommodation-contact a {
+  color: #ffd76a;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+.accommodation-contact a:hover {
+  text-decoration: underline;
+}

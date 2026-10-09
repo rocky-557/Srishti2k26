@@ -19,13 +19,17 @@ const { canonicalizeName } = require('../utils/names');
 const CLOSED_EVENTS = new Set([
   'TECH NEXUS',
   'TECHTOPIA',
+  'BRAINBYTE 2026',
+  'THRILLER TECHSCAPE',
   'CASE ZERO : THE FINAL VERDICT',
   'DEVSPRINT',
   'Reverse Engineering Challenge',
   'VisionX',
   'TwinTech 2026',
+  'VoltIQ 2026',
   'Mediverse',
   'NextGen',
+  'NextWave',
 ]);
 
 function isClosed(canonicalName) {
