@@ -71,7 +71,11 @@ const CANONICAL = {
 };
 
 // Known shorthand variants seen in the wild → canonical.
-const ALIASES = {};
+const ALIASES = {
+  // "Project Expo" is the domain label of the VisionX flagship card —
+  // map it so registrations land on VisionX (currently closed).
+  projectexpo: 'VisionX',
+};
 
 // Alphanumeric-only lowercase form: strips spaces, punctuation, dashes,
 // so 'TwinTech 2026', 'TWINTECH', 'twin-tech!' all become comparable.

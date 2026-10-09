@@ -22,6 +22,7 @@ const CLOSED_EVENTS = new Set([
   'BRAINBYTE 2026',
   'THRILLER TECHSCAPE',
   'CASE ZERO : THE FINAL VERDICT',
+  'MAZEBOTICS – RESCUE PROTOCOL',
   'DEVSPRINT',
   'Reverse Engineering Challenge',
   'VisionX',
