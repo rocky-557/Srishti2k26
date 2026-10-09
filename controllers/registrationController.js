@@ -18,9 +18,11 @@ const { canonicalizeName } = require('../utils/names');
  */
 const CLOSED_EVENTS = new Set([
   'TECH NEXUS',
+  'TECHTOPIA',
   'CASE ZERO : THE FINAL VERDICT',
   'DEVSPRINT',
   'Reverse Engineering Challenge',
+  'VisionX',
   'TwinTech 2026',
   'Mediverse',
   'NextGen',

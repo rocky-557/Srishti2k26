@@ -218,6 +218,7 @@
             return [
                 'devsprint',
                 'reverse engineering challenge',
+                'visionx',
                 'twintech',
                 'twintech 2026',
                 'mediverse',
